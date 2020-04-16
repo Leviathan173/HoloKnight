@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-
+    [SerializeField] private GameObject Forward;
 
     public float speed = 3.0f;
     public float jumpForce = 12.0f;
@@ -119,25 +119,36 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击C
-        if (Input.GetKeyDown(KeyCode.L) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.U) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
         }
         // 攻击C取消
-        if (Input.GetKeyUp(KeyCode.L)) {
+        if (Input.GetKeyUp(KeyCode.U)) {
             _animator.SetInteger(AParameters.ATTACKSTAT, -1);
         }
 
         // 攻击D
-        if (Input.GetKeyDown(KeyCode.U) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.I) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 3);
             // TODO 攻击判定
 
         }
         // 攻击D取消
-        if (Input.GetKeyUp(KeyCode.U)) {
+        if (Input.GetKeyUp(KeyCode.I)) {
             _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        }
+
+        // 翻滚
+        if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking()) {
+            _animator.SetTrigger(AParameters.ROLL);
+            _body.velocity = new Vector2(Forward.transform.position.x*3, _body.velocity.y);
+
+        }
+        //翻滚结束操作
+        if (Input.GetKeyUp(KeyCode.L)) {
+            _animator.ResetTrigger(AParameters.ROLL);
         }
     }
 
