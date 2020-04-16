@@ -110,7 +110,6 @@ public class Player : MonoBehaviour {
         // 攻击B
         if (Input.GetKeyDown(KeyCode.K) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 1);
-            print("k");
             // TODO 攻击判定
 
         }
@@ -122,7 +121,6 @@ public class Player : MonoBehaviour {
         // 攻击C
         if (Input.GetKeyDown(KeyCode.L) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 2);
-            print("l");
             // TODO 攻击判定
 
         }
@@ -134,7 +132,6 @@ public class Player : MonoBehaviour {
         // 攻击D
         if (Input.GetKeyDown(KeyCode.U) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 3);
-            print("u");
             // TODO 攻击判定
 
         }
