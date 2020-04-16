@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LadderController : MonoBehaviour
+public class LadderDevice : MonoBehaviour
 {
-    private BoxCollider2D box;
-
     void Awake() {
-        box = GetComponent<BoxCollider2D>();
     }
     void OnTriggerEnter2D(Collider2D collider) {
         collider.SendMessage("OnLadder", SendMessageOptions.DontRequireReceiver);

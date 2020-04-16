@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     [SerializeField] private GameObject Forward;
+    [SerializeField] private GameObject Back;
 
     public float speed = 3.0f;
     public float jumpForce = 12.0f;
-
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
@@ -19,6 +19,7 @@ public class Player : MonoBehaviour {
     private bool _grounded;
     private bool _rolling;
     private bool _hasLadder;
+    private int _facingRight;// 1 = true, -1 = false
     private float _ladderX;
     private float _deltaX;
     private float _deltaY;
@@ -40,6 +41,10 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if(Forward.transform.position.x > Back.transform.position.x) {
+
+        }
+
         _deltaX = Input.GetAxis("Horizontal") * speed;
         _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX));
         // 控制朝向
@@ -81,7 +86,7 @@ public class Player : MonoBehaviour {
             _animator.SetBool(AParameters.GROUND, false);
         }
         // 跳跃
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling()) {
+        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling() && !IsOnLadder()) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _grounded = false;
             //_animator.SetBool("Grounded", false);
@@ -154,12 +159,13 @@ public class Player : MonoBehaviour {
 
         // TODO 爬梯
         _deltaY = Input.GetAxis("Vertical");
-        if (_deltaY != 0 && _hasLadder) {
+        if (_deltaY != 0 && _hasLadder && !IsOnLadder()) {
             /*
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
              */
-             
+            _animator.SetInteger(AParameters.CLIMB_STAT,0);
+            _body.gravityScale = 0;
         }
 
     }
@@ -178,7 +184,12 @@ public class Player : MonoBehaviour {
     }
 
     private bool IsOnLadder() {
-        return(_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_A))
+        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_LADDER_START) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.STAY_IN_LADDER) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.MOVE_IN_LADDER) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.FALLDOWN) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_TO_LADDER_TOP_END) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.LADDER_BOTTOM));
     }
 
     private bool IsRolling() {
@@ -207,5 +218,10 @@ public class Player : MonoBehaviour {
     private void SetLadderX(float value) {
         _ladderX = value;
         //print(value);
+    }
+    private void Say() {
+        _body.gravityScale = 3;
+        print("robot!!!");
+        _body.velocity = new Vector2((Back.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
     }
 }
