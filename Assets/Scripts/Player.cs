@@ -53,7 +53,7 @@ public class Player : MonoBehaviour {
 
         //移动
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling()) {
+        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() && !_rolling && _grounded) {
             print("walk");
             _body.velocity = movement;
         }
@@ -61,8 +61,8 @@ public class Player : MonoBehaviour {
         // 跳跃条件
         Vector3 max = _boxCollider.bounds.max;
         Vector3 min = _boxCollider.bounds.min;
-        Vector2 corner1 = new Vector2(max.x, min.y - .1f);
-        Vector2 corner2 = new Vector2(min.x, min.y - .2f);
+        Vector2 corner1 = new Vector2(max.x, min.y - .2f);
+        Vector2 corner2 = new Vector2(min.x, min.y - .3f);
 
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
@@ -76,10 +76,11 @@ public class Player : MonoBehaviour {
             _jumping = true;
             _animator.SetBool(AParameters.GROUND, false);
         }
-
+        print(_grounded);
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling()) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _grounded = false;
             //_animator.SetBool("Grounded", false);
         }
 
@@ -147,13 +148,6 @@ public class Player : MonoBehaviour {
             print("roll");
             _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
-            _body.velocity = new Vector2((Forward.transform.position.x - gameObject.transform.position.x)*30, _body.velocity.y);
-            
-        }
-        //翻滚结束操作
-        if (Input.GetKeyUp(KeyCode.L)) {
-            _rolling = false;
-            _animator.ResetTrigger(AParameters.ROLL);
         }
     }
 
@@ -172,5 +166,16 @@ public class Player : MonoBehaviour {
 
     private bool IsRolling() {
         return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
+    }
+
+    private void OnRollGoing() {
+        //_rolling = true;
+        //_animator.SetTrigger(AParameters.ROLL);
+        _body.velocity = new Vector2((Forward.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
+    }
+
+    private void OnRollExit() {
+        _rolling = false;
+        _animator.ResetTrigger(AParameters.ROLL);
     }
 }
