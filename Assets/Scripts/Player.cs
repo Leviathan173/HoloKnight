@@ -16,7 +16,6 @@ public class Player : MonoBehaviour {
     private bool _facing_right;
     private bool _running;
     private bool _jumping;
-    private bool _attacking { get; set; }
     private bool _grounded;
     private string _currentStat;
 
@@ -29,7 +28,6 @@ public class Player : MonoBehaviour {
         _facing_right = true;
         _running = false;
         _jumping = false;
-        _attacking = false;
         _currentStat = AParameters.IDLE;
     }
 
@@ -50,12 +48,6 @@ public class Player : MonoBehaviour {
                 transform.position = new Vector3(transform.position.x + _width, transform.position.y, transform.position.z);
             }
         }
-
-        ////延迟取消攻击判定
-        //if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
-        //    print("equals");
-        //    _attacking = false;
-        //}
 
         //移动
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
@@ -107,9 +99,6 @@ public class Player : MonoBehaviour {
         // 攻击A
         if (Input.GetKeyDown(KeyCode.J) && _grounded) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 0);
-            _body.velocity = new Vector2(0.3f, _body.velocity.y);
-            _attacking = true;
-            //StartCoroutine(FinishAttack());
             // TODO 攻击判定
 
         }
@@ -117,15 +106,41 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.J)) {
             _animator.SetInteger(AParameters.ATTACKSTAT, -1);
         }
-    }
 
-    private IEnumerator FinishAttack() {
-        while (_attacking) {
-            if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.IDLE)) {
-                _attacking = !_attacking;
-                yield return null;
-            }
-            yield return null;
+        // 攻击B
+        if (Input.GetKeyDown(KeyCode.K) && _grounded) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, 1);
+            print("k");
+            // TODO 攻击判定
+
+        }
+        // 攻击B取消
+        if (Input.GetKeyUp(KeyCode.K)) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        }
+
+        // 攻击C
+        if (Input.GetKeyDown(KeyCode.L) && _grounded) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, 2);
+            print("l");
+            // TODO 攻击判定
+
+        }
+        // 攻击C取消
+        if (Input.GetKeyUp(KeyCode.L)) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        }
+
+        // 攻击D
+        if (Input.GetKeyDown(KeyCode.U) && _grounded) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, 3);
+            print("u");
+            // TODO 攻击判定
+
+        }
+        // 攻击D取消
+        if (Input.GetKeyUp(KeyCode.U)) {
+            _animator.SetInteger(AParameters.ATTACKSTAT, -1);
         }
     }
 
