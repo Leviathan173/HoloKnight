@@ -19,6 +19,8 @@ public class Player : MonoBehaviour {
     private bool _grounded;
     private bool _rolling;
     private bool _hasLadder;
+    private bool _reachTopLadder;
+    private bool _reachBottomLadder;
     private int _facingRight;// 1 = true, -1 = false
     private float _ladderX;
     private float _deltaX;
@@ -36,6 +38,8 @@ public class Player : MonoBehaviour {
         _jumping = false;
         _rolling = false;
         _hasLadder = false;
+        _reachTopLadder = false;
+        _reachBottomLadder = false;
         _currentStat = AParameters.IDLE;
     }
 
@@ -159,13 +163,15 @@ public class Player : MonoBehaviour {
 
         // TODO 爬梯
         _deltaY = Input.GetAxis("Vertical");
-        if (_deltaY != 0 && _hasLadder && !IsOnLadder()) {
+        if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !IsOnLadder()) {
             /*
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
              */
             _animator.SetInteger(AParameters.CLIMB_STAT,0);
             _body.gravityScale = 0;
+            _body.velocity = Vector2.zero;
+            _boxCollider.isTrigger = true;
         }
 
     }
@@ -219,9 +225,20 @@ public class Player : MonoBehaviour {
         _ladderX = value;
         //print(value);
     }
-    private void Say() {
+    private void FallDownLadder() {
         _body.gravityScale = 3;
+        _boxCollider.isTrigger = false;
         print("robot!!!");
         _body.velocity = new Vector2((Back.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
+    }
+    private void LadderMoveUp() {
+        if (_reachTopLadder) {
+            _animator.SetTrigger(AParameters.LADDER_TOP);
+            _body.gravityScale = 3;
+        }
+        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.013f, gameObject.transform.position.z);
+    }
+    private void LadderMoveDown() {
+        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.013f, gameObject.transform.position.z);
     }
 }

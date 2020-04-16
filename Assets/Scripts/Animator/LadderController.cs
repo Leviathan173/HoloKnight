@@ -8,13 +8,27 @@ public class LadderController : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         animator.SetInteger(AParameters.CLIMB_STAT, 1);
+        Debug.Log("ladder stat enter");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (Input.GetKeyDown(KeyCode.Space)) {
             animator.SetTrigger(AParameters.FALL_DOWN_LADDER);
-            animator.SendMessage("Say", SendMessageOptions.DontRequireReceiver);
+            animator.SendMessage("FallDownLadder", SendMessageOptions.DontRequireReceiver);
+        }
+        float delteY = Input.GetAxis("Vertical");
+        if (!Mathf.Approximately(delteY, 0)){
+            if (delteY > 0) {
+                //animator.SetInteger(AParameters.ANIME_PLAY_DELTA, 1); // 默认就是1
+                animator.SetInteger(AParameters.CLIMB_STAT, 2);
+                animator.SendMessage("LadderMoveUp", SendMessageOptions.DontRequireReceiver);
+                
+            } else {
+                animator.SetFloat(AParameters.ANIME_PLAY_DELTA, -1);
+                animator.SetInteger(AParameters.CLIMB_STAT, 2);
+                animator.SendMessage("LadderMoveDown", SendMessageOptions.DontRequireReceiver);
+            }
         }
     }
 
