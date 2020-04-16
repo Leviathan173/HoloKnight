@@ -18,6 +18,7 @@ public class Player : MonoBehaviour {
     private bool _jumping;
     private bool _grounded;
     private bool _rolling;
+    private float deltaX;
     private string _currentStat;
 
     // Start is called before the first frame update
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        float deltaX = Input.GetAxis("Horizontal") * speed;
+        deltaX = Input.GetAxis("Horizontal") * speed;
         _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX));
         // 控制朝向
         if (!Mathf.Approximately(deltaX, 0) && !IsRolling()) {
