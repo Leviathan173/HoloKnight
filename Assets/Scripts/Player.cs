@@ -150,6 +150,9 @@ public class Player : MonoBehaviour {
             _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
         }
+
+        // TODO 爬梯
+
     }
 
     private void ChangeStat(string changeStat) {
