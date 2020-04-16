@@ -14,4 +14,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         status = ManagerStatus.Started;
     }
+
+
 }

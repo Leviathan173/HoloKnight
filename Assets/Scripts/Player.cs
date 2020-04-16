@@ -18,7 +18,10 @@ public class Player : MonoBehaviour {
     private bool _jumping;
     private bool _grounded;
     private bool _rolling;
-    private float deltaX;
+    private bool _hasLadder;
+    private float _ladderX;
+    private float _deltaX;
+    private float _deltaY;
     private string _currentStat;
 
     // Start is called before the first frame update
@@ -31,21 +34,22 @@ public class Player : MonoBehaviour {
         _running = false;
         _jumping = false;
         _rolling = false;
+        _hasLadder = false;
         _currentStat = AParameters.IDLE;
     }
 
     // Update is called once per frame
     void Update() {
-        deltaX = Input.GetAxis("Horizontal") * speed;
-        _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX));
+        _deltaX = Input.GetAxis("Horizontal") * speed;
+        _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX));
         // 控制朝向
-        if (!Mathf.Approximately(deltaX, 0) && !IsRolling()) {
-            transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
-            if (_facing_right && Mathf.Sign(deltaX) < 0) {
+        if (!Mathf.Approximately(_deltaX, 0) && !IsRolling()) {
+            transform.localScale = new Vector3(Mathf.Sign(_deltaX) * 3, 3, 3);
+            if (_facing_right && Mathf.Sign(_deltaX) < 0) {
                 //do turn left
                 _facing_right = !_facing_right;
                 transform.position = new Vector3(transform.position.x - _width, transform.position.y, transform.position.z);
-            } else if (!_facing_right && Mathf.Sign(deltaX) > 0) {
+            } else if (!_facing_right && Mathf.Sign(_deltaX) > 0) {
                 //do turn right
                 _facing_right = !_facing_right;
                 transform.position = new Vector3(transform.position.x + _width, transform.position.y, transform.position.z);
@@ -53,9 +57,8 @@ public class Player : MonoBehaviour {
         }
 
         //移动
-        Vector2 movement = new Vector2(deltaX, _body.velocity.y);
+        Vector2 movement = new Vector2(_deltaX, _body.velocity.y);
         if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() && !_rolling && _grounded) {
-            print("walk");
             _body.velocity = movement;
         }
 
@@ -68,7 +71,7 @@ public class Player : MonoBehaviour {
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
         _grounded = false;
-        if(hit != null) {
+        if(hit != null && !hit.isTrigger) {
             _grounded = true;
             _animator.SetBool(AParameters.GROUND, true);
             _jumping = false;
@@ -77,7 +80,6 @@ public class Player : MonoBehaviour {
             _jumping = true;
             _animator.SetBool(AParameters.GROUND, false);
         }
-        print(_grounded);
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling()) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -93,7 +95,7 @@ public class Player : MonoBehaviour {
         if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking() && !IsRolling()) {
             _running = true;
             _body.velocity = new Vector2(movement.x*2,_body.velocity.y);
-            _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX * 2));
+            _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX * 2));
             //print(_animator.GetFloat(AParameters.SPEED));
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
@@ -146,12 +148,19 @@ public class Player : MonoBehaviour {
 
         // 翻滚
         if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking()) {
-            print("roll");
             _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
         }
 
         // TODO 爬梯
+        _deltaY = Input.GetAxis("Vertical");
+        if (_deltaY != 0 && _hasLadder) {
+            /*
+             * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
+             * 
+             */
+             
+        }
 
     }
 
@@ -168,6 +177,10 @@ public class Player : MonoBehaviour {
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
     }
 
+    private bool IsOnLadder() {
+        return(_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_A))
+    }
+
     private bool IsRolling() {
         return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
     }
@@ -181,5 +194,18 @@ public class Player : MonoBehaviour {
     private void OnRollExit() {
         _rolling = false;
         _animator.ResetTrigger(AParameters.ROLL);
+    }
+
+    private void OnLadder() {
+        _hasLadder = true;
+        print("Enter Ladder area");
+    }
+    private void ExitLadder() {
+        _hasLadder = false;
+        print("Exit Ladder area");
+    }
+    private void SetLadderX(float value) {
+        _ladderX = value;
+        //print(value);
     }
 }
