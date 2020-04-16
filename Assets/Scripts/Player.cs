@@ -30,13 +30,13 @@ public class Player : MonoBehaviour {
         _running = false;
         _jumping = false;
         _attacking = false;
-        _currentStat = ATriggerType.Idle.ToString();
+        _currentStat = AParameters.IDLE;
     }
 
     // Update is called once per frame
     void Update() {
         float deltaX = Input.GetAxis("Horizontal") * speed;
-        _animator.SetFloat("Speed", Mathf.Abs(deltaX));
+        _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX));
         // 控制朝向
         if (!Mathf.Approximately(deltaX, 0)) {
             transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
@@ -51,15 +51,15 @@ public class Player : MonoBehaviour {
             }
         }
 
-        //延迟取消攻击判定
-        if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
-            print("equals");
-            _attacking = false;
-        }
+        ////延迟取消攻击判定
+        //if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
+        //    print("equals");
+        //    _attacking = false;
+        //}
 
         //移动
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !_attacking) {
+        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking()) {
             print(deltaX);
             _body.velocity = movement;
         }
@@ -75,16 +75,16 @@ public class Player : MonoBehaviour {
         _grounded = false;
         if(hit != null) {
             _grounded = true;
-            _animator.SetBool("Grounded", true);
+            _animator.SetBool(AParameters.GROUND, true);
             _jumping = false;
             
         } else {
             _jumping = true;
-            _animator.SetBool("Grounded", false);
+            _animator.SetBool(AParameters.GROUND, false);
         }
 
         // 跳跃
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !_attacking) {
+        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking()) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             //_animator.SetBool("Grounded", false);
         }
@@ -94,11 +94,11 @@ public class Player : MonoBehaviour {
         _boxCollider.size = new Vector2(0.33f, 0.63f);
 
         // 跑动
-        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !_attacking) {
+        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking()) {
             _running = true;
             _body.velocity = new Vector2(movement.x*2,_body.velocity.y);
-            _animator.SetFloat("Speed", Mathf.Abs(deltaX * 2));
-            print(_animator.GetFloat("Speed"));
+            _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX * 2));
+            print(_animator.GetFloat(AParameters.SPEED));
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
             _running = false;
@@ -106,7 +106,8 @@ public class Player : MonoBehaviour {
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.J) && _grounded) {
-            _animator.SetInteger("AttackStat", 0);
+            _animator.SetInteger(AParameters.ATTACKSTAT, 0);
+            _body.velocity = new Vector2(0.3f, _body.velocity.y);
             _attacking = true;
             //StartCoroutine(FinishAttack());
             // TODO 攻击判定
@@ -114,13 +115,13 @@ public class Player : MonoBehaviour {
         }
         // 攻击A取消
         if (Input.GetKeyUp(KeyCode.J)) {
-            _animator.SetInteger("AttackStat", -1);
+            _animator.SetInteger(AParameters.ATTACKSTAT, -1);
         }
     }
 
     private IEnumerator FinishAttack() {
         while (_attacking) {
-            if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
+            if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.IDLE)) {
                 _attacking = !_attacking;
                 yield return null;
             }
@@ -132,5 +133,12 @@ public class Player : MonoBehaviour {
         _animator.ResetTrigger(_currentStat);
         _animator.SetTrigger(changeStat);
         _currentStat = changeStat;
+    }
+
+    private bool IsAttacking() {
+        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_A) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_B) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_C) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
     }
 }
