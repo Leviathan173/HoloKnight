@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
     private bool _running;
     private bool _jumping;
     private bool _grounded;
+    private bool _rolling;
     private string _currentStat;
 
     // Start is called before the first frame update
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
         _facing_right = true;
         _running = false;
         _jumping = false;
+        _rolling = false;
         _currentStat = AParameters.IDLE;
     }
 
@@ -36,7 +38,7 @@ public class Player : MonoBehaviour {
         float deltaX = Input.GetAxis("Horizontal") * speed;
         _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX));
         // 控制朝向
-        if (!Mathf.Approximately(deltaX, 0)) {
+        if (!Mathf.Approximately(deltaX, 0) && !IsRolling()) {
             transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
             if (_facing_right && Mathf.Sign(deltaX) < 0) {
                 //do turn left
@@ -51,8 +53,8 @@ public class Player : MonoBehaviour {
 
         //移动
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking()) {
-            print(deltaX);
+        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling()) {
+            print("walk");
             _body.velocity = movement;
         }
 
@@ -76,7 +78,7 @@ public class Player : MonoBehaviour {
         }
 
         // 跳跃
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking()) {
+        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling()) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             //_animator.SetBool("Grounded", false);
         }
@@ -86,18 +88,18 @@ public class Player : MonoBehaviour {
         _boxCollider.size = new Vector2(0.33f, 0.63f);
 
         // 跑动
-        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking()) {
+        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking() && !IsRolling()) {
             _running = true;
             _body.velocity = new Vector2(movement.x*2,_body.velocity.y);
             _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX * 2));
-            print(_animator.GetFloat(AParameters.SPEED));
+            //print(_animator.GetFloat(AParameters.SPEED));
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
             _running = false;
         }
 
         // 攻击A
-        if (Input.GetKeyDown(KeyCode.J) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.J) && _grounded && !IsRolling()) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 0);
             // TODO 攻击判定
 
@@ -108,7 +110,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击B
-        if (Input.GetKeyDown(KeyCode.K) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.K) && _grounded && !IsRolling()) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
@@ -119,7 +121,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击C
-        if (Input.GetKeyDown(KeyCode.U) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.U) && _grounded && !IsRolling()) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
@@ -130,7 +132,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击D
-        if (Input.GetKeyDown(KeyCode.I) && _grounded) {
+        if (Input.GetKeyDown(KeyCode.I) && _grounded && !IsRolling()) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 3);
             // TODO 攻击判定
 
@@ -142,12 +144,15 @@ public class Player : MonoBehaviour {
 
         // 翻滚
         if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking()) {
+            print("roll");
+            _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
-            _body.velocity = new Vector2(Forward.transform.position.x*3, _body.velocity.y);
-
+            _body.velocity = new Vector2((Forward.transform.position.x - gameObject.transform.position.x)*30, _body.velocity.y);
+            
         }
         //翻滚结束操作
         if (Input.GetKeyUp(KeyCode.L)) {
+            _rolling = false;
             _animator.ResetTrigger(AParameters.ROLL);
         }
     }
@@ -163,5 +168,9 @@ public class Player : MonoBehaviour {
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_B) ||
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_C) ||
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
+    }
+
+    private bool IsRolling() {
+        return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
     }
 }
