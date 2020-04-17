@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-//[RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(PlayerManager))]
 //[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
