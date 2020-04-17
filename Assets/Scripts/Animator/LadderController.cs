@@ -19,7 +19,7 @@ public class LadderController : StateMachineBehaviour
             animator.SendMessage("FallDownLadder", SendMessageOptions.DontRequireReceiver);
         }
         float delteY = Input.GetAxis("Vertical");
-        if (!Mathf.Approximately(delteY, 0) && NotInExitStat(animator)){
+        if (!Mathf.Approximately(delteY, 0) && NotInExitOrStartStat(animator)){
             if (delteY > 0) {
                 //animator.SetInteger(AParameters.ANIME_PLAY_DELTA, 1); // 默认就是1
                 animator.SetInteger(AParameters.CLIMB_STAT, 2);
@@ -33,7 +33,7 @@ public class LadderController : StateMachineBehaviour
         }
     }
 
-    private bool NotInExitStat(Animator animator) {
+    public static bool NotInExitOrStartStat(Animator animator) {
         if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.LADDER_BOTTOM ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.CLIMB_TO_LADDER_TOP_END ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.MOVE_IN_LADDER) {

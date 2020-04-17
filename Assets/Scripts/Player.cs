@@ -69,7 +69,7 @@ public class Player : MonoBehaviour {
 
         //移动
         Vector2 movement = new Vector2(_deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() && !_rolling && _grounded) {
+        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() && !_rolling && _grounded && !IsOnLadder()) {
             _body.velocity = movement;
         }
 
@@ -165,7 +165,7 @@ public class Player : MonoBehaviour {
 
         // TODO 爬梯
         _deltaY = Input.GetAxis("Vertical");
-        if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !IsOnLadder()) {
+        if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !IsOnLadder() && LadderController.NotInExitOrStartStat(_animator)) {
             /*
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
@@ -237,12 +237,12 @@ public class Player : MonoBehaviour {
         if (_reachTopLadder) {
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_TOP);
-            _animator.ResetTrigger(AParameters.LADDER_TOP);
+            //_animator.ResetTrigger(AParameters.LADDER_TOP);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
             gameObject.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, gameObject.transform.position.z);
         } else {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.013f, gameObject.transform.position.z);
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.05f, gameObject.transform.position.z);
         }
     }
     private void LadderMoveDown() {
@@ -250,13 +250,13 @@ public class Player : MonoBehaviour {
             print("leave ladder due to reach bottom and reaceve a down cmd");
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_BOTTOM);
-            _animator.ResetTrigger(AParameters.LADDER_BOTTOM);
+            //_animator.ResetTrigger(AParameters.LADDER_BOTTOM);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
             //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
-            _body.velocity = new Vector2(_ladderBottomPos.x, _ladderBottomPos.y);
+            _body.velocity = new Vector2(_ladderBottomPos.x/3, _ladderBottomPos.y);
         } else {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.013f, gameObject.transform.position.z);
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.05f, gameObject.transform.position.z);
         }
     }
     private void ReachLadderEnd(string end) {
