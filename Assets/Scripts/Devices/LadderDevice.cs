@@ -7,13 +7,13 @@ public class LadderDevice : MonoBehaviour
     void Awake() {
     }
     void OnTriggerEnter2D(Collider2D collider) {
-        collider.SendMessage("OnLadder", SendMessageOptions.DontRequireReceiver);
+        collider.SendMessage("OnLadderArea", SendMessageOptions.DontRequireReceiver);
         collider.SendMessage("SetLadderX",
             gameObject.transform.localPosition.x,
             SendMessageOptions.DontRequireReceiver);
     }
     void OnTriggerExit2D(Collider2D collider) {
-        collider.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
+        collider.SendMessage("ExitLadderArea", SendMessageOptions.DontRequireReceiver);
     }
 
 }

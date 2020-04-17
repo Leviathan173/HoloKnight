@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
     private bool _rolling;
     private bool _hasLadder;
     private bool _reachTopLadder;
+    private bool _onLadder;
     private bool _reachBottomLadder;
     private int _facingRight;// 1 = true, -1 = false
     private float _ladderX;
@@ -37,9 +38,10 @@ public class Player : MonoBehaviour {
         _boxCollider = GetComponent<BoxCollider2D>();
         _facing_right = true;
         _running = false;
-        _jumping = false;
+        _jumping = false; 
         _rolling = false;
         _hasLadder = false;
+        _onLadder = false;
         _reachTopLadder = false;
         _reachBottomLadder = false;
         _currentStat = AParameters.IDLE;
@@ -68,8 +70,9 @@ public class Player : MonoBehaviour {
         }
 
         //移动
-        Vector2 movement = new Vector2(_deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() && !_rolling && _grounded && !IsOnLadder()) {
+        Vector2 movement = new Vector2(_deltaX, _body.velocity.y );
+        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() 
+            && !_rolling && _grounded && !_onLadder) {
             _body.velocity = movement;
         }
 
@@ -92,7 +95,7 @@ public class Player : MonoBehaviour {
             _animator.SetBool(AParameters.GROUND, false);
         }
         // 跳跃
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling() && !IsOnLadder()) {
+        if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling() && !_onLadder) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _grounded = false;
             //_animator.SetBool("Grounded", false);
@@ -103,7 +106,7 @@ public class Player : MonoBehaviour {
         _boxCollider.size = new Vector2(0.33f, 0.63f);
 
         // 跑动
-        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking() && !IsRolling()) {
+        if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking() && !IsRolling() && _grounded && !_onLadder) {
             _running = true;
             _body.velocity = new Vector2(movement.x*2,_body.velocity.y);
             _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX * 2));
@@ -114,7 +117,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击A
-        if (Input.GetKeyDown(KeyCode.J) && _grounded && !IsRolling()) {
+        if (Input.GetKeyDown(KeyCode.J) && _grounded && !IsRolling() && !_onLadder) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 0);
             // TODO 攻击判定
 
@@ -125,7 +128,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击B
-        if (Input.GetKeyDown(KeyCode.K) && _grounded && !IsRolling()) {
+        if (Input.GetKeyDown(KeyCode.K) && _grounded && !IsRolling() && !_onLadder) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
@@ -136,7 +139,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击C
-        if (Input.GetKeyDown(KeyCode.U) && _grounded && !IsRolling()) {
+        if (Input.GetKeyDown(KeyCode.U) && _grounded && !IsRolling() && !_onLadder) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
@@ -147,7 +150,7 @@ public class Player : MonoBehaviour {
         }
 
         // 攻击D
-        if (Input.GetKeyDown(KeyCode.I) && _grounded && !IsRolling()) {
+        if (Input.GetKeyDown(KeyCode.I) && _grounded && !IsRolling() && !_onLadder) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 3);
             // TODO 攻击判定
 
@@ -158,14 +161,14 @@ public class Player : MonoBehaviour {
         }
 
         // 翻滚
-        if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking()) {
+        if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking() && !_onLadder) {
             _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
         }
 
         // TODO 爬梯
         _deltaY = Input.GetAxis("Vertical");
-        if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !IsOnLadder() && LadderController.NotInExitOrStartStat(_animator)) {
+        if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !_onLadder) {
             /*
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
@@ -190,15 +193,13 @@ public class Player : MonoBehaviour {
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_C) ||
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
     }
-
-    private bool IsOnLadder() {
-        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_LADDER_START) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.STAY_IN_LADDER) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.MOVE_IN_LADDER) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.FALLDOWN) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_TO_LADDER_TOP_END) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.LADDER_BOTTOM));
-    }
+    /*
+     * Roll Part Start
+     * 
+     * 
+     * 
+     */
+    
 
     private bool IsRolling() {
         return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
@@ -214,12 +215,17 @@ public class Player : MonoBehaviour {
         _rolling = false;
         _animator.ResetTrigger(AParameters.ROLL);
     }
-
-    private void OnLadder() {
+    /*
+     * Ladder Part Start
+     * 
+     * 
+     * 
+     */
+    private void OnLadderArea() {
         _hasLadder = true;
         print("Enter Ladder area");
     }
-    private void ExitLadder() {
+    private void ExitLadderArea() {
         _hasLadder = false;
         print("Exit Ladder area");
     }
@@ -280,5 +286,22 @@ public class Player : MonoBehaviour {
     }
     private void SetLadderBottomPos(Vector2 pos) {
         _ladderBottomPos = pos;
+    }
+    // 废弃方法
+    //private bool IsOnLadder() {
+    //    bool res = (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_LADDER_START) ||
+    //        _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.STAY_IN_LADDER) ||
+    //        _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.MOVE_IN_LADDER) ||
+    //        _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.FALLDOWN) ||
+    //        _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.CLIMB_TO_LADDER_TOP_END) ||
+    //        _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.LADDER_BOTTOM));
+    //    print(res);
+    //    return res;
+    //}
+    private void OnLadder() {
+        _onLadder = true;
+    }
+    private void ExitLadder() {
+        _onLadder = false;
     }
 }
