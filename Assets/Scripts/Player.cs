@@ -12,6 +12,8 @@ public class Player : MonoBehaviour {
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
+    private Vector2 _ladderTopPos;
+    private Vector2 _ladderBottomPos;
     private float _width;
     private bool _facing_right;
     private bool _running;
@@ -233,12 +235,47 @@ public class Player : MonoBehaviour {
     }
     private void LadderMoveUp() {
         if (_reachTopLadder) {
+            _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_TOP);
             _body.gravityScale = 3;
+            _boxCollider.isTrigger = false;
+            gameObject.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, gameObject.transform.position.z);
+        } else {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.013f, gameObject.transform.position.z);
         }
-        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.013f, gameObject.transform.position.z);
     }
     private void LadderMoveDown() {
-        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.013f, gameObject.transform.position.z);
+        if (_reachBottomLadder) {
+            print("leave ladder due to reach bottom and reaceve a down cmd");
+            _animator.SetInteger(AParameters.CLIMB_STAT, -1);
+            _animator.SetTrigger(AParameters.LADDER_BOTTOM);
+            _body.gravityScale = 3;
+            _boxCollider.isTrigger = false;
+            gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
+        } else {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.013f, gameObject.transform.position.z);
+        }
+    }
+    private void ReachLadderEnd(string end) {
+        print("Enter"+end);
+        if (end.Equals("Top")) {
+            _reachTopLadder = true;
+        } else {
+            _reachBottomLadder = true;
+        }
+    }
+    private void LeaveLadderEnd(string end) {
+        print("leave:"+end);
+        if (end.Equals("Top")) {
+            _reachTopLadder = false;
+        } else {
+            _reachBottomLadder = false;
+        }
+    }
+    private void SetLadderTopPos(Vector2 pos) {
+        _ladderTopPos = pos;
+    }
+    private void SetLadderBottomPos(Vector2 pos) {
+        _ladderBottomPos = pos;
     }
 }
