@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 
     public float speed = 3.0f;
     public float jumpForce = 12.0f;
+
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
@@ -160,13 +161,18 @@ public class Player : MonoBehaviour {
             _animator.SetInteger(AParameters.ATTACKSTAT, -1);
         }
 
+        // 跳跃攻击
+        if(!_grounded && Input.GetKeyDown(KeyCode.J)) {
+            _animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 0);
+        }
+
         // 翻滚
         if (Input.GetKeyDown(KeyCode.L) && _grounded && !IsAttacking() && !_onLadder) {
             _rolling = true;
             _animator.SetTrigger(AParameters.ROLL);
         }
 
-        // TODO 爬梯
+        // 爬梯
         _deltaY = Input.GetAxis("Vertical");
         if (!Mathf.Approximately(_deltaY,0) && _hasLadder && !_onLadder) {
             /*
@@ -178,6 +184,8 @@ public class Player : MonoBehaviour {
             _body.velocity = Vector2.zero;
             _boxCollider.isTrigger = true;
         }
+
+        
 
     }
 
@@ -303,5 +311,18 @@ public class Player : MonoBehaviour {
     }
     private void ExitLadder() {
         _onLadder = false;
+    }
+    /*
+     * Jump Attack Start
+     * 
+     * 
+     * 
+     */
+     private void AddForce(float force = 0) {
+        if(force == 0) {
+            _body.AddForce(Vector2.up * jumpForce / 6, ForceMode2D.Impulse);
+        } else {
+            _body.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        }
     }
 }
