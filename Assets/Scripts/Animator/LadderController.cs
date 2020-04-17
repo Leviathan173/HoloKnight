@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ public class LadderController : StateMachineBehaviour
             animator.SendMessage("FallDownLadder", SendMessageOptions.DontRequireReceiver);
         }
         float delteY = Input.GetAxis("Vertical");
-        if (!Mathf.Approximately(delteY, 0)){
+        if (!Mathf.Approximately(delteY, 0) && NotInExitStat(animator)){
             if (delteY > 0) {
                 //animator.SetInteger(AParameters.ANIME_PLAY_DELTA, 1); // 默认就是1
                 animator.SetInteger(AParameters.CLIMB_STAT, 2);
@@ -32,11 +33,20 @@ public class LadderController : StateMachineBehaviour
         }
     }
 
+    private bool NotInExitStat(Animator animator) {
+        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.LADDER_BOTTOM ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.CLIMB_TO_LADDER_TOP_END ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Astat.MOVE_IN_LADDER) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        Debug.Log("exit ladder");
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

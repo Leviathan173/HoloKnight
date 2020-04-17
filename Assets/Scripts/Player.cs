@@ -237,6 +237,7 @@ public class Player : MonoBehaviour {
         if (_reachTopLadder) {
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_TOP);
+            _animator.ResetTrigger(AParameters.LADDER_TOP);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
             gameObject.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, gameObject.transform.position.z);
@@ -249,9 +250,11 @@ public class Player : MonoBehaviour {
             print("leave ladder due to reach bottom and reaceve a down cmd");
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_BOTTOM);
+            _animator.ResetTrigger(AParameters.LADDER_BOTTOM);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
-            gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
+            //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
+            _body.velocity = new Vector2(_ladderBottomPos.x, _ladderBottomPos.y);
         } else {
             gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.013f, gameObject.transform.position.z);
         }
