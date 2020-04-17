@@ -6,14 +6,14 @@ public class AfterJumpAttack : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Managers.Player.jumpStat = 2;
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        if (Input.GetKeyDown(KeyCode.J)) {
+        if (Input.GetKeyDown(KeyCode.J) && Managers.Player.jumpStat != -1) {
             Managers.Player.jumpStat = 1;
-            animator.SetInteger(AParameters.JUMP_ATTACK_STAT, Managers.Player.jumpStat);
+            animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 1);
         }
     }
 
