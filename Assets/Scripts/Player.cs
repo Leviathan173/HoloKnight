@@ -163,6 +163,7 @@ public class Player : MonoBehaviour {
 
         // 跳跃攻击
         if(!_grounded && Input.GetKeyDown(KeyCode.J)) {
+            //print("jump attack");
             _animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 0);
         }
 
@@ -318,11 +319,4 @@ public class Player : MonoBehaviour {
      * 
      * 
      */
-     private void AddForce(float force = 0) {
-        if(force == 0) {
-            _body.AddForce(Vector2.up * jumpForce / 6, ForceMode2D.Impulse);
-        } else {
-            _body.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        }
-    }
 }

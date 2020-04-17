@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpAttack : StateMachineBehaviour
+public class JumpAttackB : StateMachineBehaviour
 {
-    private int stat = 0;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        animator.SendMessage("AddForce", SendMessageOptions.DontRequireReceiver);
-        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("JumpAttackB")) {
-            stat = 1;
-        }
+        animator.SetInteger(AParameters.JUMP_ATTACK_STAT, -1);
+        Managers.Player.jumpStat = -1;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        if (Input.GetKeyDown(KeyCode.J) && stat == 0) {
-            animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 1);
-        }
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
