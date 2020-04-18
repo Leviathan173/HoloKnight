@@ -17,15 +17,15 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public Vector2 _ladderTopPos { get; set; }
     public Vector2 _ladderBottomPos { get; set; }
     public int jumpStat {get;set;}
-    public bool _reachTopLadder { get; set; }
-    public bool _reachBottomLadder { get; set; }
-    public bool _onLadder { get; set; }
+    public bool _isReachTopLadder { get; set; }
+    public bool _isReachBottomLadder { get; set; }
+    public bool _isOnLadder { get; set; }
     public bool _hasLadder { get; set; }
-    public bool _rolling { get; set; }
-    public bool _facing_right { get; set; }
-    public bool _running { get; set; }
-    public bool _grounded { get; set; }
-    public bool _jumping { get; set; }
+    public bool _isRolling { get; set; }
+    public bool _isFacingRight { get; set; }
+    public bool _isRunning { get; set; }
+    public bool _isGrounded { get; set; }
+    public bool _isJumping { get; set; }
     public float _ladderX { get; set; }
     public float _width { get; set; }
     public float jumpForce = 12.0f;
@@ -41,16 +41,16 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         _width = player.GetComponent<SpriteRenderer>().bounds.size.x / 3;
         JumpAttackAirBounce = 12.0f;
         jumpStat = -1;
-        _reachTopLadder = false;
-        _reachBottomLadder = false;
-        _facing_right = true;
-        _onLadder = false;
+        _isReachTopLadder = false;
+        _isReachBottomLadder = false;
+        _isFacingRight = true;
+        _isOnLadder = false;
         _hasLadder = false;
         _ladderX = 0;
-        _rolling = false;
-        _running = false;
-        _grounded = false;
-        _jumping = false;
+        _isRolling = false;
+        _isRunning = false;
+        _isGrounded = false;
+        _isJumping = false;
 
 
         status = ManagerStatus.Started;
@@ -88,7 +88,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         _body.velocity = new Vector2((Back.transform.position.x - player.transform.position.x) * 7, _body.velocity.y);
     }
     public void LadderMoveUp() {
-        if (_reachTopLadder) {
+        if (_isReachTopLadder) {
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_TOP);
             //_animator.ResetTrigger(AParameters.LADDER_TOP);
@@ -100,7 +100,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
     }
     public void LadderMoveDown() {
-        if (_reachBottomLadder) {
+        if (_isReachBottomLadder) {
             print("leave ladder due to reach bottom and reaceve a down cmd");
             _animator.SetInteger(AParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(AParameters.LADDER_BOTTOM);
@@ -115,7 +115,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 爬梯
     public void ClimbStart() {
-        if (_hasLadder && !_onLadder) {
+        if (_hasLadder && !_isOnLadder) {
             /*
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
@@ -127,30 +127,34 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
     }
     // 翻滚
+    // 是否在翻滚中，用于转向判断
     public bool IsRolling() {
         return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
     }
+    // 翻滚中每次动画状态更新调用
+    // 添加一个朝向翻滚方向的加速度
     public void OnRollGoing() {
         //_rolling = true;
         //_animator.SetTrigger(AParameters.ROLL);
         _body.velocity = new Vector2((Forward.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
     }
+    // 退出翻滚状态
     public void OnRollExit() {
-        _rolling = false;
+        _isRolling = false;
         _animator.ResetTrigger(AParameters.ROLL);
     }
     // 控制朝向
     public void Turn(float deltaX) {
         print("turn,deltaX:" + deltaX);
-        if (!IsRolling()) {
+        if (!IsRolling()) { // 翻滚时不能转向
             player.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
-            if (_facing_right && Mathf.Sign(deltaX) < 0) {
+            if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
                 //do turn left
-                _facing_right = !_facing_right;
+                _isFacingRight = !_isFacingRight;
                 player.transform.position = new Vector3(player.transform.position.x - _width, player.transform.position.y, player.transform.position.z);
-            } else if (!_facing_right && Mathf.Sign(deltaX) > 0) {
+            } else if (!_isFacingRight && Mathf.Sign(deltaX) > 0) {
                 //do turn right
-                _facing_right = !_facing_right;
+                _isFacingRight = !_isFacingRight;
                 player.transform.position = new Vector3(player.transform.position.x + _width, player.transform.position.y, player.transform.position.z);
             }
         }
@@ -158,34 +162,34 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     //移动
     public void Move(float deltaX) {
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling()
-            && !_rolling && _grounded && !_onLadder) {
+        if (movement != Vector2.zero && !_isRunning && !_isJumping && !IsAttacking() && !IsRolling()
+            && !_isRolling && _isGrounded && !_isOnLadder) {
             _body.velocity = movement;
         }
     }
     // 跳跃
     public void Jump() {
-        if (_grounded && !IsAttacking() && !IsRolling() && !_onLadder) {
+        if (_isGrounded && !IsAttacking() && !IsRolling() && !_isOnLadder) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            _grounded = false;
+            _isGrounded = false;
         }
     }
     // 跑动
     public void Run(float deltaX) {
         if (new Vector2(deltaX, _body.velocity.y) != Vector2.zero
-            && !_jumping && !IsAttacking() && !IsRolling() && _grounded && !_onLadder) {
-            _running = true;
+            && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded && !_isOnLadder) {
+            _isRunning = true;
             _body.velocity = new Vector2(new Vector2(deltaX, _body.velocity.y).x * 2, _body.velocity.y);
             _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX * 2));
         }
     }
     //结束跑动
     public void RunExit() {
-        _running = false;
+        _isRunning = false;
     }
     // 攻击A
     public void AttackAEnter() {
-        if (_grounded && !IsRolling() && !_onLadder) {
+        if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 0);
             // TODO 攻击判定
         }
@@ -196,7 +200,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 攻击B
     public void AttackBEnter() {
-        if (_grounded && !IsRolling() && !_onLadder) {
+        if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
@@ -208,7 +212,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 攻击C
     public void AttackCEnter() {
-        if (_grounded && !IsRolling() && !_onLadder) {
+        if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
@@ -220,7 +224,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 攻击D
     public void AttackDEnter() {
-        if (_grounded && !IsRolling() && !_onLadder) {
+        if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
             _animator.SetInteger(AParameters.ATTACKSTAT, 3);
             // TODO 攻击判定
 
@@ -232,14 +236,14 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跳跃攻击
     public void JumpAttack() {
-        if (!_grounded) {
+        if (!_isGrounded) {
             _animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 0);
         }
     }
     // 翻滚
     public void Roll() {
-        if (_grounded && !IsAttacking() && !_onLadder) {
-            _rolling = true;
+        if (_isGrounded && !IsAttacking() && !_isOnLadder) {
+            _isRolling = true;
             _animator.SetTrigger(AParameters.ROLL);
         }
     }

@@ -72,13 +72,13 @@ public class Player : MonoBehaviour {
 
         //_grounded = false; // 老代码
         if (hit != null && !hit.isTrigger) {
-            Managers.Player._grounded = true;
+            Managers.Player._isGrounded = true;
             _animator.SetBool(AParameters.GROUND, true);
-            Managers.Player._jumping = false;
+            Managers.Player._isJumping = false;
             
         } else {
-            Managers.Player._grounded = false;
-            Managers.Player._jumping = true;
+            Managers.Player._isGrounded = false;
+            Managers.Player._isJumping = true;
             _animator.SetBool(AParameters.GROUND, false);
         }
         // 跳跃
