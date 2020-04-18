@@ -62,8 +62,17 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_C) ||
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
     }
-    //跳跃攻击
-    public void AddForce(float force = 0) {
+    // 添加向前的力
+    public void AddFrontForce(float force = 0) {
+        if(force == 0) {
+            _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 9, _body.velocity.y);
+        } else {
+            _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * force, _body.velocity.y);
+        }
+            
+    }
+    // 跳跃攻击
+    public void AddUpForce(float force = 0) {
         //print("add force" + force);
         if(Mathf.Approximately(force,0)) {
             if(_body.velocity.y >= 0) {
@@ -136,7 +145,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void OnRollGoing() {
         //_rolling = true;
         //_animator.SetTrigger(AParameters.ROLL);
-        _body.velocity = new Vector2((Forward.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
+        _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 7, _body.velocity.y);
     }
     // 退出翻滚状态
     public void OnRollExit() {
@@ -146,7 +155,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     // 控制朝向
     public void Turn(float deltaX) {
         print("turn,deltaX:" + deltaX);
-        if (!IsRolling()) { // 翻滚时不能转向
+        if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
+            && !IsAttacking()
+            && !_isOnLadder) { 
             player.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
                 //do turn left
@@ -236,7 +247,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跳跃攻击
     public void JumpAttack() {
-        if (!_isGrounded) {
+        if (!_isGrounded && _isJumping) {
             _animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 0);
         }
     }

@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
     //private float _ladderX;
     private float _deltaX;
     private float _deltaY;
-    private string _currentStat;//无用代码
+    private string _currentStat;//无用代码 
 
     // Start is called before the first frame update
     void Start() {
@@ -70,7 +70,6 @@ public class Player : MonoBehaviour {
 
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
-        //_grounded = false; // 老代码
         if (hit != null && !hit.isTrigger) {
             Managers.Player._isGrounded = true;
             _animator.SetBool(AParameters.GROUND, true);
