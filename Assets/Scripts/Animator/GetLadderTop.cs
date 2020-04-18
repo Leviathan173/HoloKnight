@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//  从梯子上方离开
 public class GetLadderTop : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -18,7 +20,8 @@ public class GetLadderTop : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         animator.ResetTrigger(AParameters.LADDER_TOP);
-        animator.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
+        //animator.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
+        Managers.Player._onLadder = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

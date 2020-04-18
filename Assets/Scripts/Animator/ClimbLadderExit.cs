@@ -18,7 +18,9 @@ public class ClimbLadderExit : StateMachineBehaviour
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        animator.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
+        //animator.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
+        // 离开梯子
+        Managers.Player._onLadder = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
