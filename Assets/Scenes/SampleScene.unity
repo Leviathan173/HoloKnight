@@ -411,8 +411,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b9d97389cc01f4099efb6178547f45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Forward: {fileID: 205475139}
-  Back: {fileID: 776963022}
   speed: 3
   jumpForce: 12
 --- !u!1 &158527607
@@ -1577,6 +1575,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 135675987}
+  Back: {fileID: 776963022}
+  Forward: {fileID: 205475139}
+  jumpForce: 12
 --- !u!1 &2141930902
 GameObject:
   m_ObjectHideFlags: 0
