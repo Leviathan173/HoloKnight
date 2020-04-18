@@ -85,7 +85,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         _body.gravityScale = 3;
         _boxCollider.isTrigger = false;
         print("robot!!!");
-        _body.velocity = new Vector2((Back.transform.position.x - gameObject.transform.position.x) * 7, _body.velocity.y);
+        _body.velocity = new Vector2((Back.transform.position.x - player.transform.position.x) * 7, _body.velocity.y);
     }
     public void LadderMoveUp() {
         if (_reachTopLadder) {
@@ -94,9 +94,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             //_animator.ResetTrigger(AParameters.LADDER_TOP);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
-            gameObject.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, gameObject.transform.position.z);
+            player.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, player.transform.position.z);
         } else {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.05f, gameObject.transform.position.z);
+            player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.05f, player.transform.position.z);
         }
     }
     public void LadderMoveDown() {
@@ -110,7 +110,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
             _body.velocity = new Vector2(_ladderBottomPos.x / 3, _ladderBottomPos.y);
         } else {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.05f, gameObject.transform.position.z);
+            player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 0.05f, player.transform.position.z);
         }
     }
     // 爬梯
@@ -141,16 +141,17 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 控制朝向
     public void Turn(float deltaX) {
+        print("turn,deltaX:" + deltaX);
         if (!IsRolling()) {
-            transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
+            player.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
             if (_facing_right && Mathf.Sign(deltaX) < 0) {
                 //do turn left
                 _facing_right = !_facing_right;
-                transform.position = new Vector3(transform.position.x - _width, transform.position.y, transform.position.z);
+                player.transform.position = new Vector3(player.transform.position.x - _width, player.transform.position.y, player.transform.position.z);
             } else if (!_facing_right && Mathf.Sign(deltaX) > 0) {
                 //do turn right
                 _facing_right = !_facing_right;
-                transform.position = new Vector3(transform.position.x + _width, transform.position.y, transform.position.z);
+                player.transform.position = new Vector3(player.transform.position.x + _width, player.transform.position.y, player.transform.position.z);
             }
         }
     }
