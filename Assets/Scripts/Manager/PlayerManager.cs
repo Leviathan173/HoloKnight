@@ -43,6 +43,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         jumpStat = -1;
         _reachTopLadder = false;
         _reachBottomLadder = false;
+        _facing_right = true;
         _onLadder = false;
         _hasLadder = false;
         _ladderX = 0;
@@ -170,7 +171,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跑动
     public void Run(float deltaX) {
-        while (new Vector2(deltaX, _body.velocity.y) != Vector2.zero 
+        if (new Vector2(deltaX, _body.velocity.y) != Vector2.zero
             && !_jumping && !IsAttacking() && !IsRolling() && _grounded && !_onLadder) {
             _running = true;
             _body.velocity = new Vector2(new Vector2(deltaX, _body.velocity.y).x * 2, _body.velocity.y);

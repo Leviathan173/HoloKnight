@@ -58,27 +58,9 @@ public class Player : MonoBehaviour {
         _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX));
         // 当获取不为零的横向输入时，判断转向与移动
         if (!Mathf.Approximately(_deltaX, 0)) {
-
-            //transform.localScale = new Vector3(Mathf.Sign(_deltaX) * 3, 3, 3);
-            //if (_facing_right && Mathf.Sign(_deltaX) < 0) {
-            //    //do turn left
-            //    _facing_right = !_facing_right;
-            //    transform.position = new Vector3(transform.position.x - _width, transform.position.y, transform.position.z);
-            //} else if (!_facing_right && Mathf.Sign(_deltaX) > 0) {
-            //    //do turn right
-            //    _facing_right = !_facing_right;
-            //    transform.position = new Vector3(transform.position.x + _width, transform.position.y, transform.position.z);
-            //}
             Managers.Player.Turn(_deltaX);
             Managers.Player.Move(_deltaX);
         }
-
-        ////移动
-        //Vector2 movement = new Vector2(_deltaX, _body.velocity.y );
-        //if (movement != Vector2.zero && !_running && !_jumping && !IsAttacking() && !IsRolling() 
-        //    && !_rolling && _grounded && !_onLadder) {
-        //    _body.velocity = movement;
-        //}
 
         // 跳跃条件
         Vector3 max = _boxCollider.bounds.max;
@@ -100,11 +82,6 @@ public class Player : MonoBehaviour {
             _animator.SetBool(AParameters.GROUND, false);
         }
         // 跳跃
-        //if (Input.GetKeyDown(KeyCode.Space) && _grounded && !IsAttacking() && !IsRolling() && !_onLadder) {
-        //    _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        //    _grounded = false;
-        //    //_animator.SetBool("Grounded", false);
-        //}
         if (Input.GetKeyDown(KeyCode.Space)) {
             Managers.Player.Jump();
         }
@@ -114,17 +91,8 @@ public class Player : MonoBehaviour {
         _boxCollider.size = new Vector2(0.33f, 0.63f);
 
         // 跑动
-        //if (Input.GetKey(KeyCode.LeftShift) && movement != Vector2.zero && !_jumping && !IsAttacking() && !IsRolling() && _grounded && !_onLadder) {
-        //    _running = true;
-        //    _body.velocity = new Vector2(movement.x*2,_body.velocity.y);
-        //    _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX * 2));
-        //    //print(_animator.GetFloat(AParameters.SPEED));
-        //}
-        //if (Input.GetKeyUp(KeyCode.LeftShift)) {
-        //    _running = false;
-        //}
         //  Warning！！！这段代码大概率不会正常工作
-        if (Input.GetKeyDown(KeyCode.LeftShift)){
+        if (Input.GetKey(KeyCode.LeftShift)){
             Managers.Player.Run(_deltaX);
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
