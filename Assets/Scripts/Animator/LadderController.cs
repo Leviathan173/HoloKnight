@@ -16,7 +16,6 @@ public class LadderController : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (Input.GetKeyDown(KeyCode.Space)) {
             animator.SetTrigger(AParameters.FALL_DOWN_LADDER);
-            //animator.SendMessage("FallDownLadder", SendMessageOptions.DontRequireReceiver);
             Managers.Player.FallDownLadder();
         }
         float delteY = Input.GetAxis("Vertical");
@@ -24,13 +23,11 @@ public class LadderController : StateMachineBehaviour
             if (delteY > 0) {
                 //animator.SetInteger(AParameters.ANIME_PLAY_DELTA, 1); // 默认就是1
                 animator.SetInteger(AParameters.CLIMB_STAT, 2);
-                //animator.SendMessage("LadderMoveUp", SendMessageOptions.DontRequireReceiver);
                 Managers.Player.LadderMoveUp();
                 
             } else {
                 animator.SetFloat(AParameters.ANIME_PLAY_DELTA, -1);
                 animator.SetInteger(AParameters.CLIMB_STAT, 2);
-                //animator.SendMessage("LadderMoveDown", SendMessageOptions.DontRequireReceiver);
                 Managers.Player.LadderMoveDown();
             }
         }
@@ -47,9 +44,9 @@ public class LadderController : StateMachineBehaviour
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        //Debug.Log("exit ladder");
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //    Debug.Log("exit ladder");
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

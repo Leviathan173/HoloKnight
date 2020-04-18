@@ -19,9 +19,8 @@ public class GetDownLadder : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         animator.ResetTrigger(AParameters.LADDER_BOTTOM);
-        //animator.SendMessage("ExitLadder", SendMessageOptions.DontRequireReceiver);
         // 离开梯子
-        Managers.Player._onLadder = false;
+        Managers.Player._isOnLadder = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
