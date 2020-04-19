@@ -155,7 +155,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 控制朝向
     public void Turn(float deltaX) {
-        print("turn,deltaX:" + deltaX);
+        //print("turn,deltaX:" + deltaX);
         if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
             && !IsAttacking()
             && !_isOnLadder) { 
@@ -181,6 +181,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跳跃
     public void Jump() {
+        print("grounded:" + _isGrounded);
+        print("!IsAttacking():" + IsAttacking());
+        print("IsRolling:" + IsRolling());
+        print("_isOnLadder:" + _isOnLadder);
         if (_isGrounded && !IsAttacking() && !IsRolling() && !_isOnLadder) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;

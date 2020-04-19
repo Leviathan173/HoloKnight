@@ -35,6 +35,12 @@ public class Player : MonoBehaviour {
             Managers.Player.Move(_deltaX);
         }
 
+        // 不在倾斜的平台上滑动
+        // TODO
+        if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
+            //_body.gravityScale = (Managers.Player._isGrounded && Mathf.Approximately(_deltaX, 0)) ? 0 : 3;
+            //_body.velocity = Vector2.zero;
+        }
         // 跳跃条件
         Vector3 max = _boxCollider.bounds.max;
         Vector3 min = _boxCollider.bounds.min;
@@ -42,12 +48,12 @@ public class Player : MonoBehaviour {
         Vector2 corner2 = new Vector2(min.x, min.y - .3f);
 
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
-
-        if (hit != null && !hit.isTrigger) {
-            Managers.Player._isGrounded = true;
-            _animator.SetBool(PAParameters.GROUND, true);
-            Managers.Player._isJumping = false;
-            
+        if(hit != null) {
+            if (!hit.isTrigger) {
+                Managers.Player._isGrounded = true;
+                _animator.SetBool(PAParameters.GROUND, true);
+                Managers.Player._isJumping = false;
+            } 
         } else {
             Managers.Player._isGrounded = false;
             Managers.Player._isJumping = true;

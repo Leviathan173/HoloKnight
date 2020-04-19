@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy1Manager : MonoBehaviour, IGameManager {
     public ManagerStatus status { get; private set; }
 
-    [SerializeField] private Enemy1 Enemy1;
+    [SerializeField] private SKeleton Enemy1;
     [SerializeField] private GameObject Back;
     [SerializeField] private GameObject Forward;
 
@@ -53,8 +53,8 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
 
     //攻击
     public bool IsAttacking() {
-        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat1.ENEMY_1_ATTACK_A) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat1.ENEMY_1_ATTACK_B));
+        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_A) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_B));
     }
     // 添加向前的力
     public void AddFrontForce(float force = 0) {
@@ -129,7 +129,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     // 他需要持续的调用
     // 每次调用执行一次
     public void Move(float deltaX) {
-        _animator.SetFloat(EAParameters1.SPEED, 1.0f);
+        _animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
         if (movement != Vector2.zero  && !_isJumping && !IsAttacking() 
              && _isGrounded && !_isOnLadder) {
@@ -148,37 +148,41 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     // 攻击A
     public void AttackAEnter() {
         if (_isGrounded &&  !_isOnLadder && !_isJumping) {
-            _animator.SetTrigger(EAParameters1.ATTACK_A);
+            _animator.SetTrigger(EAParameters.ATTACK_A);
             // TODO 攻击判定
         }
     }
     // 攻击A取消
     public void AttackAExit() {
-        _animator.ResetTrigger(EAParameters1.ATTACK_A);
+        _animator.ResetTrigger(EAParameters.ATTACK_A);
     }
     // 攻击B
     public void AttackBEnter() {
         if (_isGrounded  && !_isOnLadder && !_isJumping) {
-            _animator.SetTrigger(EAParameters1.ATTACK_B);
+            _animator.SetTrigger(EAParameters.ATTACK_B);
             // TODO 攻击判定
 
         }
     }
     // 攻击B取消
     public void AttackBExit() {
-        _animator.ResetTrigger(EAParameters1.ATTACK_B);
+        _animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
     // 受击
     // TODO 把传入的damage进行判断
     public void GetHit(float damage) {
-        _animator.SetTrigger(EAParameters1.GETHIT);
+        _animator.SetTrigger(EAParameters.HIT);
     }
 
     // 死亡
     // TODO 消除敌人并给予玩家经验
     public void Death() {
-        _animator.SetTrigger(EAParameters1.GO_DEAD);
+        _animator.SetTrigger(EAParameters.DEAD);
+    }
+
+    public void Enemy1_Destroy() {
+        Enemy1.Enemy1_Death();
     }
 
 }

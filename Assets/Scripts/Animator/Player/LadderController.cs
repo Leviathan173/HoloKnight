@@ -34,13 +34,9 @@ public class LadderController : StateMachineBehaviour
     }
 
     public static bool NotInExitOrStartStat(Animator animator) {
-        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.LADDER_BOTTOM ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.CLIMB_TO_LADDER_TOP_END ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.MOVE_IN_LADDER) {
-            return true;
-        } else {
-            return false;
-        }
+        return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.LADDER_BOTTOM &&
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.CLIMB_TO_LADDER_TOP_END &&
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != PAStat.MOVE_IN_LADDER);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
