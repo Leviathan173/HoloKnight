@@ -16,7 +16,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     public Vector2 _ladderTopPos { get; set; }
     public Vector2 _ladderBottomPos { get; set; }
-    public int jumpStat {get;set;}
+    public int jumpStat { get; set; }
     public bool _isReachTopLadder { get; set; }
     public bool _isReachBottomLadder { get; set; }
     public bool _isOnLadder { get; set; }
@@ -31,15 +31,17 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public float jumpForce = 12.0f;
     //public float speed = 3.0f;
 
-
     public ManagerStatus status { get; private set; }
 
     public void Startup() {
         print("starting PlayerManager...");
+        
+
         _body = player.GetComponent<Rigidbody2D>();
         _boxCollider = player.GetComponent<BoxCollider2D>();
         _animator = player.GetComponent<Animator>();
         _width = player.GetComponent<SpriteRenderer>().bounds.size.x / 3;
+
         JumpAttackAirBounce = 12.0f;
         jumpStat = -1;
         _isReachTopLadder = false;

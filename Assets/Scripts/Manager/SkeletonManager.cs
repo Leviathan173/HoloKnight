@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1Manager : MonoBehaviour, IGameManager {
+public class SkeletonManager : MonoBehaviour, IGameManager {
     public ManagerStatus status { get; private set; }
 
-    [SerializeField] private SKeleton Enemy1;
+    [SerializeField] private Skeleton skleton;
     [SerializeField] private GameObject Back;
     [SerializeField] private GameObject Forward;
 
@@ -30,12 +30,14 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     public float jumpForce = 0.001f;
 
     public void Startup() {
-        print("starting enemy manager...");
+        print("starting Skeleton manager...");
 
-        _body = Enemy1.GetComponent<Rigidbody2D>();
-        _boxCollider = Enemy1.GetComponent<BoxCollider2D>();
-        _animator = Enemy1.GetComponent<Animator>();
-        _width = Enemy1.GetComponent<SpriteRenderer>().bounds.size.x / 3;
+        
+
+        _body = skleton.GetComponent<Rigidbody2D>();
+        _boxCollider = skleton.GetComponent<BoxCollider2D>();
+        _animator = skleton.GetComponent<Animator>();
+        _width = skleton.GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -59,9 +61,9 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     // 添加向前的力
     public void AddFrontForce(float force = 0) {
         if (force == 0) {
-            _body.velocity = new Vector2((Forward.transform.position.x - Enemy1.transform.position.x) * 9, _body.velocity.y);
+            _body.velocity = new Vector2((Forward.transform.position.x - skleton.transform.position.x) * 9, _body.velocity.y);
         } else {
-            _body.velocity = new Vector2((Forward.transform.position.x - Enemy1.transform.position.x) * force, _body.velocity.y);
+            _body.velocity = new Vector2((Forward.transform.position.x - skleton.transform.position.x) * force, _body.velocity.y);
         }
 
     }
@@ -71,7 +73,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
         _body.gravityScale = 3;
         _boxCollider.isTrigger = false;
         print("robot!!!");
-        _body.velocity = new Vector2((Back.transform.position.x - Enemy1.transform.position.x) * 7, _body.velocity.y);
+        _body.velocity = new Vector2((Back.transform.position.x - skleton.transform.position.x) * 7, _body.velocity.y);
     }
     public void LadderMoveUp() {
         if (_isReachTopLadder) {
@@ -80,9 +82,9 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
             //_animator.ResetTrigger(PAParameters.LADDER_TOP);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
-            Enemy1.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, Enemy1.transform.position.z);
+            skleton.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, skleton.transform.position.z);
         } else {
-            Enemy1.transform.position = new Vector3(Enemy1.transform.position.x, Enemy1.transform.position.y + 0.05f, Enemy1.transform.position.z);
+            skleton.transform.position = new Vector3(skleton.transform.position.x, skleton.transform.position.y + 0.05f, skleton.transform.position.z);
         }
     }
     public void LadderMoveDown() {
@@ -95,7 +97,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
             //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
             _body.velocity = new Vector2(_ladderBottomPos.x / 3, _ladderBottomPos.y);
         } else {
-            Enemy1.transform.position = new Vector3(Enemy1.transform.position.x, Enemy1.transform.position.y - 0.05f, Enemy1.transform.position.z);
+            skleton.transform.position = new Vector3(skleton.transform.position.x, skleton.transform.position.y - 0.05f, skleton.transform.position.z);
         }
     }
     爬梯
@@ -113,15 +115,15 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
         print("turn,deltaX:" + deltaX);
         if (!IsAttacking()
             && !_isOnLadder) {
-            Enemy1.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
+            skleton.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
                 //do turn left
                 _isFacingRight = !_isFacingRight;
-                Enemy1.transform.position = new Vector3(Enemy1.transform.position.x - _width, Enemy1.transform.position.y, Enemy1.transform.position.z);
+                skleton.transform.position = new Vector3(skleton.transform.position.x - _width, skleton.transform.position.y, skleton.transform.position.z);
             } else if (!_isFacingRight && Mathf.Sign(deltaX) > 0) {
                 //do turn right
                 _isFacingRight = !_isFacingRight;
-                Enemy1.transform.position = new Vector3(Enemy1.transform.position.x + _width, Enemy1.transform.position.y, Enemy1.transform.position.z);
+                skleton.transform.position = new Vector3(skleton.transform.position.x + _width, skleton.transform.position.y, skleton.transform.position.z);
             }
         }
     }
@@ -140,7 +142,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     public void Jump() {
         if (_isGrounded && !IsAttacking()  /*&& !_isOnLadder*/) {
             _body.AddForce(Vector2.up* jumpForce, ForceMode2D.Impulse);
-            //_body.AddForce(new Vector2(Forward.transform.position.x - Enemy1.transform.position.x, gameObject.transform.position.y) * jumpForce, ForceMode2D.Impulse);
+            //_body.AddForce(new Vector2(Forward.transform.position.x - skleton.transform.position.x, gameObject.transform.position.y) * jumpForce, ForceMode2D.Impulse);
             AddFrontForce(24);
             _isGrounded = false;
         }
@@ -182,7 +184,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     }
 
     public void Enemy1_Destroy() {
-        Enemy1.Enemy1_Death();
+        skleton.Enemy1_Death();
     }
 
 }

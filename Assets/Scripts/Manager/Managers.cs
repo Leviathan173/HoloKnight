@@ -3,24 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))]
-[RequireComponent(typeof(Enemy1Manager))]
+[RequireComponent(typeof(SkeletonManager))]
 //[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
 	public static PlayerManager Player {get; private set;}
-    public static Enemy1Manager Enemy1 { get; private set; }
+    public static SkeletonManager Skeleton { get; private set; }
     //public static InventoryManager Inventory {get; private set;}
 
     private List<IGameManager> _startSequence;
 	
 	void Awake() {
 		Player = GetComponent<PlayerManager>();
-        Enemy1 = GetComponent<Enemy1Manager>();
+        Skeleton = GetComponent<SkeletonManager>();
 		//Inventory = GetComponent<InventoryManager>();
 
 		_startSequence = new List<IGameManager>();
+
 		_startSequence.Add(Player);
-        _startSequence.Add(Enemy1);
+        _startSequence.Add(Skeleton);
 		//_startSequence.Add(Inventory);
 
 		StartCoroutine(StartupManagers());
@@ -54,4 +55,12 @@ public class Managers : MonoBehaviour {
 		
 		Debug.Log("All managers started up");
 	}
+
+    public void AddManager(IGameManager manager) {
+        _startSequence.Add(manager);
+    }
+
+    public void GetSkletonManager(string name) {
+        // TODO 获取相应manager
+    }
 }

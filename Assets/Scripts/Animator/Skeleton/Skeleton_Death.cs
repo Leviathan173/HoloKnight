@@ -17,7 +17,7 @@ public class Enemy1_Death : StateMachineBehaviour
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        //Managers.Enemy1.Enemy1_Destroy();
+        //Managers.skleton.Enemy1_Destroy();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

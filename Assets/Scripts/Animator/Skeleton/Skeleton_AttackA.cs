@@ -6,7 +6,7 @@ public class Enemy1_AttackA : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Managers.Enemy1.AttackAExit();
+        Managers.Skeleton.AttackAExit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

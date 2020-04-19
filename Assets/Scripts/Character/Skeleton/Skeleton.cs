@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SKeleton : MonoBehaviour
+public class Skeleton : MonoBehaviour
 {
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
@@ -33,13 +33,13 @@ public class SKeleton : MonoBehaviour
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
         if (hit != null && !hit.isTrigger) {
-            Managers.Enemy1._isGrounded = true;
+            Managers.Skeleton._isGrounded = true;
             _animator.SetBool(EAParameters.GROUNDED, true);
-            Managers.Enemy1._isJumping = false;
+            Managers.Skeleton._isJumping = false;
 
         } else {
-            Managers.Enemy1._isGrounded = false;
-            Managers.Enemy1._isJumping = true;
+            Managers.Skeleton._isGrounded = false;
+            Managers.Skeleton._isJumping = true;
             _animator.SetBool(EAParameters.GROUNDED, false);
         }
 
@@ -49,32 +49,32 @@ public class SKeleton : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            Managers.Enemy1.Turn(SPEED);
-            Managers.Enemy1.Move(SPEED);
+            Managers.Skeleton.Turn(SPEED);
+            Managers.Skeleton.Move(SPEED);
         }
 
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            Managers.Enemy1.Jump();
+            Managers.Skeleton.Jump();
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            Managers.Enemy1.AttackAEnter();
+            Managers.Skeleton.AttackAEnter();
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            Managers.Enemy1.AttackBEnter();
+            Managers.Skeleton.AttackBEnter();
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            Managers.Enemy1.GetHit(0);
+            Managers.Skeleton.GetHit(0);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            Managers.Enemy1.Death();
+            Managers.Skeleton.Death();
         }
     }
 
