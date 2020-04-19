@@ -27,7 +27,7 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     public bool _isJumping { get; set; }
     public float _ladderX { get; set; }
     public float _width { get; set; }
-    public float jumpForce = 12.0f;
+    public float jumpForce = 0.001f;
 
     public void Startup() {
         print("starting enemy manager...");
@@ -125,7 +125,9 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
             }
         }
     }
-    //移动
+    // 移动
+    // 他需要持续的调用
+    // 每次调用执行一次
     public void Move(float deltaX) {
         _animator.SetFloat(EAParameters1.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
@@ -138,32 +140,45 @@ public class Enemy1Manager : MonoBehaviour, IGameManager {
     public void Jump() {
         if (_isGrounded && !IsAttacking()  /*&& !_isOnLadder*/) {
             _body.AddForce(Vector2.up* jumpForce, ForceMode2D.Impulse);
-            _body.AddForce(new Vector2(Forward.transform.position.x - Enemy1.transform.position.x, gameObject.transform.position.y) * jumpForce, ForceMode2D.Impulse);
+            //_body.AddForce(new Vector2(Forward.transform.position.x - Enemy1.transform.position.x, gameObject.transform.position.y) * jumpForce, ForceMode2D.Impulse);
+            AddFrontForce(24);
             _isGrounded = false;
         }
     }
     // 攻击A
     public void AttackAEnter() {
         if (_isGrounded &&  !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(PAParameters.ATTACKSTAT, 0);
+            _animator.SetTrigger(EAParameters1.ATTACK_A);
             // TODO 攻击判定
         }
     }
     // 攻击A取消
     public void AttackAExit() {
-        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
+        _animator.ResetTrigger(EAParameters1.ATTACK_A);
     }
     // 攻击B
     public void AttackBEnter() {
         if (_isGrounded  && !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(PAParameters.ATTACKSTAT, 1);
+            _animator.SetTrigger(EAParameters1.ATTACK_B);
             // TODO 攻击判定
 
         }
     }
     // 攻击B取消
     public void AttackBExit() {
-        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
+        _animator.ResetTrigger(EAParameters1.ATTACK_B);
+    }
+
+    // 受击
+    // TODO 把传入的damage进行判断
+    public void GetHit(float damage) {
+        _animator.SetTrigger(EAParameters1.GETHIT);
+    }
+
+    // 死亡
+    // TODO 消除敌人并给予玩家经验
+    public void Death() {
+        _animator.SetTrigger(EAParameters1.GO_DEAD);
     }
 
 }
