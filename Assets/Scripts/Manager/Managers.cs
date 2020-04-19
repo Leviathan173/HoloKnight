@@ -7,6 +7,7 @@ using System.Collections.Generic;
 //[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
+    public static Managers managers { get; private set; }
 	public static PlayerManager Player {get; private set;}
     public static SkeletonManager Skeleton { get; private set; }
     //public static InventoryManager Inventory {get; private set;}
@@ -14,10 +15,12 @@ public class Managers : MonoBehaviour {
     private List<IGameManager> _startSequence;
 	
 	void Awake() {
+        managers = this;
 		Player = GetComponent<PlayerManager>();
         Skeleton = GetComponent<SkeletonManager>();
 		//Inventory = GetComponent<InventoryManager>();
 
+        // TODO 转换为字典类型
 		_startSequence = new List<IGameManager>();
 
 		_startSequence.Add(Player);
