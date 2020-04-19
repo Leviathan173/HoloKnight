@@ -3,20 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(Enemy1Manager))]
 //[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
 	public static PlayerManager Player {get; private set;}
-	//public static InventoryManager Inventory {get; private set;}
+    public static Enemy1Manager Enemy1 { get; private set; }
+    //public static InventoryManager Inventory {get; private set;}
 
-	private List<IGameManager> _startSequence;
+    private List<IGameManager> _startSequence;
 	
 	void Awake() {
 		Player = GetComponent<PlayerManager>();
+        Enemy1 = GetComponent<Enemy1Manager>();
 		//Inventory = GetComponent<InventoryManager>();
 
 		_startSequence = new List<IGameManager>();
 		_startSequence.Add(Player);
+        _startSequence.Add(Enemy1);
 		//_startSequence.Add(Inventory);
 
 		StartCoroutine(StartupManagers());

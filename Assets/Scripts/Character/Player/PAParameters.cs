@@ -1,4 +1,4 @@
-﻿public class AParameters {
+﻿public class PAParameters {
     //      初始化状态, trigger
     public const string IDLE = "Idle";
     /*    攻击种类，int

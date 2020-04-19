@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//  从梯子下方离开
-public class GetDownLadder : StateMachineBehaviour
+public class Idle : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //animator.ResetTrigger(AParameters.LADDER_BOTTOM);
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        Managers.Player.jumpStat = -1;
+        animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, -1);
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,11 +17,10 @@ public class GetDownLadder : StateMachineBehaviour
     //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        animator.ResetTrigger(AParameters.LADDER_BOTTOM);
-        // 离开梯子
-        Managers.Player._isOnLadder = false;
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

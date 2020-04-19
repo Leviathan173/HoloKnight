@@ -29,7 +29,8 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public float _ladderX { get; set; }
     public float _width { get; set; }
     public float jumpForce = 12.0f;
-    
+    //public float speed = 3.0f;
+
 
     public ManagerStatus status { get; private set; }
 
@@ -57,10 +58,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     //攻击
     public bool IsAttacking() {
-        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_A) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_B) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_C) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ATTACK_D));
+        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_A) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_B) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_C) ||
+            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_D));
     }
     // 添加向前的力
     public void AddFrontForce(float force = 0) {
@@ -98,9 +99,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     public void LadderMoveUp() {
         if (_isReachTopLadder) {
-            _animator.SetInteger(AParameters.CLIMB_STAT, -1);
-            _animator.SetTrigger(AParameters.LADDER_TOP);
-            //_animator.ResetTrigger(AParameters.LADDER_TOP);
+            _animator.SetInteger(PAParameters.CLIMB_STAT, -1);
+            _animator.SetTrigger(PAParameters.LADDER_TOP);
+            //_animator.ResetTrigger(PAParameters.LADDER_TOP);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
             player.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, player.transform.position.z);
@@ -111,9 +112,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void LadderMoveDown() {
         if (_isReachBottomLadder) {
             print("leave ladder due to reach bottom and reaceve a down cmd");
-            _animator.SetInteger(AParameters.CLIMB_STAT, -1);
-            _animator.SetTrigger(AParameters.LADDER_BOTTOM);
-            //_animator.ResetTrigger(AParameters.LADDER_BOTTOM);
+            _animator.SetInteger(PAParameters.CLIMB_STAT, -1);
+            _animator.SetTrigger(PAParameters.LADDER_BOTTOM);
+            //_animator.ResetTrigger(PAParameters.LADDER_BOTTOM);
             _body.gravityScale = 3;
             _boxCollider.isTrigger = false;
             //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
@@ -129,7 +130,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
              * 获取梯子的xy，改变玩家xy，切换动画，关闭重力
              * 
              */
-            _animator.SetInteger(AParameters.CLIMB_STAT, 0);
+            _animator.SetInteger(PAParameters.CLIMB_STAT, 0);
             _body.gravityScale = 0;
             _body.velocity = Vector2.zero;
             _boxCollider.isTrigger = true;
@@ -138,19 +139,19 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     // 翻滚
     // 是否在翻滚中，用于转向判断
     public bool IsRolling() {
-        return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(Astat.ROLL);
+        return _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ROLL);
     }
     // 翻滚中每次动画状态更新调用
     // 添加一个朝向翻滚方向的加速度
     public void OnRollGoing() {
         //_rolling = true;
-        //_animator.SetTrigger(AParameters.ROLL);
+        //_animator.SetTrigger(PAParameters.ROLL);
         _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 7, _body.velocity.y);
     }
     // 退出翻滚状态
     public void OnRollExit() {
         _isRolling = false;
-        _animator.ResetTrigger(AParameters.ROLL);
+        _animator.ResetTrigger(PAParameters.ROLL);
     }
     // 控制朝向
     public void Turn(float deltaX) {
@@ -191,7 +192,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded && !_isOnLadder) {
             _isRunning = true;
             _body.velocity = new Vector2(new Vector2(deltaX, _body.velocity.y).x * 2, _body.velocity.y);
-            _animator.SetFloat(AParameters.SPEED, Mathf.Abs(deltaX * 2));
+            _animator.SetFloat(PAParameters.SPEED, Mathf.Abs(deltaX * 2));
         }
     }
     //结束跑动
@@ -201,61 +202,62 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     // 攻击A
     public void AttackAEnter() {
         if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(AParameters.ATTACKSTAT, 0);
+            _animator.SetInteger(PAParameters.ATTACKSTAT, 0);
             // TODO 攻击判定
         }
     }
     // 攻击A取消
     public void AttackAExit() {
-        _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击B
     public void AttackBEnter() {
         if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(AParameters.ATTACKSTAT, 1);
+            _animator.SetInteger(PAParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
         }
     }
     // 攻击B取消
     public void AttackBExit() {
-        _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击C
     public void AttackCEnter() {
         if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(AParameters.ATTACKSTAT, 2);
+            _animator.SetInteger(PAParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
         }
     }
     // 攻击C取消
     public void AttackCExit() {
-        _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击D
     public void AttackDEnter() {
         if (_isGrounded && !IsRolling() && !_isOnLadder && !_isJumping) {
-            _animator.SetInteger(AParameters.ATTACKSTAT, 3);
+            _animator.SetInteger(PAParameters.ATTACKSTAT, 3);
             // TODO 攻击判定
 
         }
     }
     // 攻击D取消
     public void AttackDExit() {
-        _animator.SetInteger(AParameters.ATTACKSTAT, -1);
+        _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 跳跃攻击
     public void JumpAttack() {
         if (!_isGrounded && _isJumping) {
-            _animator.SetInteger(AParameters.JUMP_ATTACK_STAT, 0);
+            _animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
+            _body.velocity = new Vector2(0, _body.velocity.y);
         }
     }
     // 翻滚
     public void Roll() {
         if (_isGrounded && !IsAttacking() && !_isOnLadder) {
             _isRolling = true;
-            _animator.SetTrigger(AParameters.ROLL);
+            _animator.SetTrigger(PAParameters.ROLL);
         }
     }
     

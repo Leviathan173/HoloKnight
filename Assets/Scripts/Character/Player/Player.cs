@@ -8,25 +8,10 @@ public class Player : MonoBehaviour {
     //[SerializeField] private GameObject Back;
 
     public float speed = 3.0f;
-    public float jumpForce = 12.0f;
 
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
-    //private Vector2 _ladderTopPos;
-    //private Vector2 _ladderBottomPos;
-    //private float _width;
-    //private bool _facing_right;
-    //private bool _running;
-    //private bool _jumping;
-    //private bool _grounded;
-    //private bool _rolling;
-    //private bool _hasLadder;
-    //private bool _reachTopLadder;
-    //private bool _onLadder;
-    //private bool _reachBottomLadder;
-    //private int _facingRight;// 1 = true, -1 = false
-    //private float _ladderX;
     private float _deltaX;
     private float _deltaY;
     private string _currentStat;//无用代码 
@@ -35,27 +20,15 @@ public class Player : MonoBehaviour {
     void Start() {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        //_width = GetComponent<SpriteRenderer>().bounds.size.x/3;
         _boxCollider = GetComponent<BoxCollider2D>();
-        //_facing_right = true;
-        //_running = false;
-        //_jumping = false; 
-        //_rolling = false;
-        //_hasLadder = false;
-        //_onLadder = false;
-        //_reachTopLadder = false;
-        //_reachBottomLadder = false;
-        _currentStat = AParameters.IDLE;//无用代码
+        _currentStat = PAParameters.IDLE;//无用代码
     }
 
     // Update is called once per frame
     void Update() {
-        //if(Forward.transform.position.x > Back.transform.position.x) {
-
-        //}
 
         _deltaX = Input.GetAxis("Horizontal") * speed;
-        _animator.SetFloat(AParameters.SPEED, Mathf.Abs(_deltaX));
+        _animator.SetFloat(PAParameters.SPEED, Mathf.Abs(_deltaX));
         // 当获取不为零的横向输入时，判断转向与移动
         if (!Mathf.Approximately(_deltaX, 0)) {
             Managers.Player.Turn(_deltaX);
@@ -72,13 +45,13 @@ public class Player : MonoBehaviour {
 
         if (hit != null && !hit.isTrigger) {
             Managers.Player._isGrounded = true;
-            _animator.SetBool(AParameters.GROUND, true);
+            _animator.SetBool(PAParameters.GROUND, true);
             Managers.Player._isJumping = false;
             
         } else {
             Managers.Player._isGrounded = false;
             Managers.Player._isJumping = true;
-            _animator.SetBool(AParameters.GROUND, false);
+            _animator.SetBool(PAParameters.GROUND, false);
         }
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space)) {

@@ -1,4 +1,4 @@
-﻿public class Astat {
+﻿public class PAStat {
     public const string IDLE = "Idle";
     public const string WALK = "Walk";
     public const string RUN = "Run";
