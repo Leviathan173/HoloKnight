@@ -5,12 +5,20 @@ using UnityEngine;
 public class ManagerRegister : MonoBehaviour
 {
     public static SkeletonManager SkeletonManager;
+    public static SSManager ssManager;
 
 
     public void Register() {
-        SkeletonManager = GetComponent<SkeletonManager>();
+        
+        if (gameObject.name.Contains("Skeleton")) {
+            SkeletonManager = GetComponent<SkeletonManager>();
+            Managers.managers.AddManager(gameObject.name, SkeletonManager);
+        }else if (gameObject.name.Contains("Shield")) {
+            ssManager = GetComponent<SSManager>();
+            Managers.managers.AddManager(gameObject.name, ssManager);
+        }
         //string Id = Md5Sum(gameObject.name);
-        Managers.managers.AddManager(gameObject.name, SkeletonManager);
+        
     }
 
     public static string Md5Sum(string input) {

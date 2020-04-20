@@ -7,9 +7,9 @@ public class Skeleton_AttackA : StateMachineBehaviour
     SkeletonManager skeletonManager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Debug.Log("animator.name" + animator.gameObject.name);
+        //Debug.Log("animator.name" + animator.gameObject.name);
         skeletonManager = (SkeletonManager)Managers.managers.GetManager(animator.gameObject.name);
-        Debug.Log("skeletonManager:" + skeletonManager);
+        //Debug.Log("skeletonManager:" + skeletonManager);
         //Managers.Skeleton.AttackAExit();
         skeletonManager.AttackAExit();
         

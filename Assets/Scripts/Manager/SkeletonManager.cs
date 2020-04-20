@@ -30,7 +30,7 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
     public float jumpForce = 0.001f;
 
     public void Startup() {
-        print("starting Skeleton manager...");
+        //print("starting Skeleton manager...");
 
         
 
