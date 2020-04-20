@@ -11,6 +11,8 @@
     public const string ATTACK_A = "AttackA";
     // 攻击B，trigger
     public const string ATTACK_B = "AttackB";
+    // 攻击C，trigger
+    public const string ATTACK_C = "AttackC";
     // TODO 缓慢行走，float
     // Walk动画播放速度的系数
     public const string WALK_SPEED = "WalkSpeed";

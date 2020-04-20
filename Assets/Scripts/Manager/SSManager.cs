@@ -118,7 +118,7 @@ public class SSManager : MonoBehaviour, IGameManager
         //print("turn,deltaX:" + deltaX);
         if (!IsAttacking()
             && !_isOnLadder) {
-            ss.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
+            ss.transform.localScale = new Vector3(Mathf.Sign(deltaX) * ss.transform.localScale.x, ss.transform.localScale.y, ss.transform.localScale.z);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
                 //do turn left
                 _isFacingRight = !_isFacingRight;

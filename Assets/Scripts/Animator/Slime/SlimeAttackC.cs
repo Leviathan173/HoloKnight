@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeDeath : StateMachineBehaviour
+public class SlimeAttackC : StateMachineBehaviour
 {
     SlimeManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         manager = (SlimeManager)Managers.managers.GetManager(animator.gameObject.name);
-        animator.ResetTrigger(EAParameters.DEAD);
+        manager.AttackCExit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

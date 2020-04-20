@@ -38,7 +38,7 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
         _boxCollider = skleton.GetComponent<BoxCollider2D>();
         _animator = skleton.GetComponent<Animator>();
         _width = skleton.GetComponent<SpriteRenderer>().bounds.size.x / 3;
-        print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
+        //print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -116,7 +116,7 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
         print("turn,deltaX:" + deltaX);
         if (!IsAttacking()
             && !_isOnLadder) {
-            skleton.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
+            skleton.transform.localScale = new Vector3(Mathf.Sign(deltaX) * skleton.transform.localScale.x, skleton.transform.localScale.y, skleton.transform.localScale.z);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
                 //do turn left
                 _isFacingRight = !_isFacingRight;
