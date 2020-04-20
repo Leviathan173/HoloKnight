@@ -10,12 +10,17 @@ public class Skeleton : MonoBehaviour
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
-
+    private ManagerRegister register;
+    private static SkeletonManager skeletonManager;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        register = GetComponent<ManagerRegister>();
+        register.Register();
+        skeletonManager = (SkeletonManager)Managers.managers.GetManager(gameObject.name);
+
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
@@ -33,13 +38,13 @@ public class Skeleton : MonoBehaviour
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
         if (hit != null && !hit.isTrigger) {
-            Managers.Skeleton._isGrounded = true;
+            skeletonManager._isGrounded = true;
             _animator.SetBool(EAParameters.GROUNDED, true);
-            Managers.Skeleton._isJumping = false;
+            skeletonManager._isJumping = false;
 
         } else {
-            Managers.Skeleton._isGrounded = false;
-            Managers.Skeleton._isJumping = true;
+            skeletonManager._isGrounded = false;
+            skeletonManager._isJumping = true;
             _animator.SetBool(EAParameters.GROUNDED, false);
         }
 
@@ -49,32 +54,32 @@ public class Skeleton : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            Managers.Skeleton.Turn(SPEED);
-            Managers.Skeleton.Move(SPEED);
+            skeletonManager.Turn(SPEED);
+            skeletonManager.Move(SPEED);
         }
 
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            Managers.Skeleton.Jump();
+            skeletonManager.Jump();
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            Managers.Skeleton.AttackAEnter();
+            skeletonManager.AttackAEnter();
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            Managers.Skeleton.AttackBEnter();
+            skeletonManager.AttackBEnter();
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            Managers.Skeleton.GetHit(0);
+            skeletonManager.GetHit(0);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            Managers.Skeleton.Death();
+            skeletonManager.Death();
         }
     }
 

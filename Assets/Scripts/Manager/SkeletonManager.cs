@@ -38,6 +38,7 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
         _boxCollider = skleton.GetComponent<BoxCollider2D>();
         _animator = skleton.GetComponent<Animator>();
         _width = skleton.GetComponent<SpriteRenderer>().bounds.size.x / 3;
+        print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;

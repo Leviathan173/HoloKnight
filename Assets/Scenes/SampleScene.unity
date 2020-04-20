@@ -534,6 +534,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1283761218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4970101091730966026, guid: 00febbf318953654dae4b9bc9093420a,
+    type: 3}
+  m_PrefabInstance: {fileID: 4970101092879917640}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1549030561
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,6 +686,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5abd52ac04fc712449540417cfe5e6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1596285787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596285785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b34b8317eb32b145abc5c2075a59471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1596285788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596285785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 691ccfbc9a6a3bc468fba5dd49715fd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skleton: {fileID: 1596285786}
+  Back: {fileID: 1283761218}
+  Forward: {fileID: 825997806}
+  jumpForce: 12
 --- !u!95 &1596285789
 Animator:
   serializedVersion: 3
@@ -1379,6 +1413,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 0}
     - {fileID: 4970101091451928850, guid: 00febbf318953654dae4b9bc9093420a, type: 3}
-    - {fileID: 4970101091451928853, guid: 00febbf318953654dae4b9bc9093420a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 00febbf318953654dae4b9bc9093420a, type: 3}

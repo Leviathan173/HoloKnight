@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1_Death : StateMachineBehaviour
+public class Skeleton_Death : StateMachineBehaviour
 {
+    SkeletonManager skeletonManager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        skeletonManager = (SkeletonManager)Managers.managers.GetManager(animator.gameObject.name);
         animator.ResetTrigger(EAParameters.DEAD);
     }
 

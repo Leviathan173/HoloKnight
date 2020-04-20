@@ -12,27 +12,27 @@ public class Managers : MonoBehaviour {
     public static SkeletonManager Skeleton { get; private set; }
     //public static InventoryManager Inventory {get; private set;}
 
-    private List<IGameManager> _startSequence;
+    private Dictionary<string, IGameManager> _startSequence;
 	
 	void Awake() {
         managers = this;
 		Player = GetComponent<PlayerManager>();
         Skeleton = GetComponent<SkeletonManager>();
-		//Inventory = GetComponent<InventoryManager>();
+        //Inventory = GetComponent<InventoryManager>();
 
-        // TODO 转换为字典类型
-		_startSequence = new List<IGameManager>();
+        //_startSequence = new List<IGameManager>();
+        _startSequence = new Dictionary<string, IGameManager>();
 
-		_startSequence.Add(Player);
-        _startSequence.Add(Skeleton);
+		_startSequence.Add("Player",Player);
+        //_startSequence.Add("Skeleton",Skeleton);
 		//_startSequence.Add(Inventory);
 
 		StartCoroutine(StartupManagers());
 	}
 
 	private IEnumerator StartupManagers() {
-		foreach (IGameManager manager in _startSequence) {
-			manager.Startup();
+		foreach (KeyValuePair<string,IGameManager> manager in _startSequence) {
+            manager.Value.Startup();
 		}
 
 		yield return null;
@@ -44,8 +44,8 @@ public class Managers : MonoBehaviour {
 			int lastReady = numReady;
 			numReady = 0;
 			
-			foreach (IGameManager manager in _startSequence) {
-				if (manager.status == ManagerStatus.Started) {
+			foreach (KeyValuePair<string, IGameManager> manager in _startSequence) {
+				if (manager.Value.status == ManagerStatus.Started) {
 					numReady++;
 				}
 			}
@@ -59,11 +59,22 @@ public class Managers : MonoBehaviour {
 		Debug.Log("All managers started up");
 	}
 
-    public void AddManager(IGameManager manager) {
-        _startSequence.Add(manager);
+    public void AddManager(string name,IGameManager manager) {
+        print("Add new manager "+ name);
+        _startSequence.Add(name, manager);
+        print("setup manager " + name);
+        _startSequence[name].Startup();
+        print("setup finish " + name);
     }
+        
 
-    public void GetSkletonManager(string name) {
-        // TODO 获取相应manager
+    public IGameManager GetManager(string name) {
+        if (_startSequence.ContainsKey(name)) {
+            print("has manager "+ name);
+            return _startSequence[name];
+        } else {
+            print("has not manager "+ name);
+            return null;
+        }
     }
 }
