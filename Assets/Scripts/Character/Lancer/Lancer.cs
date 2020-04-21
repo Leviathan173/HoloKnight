@@ -52,8 +52,8 @@ public class Lancer : MonoBehaviour
         }
 
         // 控制碰撞
-        _boxCollider.offset = collOffset;//new Vector2(-0.2f, -0.15f);
-        _boxCollider.size = collSize;//new Vector2(0.3f, 0.66f);
+        _boxCollider.offset = collOffset;
+        _boxCollider.size = collSize;
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {

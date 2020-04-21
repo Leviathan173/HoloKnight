@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour
+public class Acher : MonoBehaviour
 {
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
@@ -10,17 +10,17 @@ public class Slime : MonoBehaviour
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
+    private ManagerRegister register;
+    private static LancerManager manager;
     private Vector2 collSize;
     private Vector2 collOffset;
-    private ManagerRegister register;
-    private static SlimeManager manager;
 
 
     // Start is called before the first frame update
     void Start() {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        manager = (SlimeManager)Managers.managers.GetManager(gameObject.name);
+        manager = (LancerManager)Managers.managers.GetManager(gameObject.name);
 
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
@@ -32,7 +32,6 @@ public class Slime : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-
         // 跳跃条件
         Vector3 max = _boxCollider.bounds.max;
         Vector3 min = _boxCollider.bounds.min;
@@ -62,17 +61,18 @@ public class Slime : MonoBehaviour
             manager.Move(SPEED);
         }
 
-        // 攻击A
+        // 跳跃
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
+            manager.Jump();
+        }
+
+        // 攻击A
+        if (Input.GetKeyDown(KeyCode.Keypad2)) {
             manager.AttackAEnter();
         }
         // 攻击B
-        if (Input.GetKeyDown(KeyCode.Keypad2) && manager._isGrounded) {
-            manager.AttackBEnter();
-        }
-        // 攻击C
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            manager.AttackCEnter();
+            manager.AttackBEnter();
         }
 
         // 受击

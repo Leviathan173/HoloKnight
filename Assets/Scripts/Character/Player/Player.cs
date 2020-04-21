@@ -15,6 +15,8 @@ public class Player : MonoBehaviour {
     private float _deltaX;
     private float _deltaY;
     private string _currentStat;//无用代码 
+    private Vector2 collSize;
+    private Vector2 collOffset;
 
     // Start is called before the first frame update
     void Start() {
@@ -22,6 +24,9 @@ public class Player : MonoBehaviour {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
         _currentStat = PAParameters.IDLE;//无用代码
+
+        collSize = _boxCollider.size;
+        collOffset = _boxCollider.offset;
     }
 
     // Update is called once per frame
@@ -65,8 +70,8 @@ public class Player : MonoBehaviour {
         }
 
         // 控制碰撞
-            _boxCollider.offset = new Vector2(-0.18f, 0.0f);
-        _boxCollider.size = new Vector2(0.33f, 0.63f);
+        _boxCollider.offset = collOffset;
+        _boxCollider.size = collSize;
 
         // 跑动
         if (Input.GetKey(KeyCode.LeftShift)){

@@ -10,6 +10,8 @@ public class SShield : MonoBehaviour
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
+    private Vector2 collSize;
+    private Vector2 collOffset;
     private ManagerRegister register;
     private static SSManager ssManager;
 
@@ -23,6 +25,9 @@ public class SShield : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
+
+        collSize = _boxCollider.size;
+        collOffset = _boxCollider.offset;
     }
 
     // Update is called once per frame
@@ -47,8 +52,8 @@ public class SShield : MonoBehaviour
         }
 
         // 控制碰撞
-        _boxCollider.offset = new Vector2(-0.17f, -0.16f);
-        _boxCollider.size = new Vector2(0.41f, 0.69f);
+        _boxCollider.offset = collOffset;
+        _boxCollider.size = collSize;
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
