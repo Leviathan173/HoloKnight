@@ -7,6 +7,7 @@ public class ManagerRegister : MonoBehaviour
     public static SkeletonManager SkeletonManager;
     public static SSManager ssManager;
     public static SlimeManager slimeManager;
+    public static LancerManager lancerManager;
 
 
     public void Register() {
@@ -20,6 +21,9 @@ public class ManagerRegister : MonoBehaviour
         }else if (gameObject.name.Contains("Slime")) {
             slimeManager = GetComponent<SlimeManager>();
             Managers.managers.AddManager(gameObject.name, slimeManager);
+        }else if(gameObject.name.Contains("Lancer")) {
+            lancerManager = GetComponent<LancerManager>();
+            Managers.managers.AddManager(gameObject.name, lancerManager);
         }
         //string Id = Md5Sum(gameObject.name);
         
