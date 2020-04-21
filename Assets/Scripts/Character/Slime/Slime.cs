@@ -21,6 +21,7 @@ public class Slime : MonoBehaviour
         register = GetComponent<ManagerRegister>();
         register.Register();
         manager = (SlimeManager)Managers.managers.GetManager(gameObject.name);
+        //print("slime == slime(1) " + Managers.managers.GetManager("Slime").Equals(Managers.managers.GetManager("Slime (1)")).ToString());
 
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();

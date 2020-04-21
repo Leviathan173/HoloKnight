@@ -70,7 +70,7 @@ public class Managers : MonoBehaviour {
 
     public IGameManager GetManager(string name) {
         if (_startSequence.ContainsKey(name)) {
-            print("has manager "+ name);
+            print("return manager name "+ name + " obj :"+_startSequence[name]);
             return _startSequence[name];
         } else {
             print("has not manager "+ name);

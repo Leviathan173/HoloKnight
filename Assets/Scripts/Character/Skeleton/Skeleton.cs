@@ -58,7 +58,8 @@ public class Skeleton : MonoBehaviour
         _boxCollider.size = collSize;
 
         // 移动
-        if (Input.GetKeyDown(KeyCode.Keypad0)) {
+        if (Input.GetKeyDown(KeyCode.M)) {
+            print("skeleton manager:" + skeletonManager + "skeleton name" + gameObject.name);
             skeletonManager.Turn(SPEED);
             skeletonManager.Move(SPEED);
         }

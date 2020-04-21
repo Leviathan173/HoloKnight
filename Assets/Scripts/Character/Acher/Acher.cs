@@ -11,7 +11,7 @@ public class Acher : MonoBehaviour
     private Animator _animator;
     private BoxCollider2D _boxCollider;
     private ManagerRegister register;
-    private static LancerManager manager;
+    private static AcherManager manager;
     private Vector2 collSize;
     private Vector2 collOffset;
 
@@ -20,7 +20,7 @@ public class Acher : MonoBehaviour
     void Start() {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        manager = (LancerManager)Managers.managers.GetManager(gameObject.name);
+        manager = (AcherManager)Managers.managers.GetManager(gameObject.name);
 
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
