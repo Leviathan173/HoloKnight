@@ -18,22 +18,27 @@ public class Slime : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        register = GetComponent<ManagerRegister>();
-        register.Register();
-        manager = (SlimeManager)Managers.managers.GetManager(gameObject.name);
-        //print("slime == slime(1) " + Managers.managers.GetManager("Slime").Equals(Managers.managers.GetManager("Slime (1)")).ToString());
+        if(manager != null) {
+            
+        } else {
+            register = GetComponent<ManagerRegister>();
+            register.Register();
+            manager = (SlimeManager)Managers.managers.GetManager(gameObject.name);
+            //print("slime == slime(1) " + Managers.managers.GetManager("Slime").Equals(Managers.managers.GetManager("Slime (1)")).ToString());
 
-        _body = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _boxCollider = GetComponent<BoxCollider2D>();
+            _body = GetComponent<Rigidbody2D>();
+            _animator = GetComponent<Animator>();
+            _boxCollider = GetComponent<BoxCollider2D>();
 
-        collSize = _boxCollider.size;
-        collOffset = _boxCollider.offset;
+            collSize = _boxCollider.size;
+            collOffset = _boxCollider.offset;
+        }
+        
     }
 
     // Update is called once per frame
     void Update() {
-
+        print("name:" + gameObject.name + "manager:" + manager);
         // 跳跃条件
         Vector3 max = _boxCollider.bounds.max;
         Vector3 min = _boxCollider.bounds.min;

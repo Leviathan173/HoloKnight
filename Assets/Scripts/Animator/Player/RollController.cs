@@ -8,7 +8,7 @@ public class RollController : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         animator.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
         animator.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        Physics2D.SetLayerCollisionMask(LayerMask.NameToLayer("Enemy"), LayerMask.GetMask("Default"));
+        Physics2D.SetLayerCollisionMask(LayerMask.NameToLayer("Enemy"), LayerMask.GetMask(""));
         animator.gameObject.GetComponent<Rigidbody2D>().gravityScale = 3;
         animator.gameObject.GetComponent<Collider2D>().isTrigger = false;
     }

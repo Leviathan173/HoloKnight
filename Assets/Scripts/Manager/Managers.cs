@@ -60,11 +60,16 @@ public class Managers : MonoBehaviour {
 	}
 
     public void AddManager(string name,IGameManager manager) {
-        print("Add new manager "+ name);
-        _startSequence.Add(name, manager);
-        print("setup manager " + name);
-        _startSequence[name].Startup();
-        print("setup finish " + name);
+        if (!_startSequence.ContainsKey(name)) {
+            print("Add new manager " + name);
+            _startSequence.Add(name, manager);
+            print("setup manager " + name);
+            _startSequence[name].Startup();
+            print("setup finish " + name);
+        } else {
+            print("already has such manager");
+        }
+        
     }
         
 

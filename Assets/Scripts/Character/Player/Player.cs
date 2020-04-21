@@ -6,7 +6,6 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     //[SerializeField] private GameObject Forward;
     //[SerializeField] private GameObject Back;
-    [SerializeField] private Slime slimeBase;
 
     public float speed = 3.0f;
 
@@ -133,12 +132,6 @@ public class Player : MonoBehaviour {
         _deltaY = Input.GetAxis("Vertical");
         if (!Mathf.Approximately(_deltaY,0)) {
             Managers.Player.ClimbStart();
-        }
-
-        // 测试用
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            Slime slime = Instantiate(slimeBase, new Vector3(-5, 5, 1), Quaternion.identity) as Slime;
-            slime.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
         
