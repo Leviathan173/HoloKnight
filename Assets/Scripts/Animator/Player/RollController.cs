@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class RollController : StateMachineBehaviour
 {
+    int mask;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        animator.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
-        animator.gameObject.GetComponent<Collider2D>().isTrigger = true;
-
-        Physics2D.SetLayerCollisionMask(LayerMask.NameToLayer("Enemy"), LayerMask.GetMask("Default"));
-        animator.gameObject.GetComponent<Rigidbody2D>().gravityScale = 3;
-        animator.gameObject.GetComponent<Collider2D>().isTrigger = false;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -22,7 +18,8 @@ public class RollController : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         Managers.Player.OnRollExit();
-        Physics2D.SetLayerCollisionMask(LayerMask.NameToLayer("Enemy"), LayerMask.GetMask("Default","Player"));
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), false);
+
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
