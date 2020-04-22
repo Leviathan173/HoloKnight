@@ -40,7 +40,6 @@ public class SSManager : MonoBehaviour, IGameManager
         _boxCollider = ss.GetComponent<BoxCollider2D>();
         _animator = ss.GetComponent<Animator>();
         _width = ss.GetComponent<SpriteRenderer>().bounds.size.x / 3;
-        //print("body:" + _body + "\ncollider:" + _boxCollider + "\nanimator:" + _animator + "\nwidth:" + _width);
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -115,7 +114,6 @@ public class SSManager : MonoBehaviour, IGameManager
 
     // 控制朝向
     public void Turn(float deltaX) {
-        //print("turn,deltaX:" + deltaX);
         if (!IsAttacking()
             && !_isOnLadder) {
             ss.transform.localScale = new Vector3(Mathf.Sign(deltaX) * ss.transform.localScale.x, ss.transform.localScale.y, ss.transform.localScale.z);

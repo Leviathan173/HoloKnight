@@ -140,6 +140,20 @@ public class Player : MonoBehaviour {
 
     }
 
+    private void OnCollisionEnter(Collision2D collision) {
+        print("collider name " + collision.gameObject.name);
+        if (collision.gameObject.name.Contains("E_")) {
+            speed = 0.01f;
+        }
+        
+    }
+
+    private void OnCollisionExit(Collision2D collision) {
+        print("collider name " + collision.gameObject.name);
+        if (collision.gameObject.name.Contains("E_")) {
+            speed = 3.0f;
+        }
+    }
     private void ChangeStat(string changeStat) {
         _animator.ResetTrigger(_currentStat);
         _animator.SetTrigger(changeStat);

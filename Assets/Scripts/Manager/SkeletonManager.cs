@@ -30,7 +30,6 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
     public float jumpForce = 0.001f;
 
     public void Startup() {
-        //print("starting Skeleton manager...");
 
         
 
@@ -38,7 +37,6 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
         _boxCollider = skleton.GetComponent<BoxCollider2D>();
         _animator = skleton.GetComponent<Animator>();
         _width = skleton.GetComponent<SpriteRenderer>().bounds.size.x / 3;
-        //print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
         
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -113,8 +111,6 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
 
     // 控制朝向
     public void Turn(float deltaX) {
-        //print("turn,deltaX:" + deltaX);
-        print("skeleton manager turn : " + deltaX + " name:" + skleton.name);
         if (!IsAttacking()
             && !_isOnLadder) {
             skleton.transform.localScale = new Vector3(Mathf.Sign(deltaX) * skleton.transform.localScale.x, skleton.transform.localScale.y, skleton.transform.localScale.z);
@@ -133,7 +129,6 @@ public class SkeletonManager : MonoBehaviour, IGameManager {
     // 他需要持续的调用
     // 每次调用执行一次
     public void Move(float deltaX) {
-        print("skeleton manager move : " + deltaX + " name:" + skleton.name);
         _animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
         if (movement != Vector2.zero  && !_isJumping && !IsAttacking() 

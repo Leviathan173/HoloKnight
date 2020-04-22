@@ -58,7 +58,6 @@ public class SlimeManager : MonoBehaviour, IGameManager
     }
     // 控制朝向
     public void Turn(float deltaX) {
-        print("turn,deltaX:" + deltaX);
         if (!IsAttacking()) {
             slime.transform.localScale = new Vector3(Mathf.Sign(deltaX) * slime.transform.localScale.x, slime.transform.localScale.y, slime.transform.localScale.z);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {

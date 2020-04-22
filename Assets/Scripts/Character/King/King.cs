@@ -57,7 +57,6 @@ public class King : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.M)) {
-            //print("skeleton manager:" + skeletonManager + "skeleton name" + gameObject.name);
             kingManager.Turn(SPEED);
             kingManager.Move(SPEED);
         }

@@ -76,7 +76,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跳跃攻击
     public void AddUpForce(float force = 0) {
-        //print("add force" + force);
         if(Mathf.Approximately(force,0)) {
             if(_body.velocity.y >= 0) {
                 _body.AddForce(Vector2.up * JumpAttackAirBounce, ForceMode2D.Impulse);
@@ -113,7 +112,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     public void LadderMoveDown() {
         if (_isReachBottomLadder) {
-            print("leave ladder due to reach bottom and reaceve a down cmd");
             _animator.SetInteger(PAParameters.CLIMB_STAT, -1);
             _animator.SetTrigger(PAParameters.LADDER_BOTTOM);
             //_animator.ResetTrigger(PAParameters.LADDER_BOTTOM);
@@ -157,7 +155,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 控制朝向
     public void Turn(float deltaX) {
-        //print("turn,deltaX:" + deltaX);
         if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
             && !IsAttacking()
             && !_isOnLadder) { 
@@ -183,10 +180,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 跳跃
     public void Jump() {
-        print("grounded:" + _isGrounded);
-        print("!IsAttacking():" + IsAttacking());
-        print("IsRolling:" + IsRolling());
-        print("_isOnLadder:" + _isOnLadder);
         if (_isGrounded && !IsAttacking() && !IsRolling() && !_isOnLadder) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;

@@ -5,7 +5,6 @@ using UnityEngine;
 public class ReachLadderEnd : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D collider) {
-        //print("v2 + v2:" + (new Vector2(12, 3) + new Vector2(12, 3)));
         if (gameObject.name.Equals("Top")) {
             Managers.Player._ladderTopPos = GetRealPos(gameObject.transform);
             Managers.Player._isReachTopLadder = true;
@@ -25,9 +24,6 @@ public class ReachLadderEnd : MonoBehaviour
     }
     
     private Vector2 GetRealPos(Transform obj) {
-        //print(obj.parent);
-        //print(obj.parent.transform.parent);
-        //print(obj.parent.transform.parent.transform.parent);
         Vector2 v2 = new Vector2(obj.transform.position.x, obj.transform.position.y);
         return v2;
     }

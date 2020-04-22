@@ -31,7 +31,6 @@ public class KingManager : MonoBehaviour, IGameManager
     public float jumpForce = 0.001f;
 
     public void Startup() {
-        //print("starting Skeleton manager...");
 
 
 
@@ -39,7 +38,6 @@ public class KingManager : MonoBehaviour, IGameManager
         _boxCollider = king.GetComponent<BoxCollider2D>();
         _animator = king.GetComponent<Animator>();
         _width = king.GetComponent<SpriteRenderer>().bounds.size.x / 3;
-        //print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -114,8 +112,6 @@ public class KingManager : MonoBehaviour, IGameManager
 
     // 控制朝向
     public void Turn(float deltaX) {
-        //print("turn,deltaX:" + deltaX);
-        print("skeleton manager turn : " + deltaX + " name:" + king.name);
         if (!IsAttacking()
             && !_isOnLadder) {
             king.transform.localScale = new Vector3(Mathf.Sign(deltaX) * king.transform.localScale.x, king.transform.localScale.y, king.transform.localScale.z);
@@ -134,7 +130,6 @@ public class KingManager : MonoBehaviour, IGameManager
     // 他需要持续的调用
     // 每次调用执行一次
     public void Move(float deltaX) {
-        print("skeleton manager move : " + deltaX + " name:" + king.name);
         _animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, _body.velocity.y);
         if (movement != Vector2.zero && !_isJumping && !IsAttacking()

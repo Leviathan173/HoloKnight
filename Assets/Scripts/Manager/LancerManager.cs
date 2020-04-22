@@ -31,7 +31,6 @@ public class LancerManager : MonoBehaviour, IGameManager
     public float jumpForce = 0.001f;
 
     public void Startup() {
-        //print("starting Skeleton manager...");
 
 
 
@@ -39,7 +38,6 @@ public class LancerManager : MonoBehaviour, IGameManager
         _boxCollider = lancer.GetComponent<BoxCollider2D>();
         _animator = lancer.GetComponent<Animator>();
         _width = lancer.GetComponent<SpriteRenderer>().bounds.size.x / 3;
-        //print("body:" + _body+"\ncollider:"+_boxCollider+"\nanimator:"+_animator+"\nwidth:"+_width);
 
         JumpAttackAirBounce = 12.0f;
         _isReachTopLadder = false;
@@ -114,7 +112,6 @@ public class LancerManager : MonoBehaviour, IGameManager
 
     // 控制朝向
     public void Turn(float deltaX) {
-        print("turn,deltaX:" + deltaX);
         if (!IsAttacking()
             && !_isOnLadder) {
             lancer.transform.localScale = new Vector3(Mathf.Sign(deltaX) * lancer.transform.localScale.x, lancer.transform.localScale.y, lancer.transform.localScale.z);
