@@ -6,6 +6,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] private Player player;
     [SerializeField] private GameObject Back;
     [SerializeField] private GameObject Forward;
+    [SerializeField] private GameObject[] Attacks;
 
     private Rigidbody2D _body;
     private BoxCollider2D _boxCollider;
@@ -211,13 +212,11 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 攻击A判定
     public void AttackACheck() {
-        RaycastHit2D[] hits;
-        float length = 5000.0f;
         print("checking AttackA");
-        hits = Physics2D.RaycastAll(player.transform.position, player.transform.forward, length);
-        Debug.DrawRay(player.transform.position, player.transform.forward, Color.red, length);
-        foreach (RaycastHit2D hit in hits) {
-            print("hited:" + hit.collider.gameObject.name);
+        EnemyDetector enemys = Attacks[0].GetComponent<EnemyDetector>();
+        foreach(string name in enemys.EnemyList) {
+            print(name);
+            Managers.managers.GetManager(name).GetHit(10);
         }
     }
     // 攻击B
@@ -270,5 +269,12 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             _animator.SetTrigger(PAParameters.ROLL);
         }
     }
-    
+    // 受伤
+    public void GetHit(float damage) {
+        // TODO 玩家受伤
+    }
+    // 死亡
+    public void Death() {
+        // TODO 玩家死亡
+    }
 }

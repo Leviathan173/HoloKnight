@@ -3,5 +3,6 @@
     //string name { get; set; }
 
 	void Startup();
-
+    void GetHit(float damage);
+    void Death();
 }
