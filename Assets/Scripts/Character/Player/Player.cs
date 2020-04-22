@@ -140,15 +140,16 @@ public class Player : MonoBehaviour {
 
     }
 
-    private void OnCollisionEnter(Collision2D collision) {
+    void OnCollisionEnter2D(Collision2D collision) {
         print("collider name " + collision.gameObject.name);
         if (collision.gameObject.name.Contains("E_")) {
-            speed = 0.01f;
+            _body.velocity = Vector2.zero;
+            speed = 0.003f;
         }
         
     }
 
-    private void OnCollisionExit(Collision2D collision) {
+    void OnCollisionExit2D(Collision2D collision) {
         print("collider name " + collision.gameObject.name);
         if (collision.gameObject.name.Contains("E_")) {
             speed = 3.0f;

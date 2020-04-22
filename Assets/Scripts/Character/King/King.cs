@@ -56,7 +56,7 @@ public class King : MonoBehaviour
         _boxCollider.size = collSize;
 
         // 移动
-        if (Input.GetKeyDown(KeyCode.M)) {
+        if (Input.GetKeyDown(KeyCode.Keypad0)) {
             kingManager.Turn(SPEED);
             kingManager.Move(SPEED);
         }

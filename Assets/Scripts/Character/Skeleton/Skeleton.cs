@@ -58,7 +58,7 @@ public class Skeleton : MonoBehaviour
         _boxCollider.size = collSize;
 
         // 移动
-        if (Input.GetKeyDown(KeyCode.M)) {
+        if (Input.GetKeyDown(KeyCode.Keypad0)) {
             skeletonManager.Turn(SPEED);
             skeletonManager.Move(SPEED);
         }
