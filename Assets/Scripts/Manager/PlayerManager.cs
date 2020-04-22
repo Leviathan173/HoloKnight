@@ -148,7 +148,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void OnRollGoing() {
         //_rolling = true;
         //_animator.SetTrigger(PAParameters.ROLL);
-        _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 7, _body.velocity.y);
+        _body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 14, _body.velocity.y);
     }
     // 退出翻滚状态
     public void OnRollExit() {

@@ -9,14 +9,16 @@ public class Player : MonoBehaviour {
 
     public float speed = 3.0f;
 
+    public Vector2 collSize { get; private set; }
+    public Vector2 collOffset { get; private set; }
+
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
     private float _deltaX;
     private float _deltaY;
     private string _currentStat;//无用代码 
-    private Vector2 collSize;
-    private Vector2 collOffset;
+    
 
     // Start is called before the first frame update
     void Start() {

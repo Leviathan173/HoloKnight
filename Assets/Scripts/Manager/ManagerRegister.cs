@@ -9,7 +9,7 @@ public class ManagerRegister : MonoBehaviour
     public static SlimeManager slimeManager;
     public static LancerManager lancerManager;
     public static AcherManager acherManager;
-
+    public static KingManager kingManager;
 
     public void Register() {
         
@@ -28,6 +28,9 @@ public class ManagerRegister : MonoBehaviour
         }else if (gameObject.name.Contains("Acher")) {
             acherManager = GetComponent<AcherManager>();
             Managers.managers.AddManager(gameObject.name, acherManager);
+        }else if (gameObject.name.Contains("King")) {
+            kingManager = GetComponent<KingManager>();
+            Managers.managers.AddManager(gameObject.name, kingManager);
         }
         //string Id = Md5Sum(gameObject.name);
 
