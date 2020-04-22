@@ -58,7 +58,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         status = ManagerStatus.Started;
     }
-    //攻击
+    // 是否在攻击中
     public bool IsAttacking() {
         return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_A) ||
             _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_B) ||
@@ -208,6 +208,17 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     // 攻击A取消
     public void AttackAExit() {
         _animator.SetInteger(PAParameters.ATTACKSTAT, -1);
+    }
+    // 攻击A判定
+    public void AttackACheck() {
+        RaycastHit2D[] hits;
+        float length = 5000.0f;
+        print("checking AttackA");
+        hits = Physics2D.RaycastAll(player.transform.position, player.transform.forward, length);
+        Debug.DrawRay(player.transform.position, player.transform.forward, Color.red, length);
+        foreach (RaycastHit2D hit in hits) {
+            print("hited:" + hit.collider.gameObject.name);
+        }
     }
     // 攻击B
     public void AttackBEnter() {

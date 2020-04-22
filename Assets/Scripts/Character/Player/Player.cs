@@ -140,8 +140,8 @@ public class Player : MonoBehaviour {
 
     }
 
+    // TODO 不让玩家能够推动敌人
     void OnCollisionEnter2D(Collision2D collision) {
-        print("collider name " + collision.gameObject.name);
         if (collision.gameObject.name.Contains("E_")) {
             _body.velocity = Vector2.zero;
             speed = 0.003f;
@@ -150,7 +150,6 @@ public class Player : MonoBehaviour {
     }
 
     void OnCollisionExit2D(Collision2D collision) {
-        print("collider name " + collision.gameObject.name);
         if (collision.gameObject.name.Contains("E_")) {
             speed = 3.0f;
         }

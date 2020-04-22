@@ -8,6 +8,7 @@ public class AttackA : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         // 攻击会向前增加一个力
         Managers.Player.AddFrontForce(0);
+        Managers.Player.AttackACheck();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

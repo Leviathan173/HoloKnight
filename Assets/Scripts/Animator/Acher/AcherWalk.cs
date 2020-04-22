@@ -10,11 +10,11 @@ public class AcherWalk : StateMachineBehaviour
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        if(animator.GetFloat(EAParameters.SPEED) > 0) {
-            animator.SetFloat(EAParameters.SPEED, -1);
-        }
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //    if(animator.GetFloat(EAParameters.SPEED) > 0) {
+    //        animator.SetFloat(EAParameters.SPEED, -1);
+    //    }
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
