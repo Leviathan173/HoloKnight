@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b9d97389cc01f4099efb6178547f45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Forward: {fileID: 3688733927168279402}
   speed: 3
 --- !u!61 &3688733927102811751
 BoxCollider2D:
@@ -300,7 +301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!1 &3688733928701611975
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,7 +371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!1 &3688733928723661606
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!1 &3688733928989395903
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,4 +511,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []

@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 7395298208404851347}
   - component: {fileID: 7395298208404851346}
   - component: {fileID: 7395298208404851345}
-  - component: {fileID: 7395298208404851344}
+  - component: {fileID: 1863705184}
   m_Layer: 8
   m_Name: Acher
   m_TagString: Untagged
@@ -302,7 +302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8c14406248cf964aaac673dce83d3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7395298208404851344
+  Forward: {fileID: 7395298207838799560}
+--- !u!114 &1863705184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -311,12 +312,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7395298208404851351}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7c622aaab0ef6749a57738802666c86, type: 3}
+  m_Script: {fileID: 11500000, guid: a87c689f5f742c84d95a1246c2d333b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acher: {fileID: 7395298208404851345}
-  Back: {fileID: 7395298208510107562}
-  Forward: {fileID: 7395298207838799560}
   jumpForce: 12
 --- !u!1 &7395298208510107562
 GameObject:

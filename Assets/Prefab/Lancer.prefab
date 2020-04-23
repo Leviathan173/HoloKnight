@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!61 &386881314
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -457,8 +456,8 @@ GameObject:
   - component: {fileID: 811693785853269302}
   - component: {fileID: 811693785853269303}
   - component: {fileID: 811693785853268680}
-  - component: {fileID: 811693785853268681}
   - component: {fileID: 811693785853268682}
+  - component: {fileID: 1844533954}
   m_Layer: 8
   m_Name: Lancer
   m_TagString: Untagged
@@ -612,22 +611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76f2167530f5a949a554eedc4ab71e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &811693785853268681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 811693785853269296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 444ccbee76c2e344c9dc87aa1319b486, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lancer: {fileID: 811693785853268680}
-  Back: {fileID: 811693785992905179}
   Forward: {fileID: 811693787446626692}
-  jumpForce: 12
 --- !u!114 &811693785853268682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +624,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b34b8317eb32b145abc5c2075a59471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1844533954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811693785853269296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87c689f5f742c84d95a1246c2d333b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 12
 --- !u!1 &811693785992905179
 GameObject:
   m_ObjectHideFlags: 0

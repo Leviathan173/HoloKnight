@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 7243456879754573661}
   - component: {fileID: 7243456879754573662}
   - component: {fileID: 7243456879754573663}
-  - component: {fileID: 7243456879754573648}
   - component: {fileID: 7243456879754573657}
+  - component: {fileID: 1139111641}
   m_Layer: 8
   m_Name: SShield
   m_TagString: Untagged
@@ -161,22 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc2cb3d33082d9944a7647c8a04b1104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7243456879754573648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7243456879754573649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18e13500bb778114687bbb08fa7c112c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ss: {fileID: 7243456879754573663}
-  Back: {fileID: 7243456880641029062}
   Forward: {fileID: 7243456880918768227}
-  jumpForce: 12
 --- !u!95 &7243456879754573657
 Animator:
   serializedVersion: 3
@@ -196,6 +181,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1139111641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7243456879754573649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87c689f5f742c84d95a1246c2d333b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 12
 --- !u!1 &7243456880641029062
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,4 +324,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []

@@ -70,7 +70,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!1 &189339464
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55a8099d09f3804a99007fb61957e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyList: []
 --- !u!1 &1957397333
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +217,7 @@ GameObject:
   - component: {fileID: 1333385211307163495}
   - component: {fileID: 1333385211307163494}
   - component: {fileID: 1333385211307163493}
-  - component: {fileID: 1333385211307163492}
+  - component: {fileID: 2039799009}
   m_Layer: 8
   m_Name: King
   m_TagString: Untagged
@@ -373,6 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e33b33944e57be418fd77a765a67dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Forward: {fileID: 1333385211316405056}
 --- !u!114 &1333385211307163493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b34b8317eb32b145abc5c2075a59471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1333385211307163492
+--- !u!114 &2039799009
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -394,12 +393,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1333385211307163503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebaebc46b928dc249a485dd2c7fac89b, type: 3}
+  m_Script: {fileID: 11500000, guid: a87c689f5f742c84d95a1246c2d333b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  king: {fileID: 1333385211307163494}
-  Back: {fileID: 1333385209796325125}
-  Forward: {fileID: 1333385211316405056}
   jumpForce: 12
 --- !u!1 &1333385211316405056
 GameObject:
