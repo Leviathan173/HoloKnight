@@ -1,8 +1,14 @@
-﻿public interface IGameManager {
+﻿using UnityEngine;
+public interface IGameManager {
 	ManagerStatus status {get;}
-    //string name { get; set; }
+
+    float maxHealth { get; set; }
+    float currentHealth { get; set; }
+    float maxStamina { get; set; }
+    float currentStamina { get; set; }
+    float staminaIncreasement { get; set; }
 
 	void Startup();
-    void GetHit(float damage);
-    void Death();
+    void GetHit(float damage, Animator animator);
+    void Death(Animator animator);
 }

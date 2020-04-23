@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeManager : MonoBehaviour, IGameManager
+public class SlimeManager : MonoBehaviour
 {
     public ManagerStatus status { get; private set; }
 

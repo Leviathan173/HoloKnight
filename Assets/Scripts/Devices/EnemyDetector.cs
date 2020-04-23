@@ -4,9 +4,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class EnemyDetector : MonoBehaviour
+public class EnemyDetector : MonoBehaviour, IEnemyDetector
 {
-    public List<string> EnemyList;
+    public List<string> EnemyList { get;}
 
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.name.Contains("E_")) {

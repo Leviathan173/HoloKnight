@@ -4,33 +4,13 @@ using UnityEngine;
 
 public class ManagerRegister : MonoBehaviour
 {
-    public static SkeletonManager SkeletonManager;
-    public static SSManager ssManager;
-    public static SlimeManager slimeManager;
-    public static LancerManager lancerManager;
-    public static AcherManager acherManager;
-    public static KingManager kingManager;
+    public static EnemyManager manager;
 
     public void Register() {
         
-        if (gameObject.name.Contains("Skeleton")) {
-            SkeletonManager = GetComponent<SkeletonManager>();
-            Managers.managers.AddManager(gameObject.name, SkeletonManager);
-        }else if (gameObject.name.Contains("Shield")) {
-            ssManager = GetComponent<SSManager>();
-            Managers.managers.AddManager(gameObject.name, ssManager);
-        }else if (gameObject.name.Contains("Slime")) {
-            slimeManager = GetComponent<SlimeManager>();
-            Managers.managers.AddManager(gameObject.name, slimeManager);
-        }else if(gameObject.name.Contains("Lancer")) {
-            lancerManager = GetComponent<LancerManager>();
-            Managers.managers.AddManager(gameObject.name, lancerManager);
-        }else if (gameObject.name.Contains("Acher")) {
-            acherManager = GetComponent<AcherManager>();
-            Managers.managers.AddManager(gameObject.name, acherManager);
-        }else if (gameObject.name.Contains("King")) {
-            kingManager = GetComponent<KingManager>();
-            Managers.managers.AddManager(gameObject.name, kingManager);
+        if (gameObject.name.Contains("E_")) {
+            manager = GetComponent<EnemyManager>();
+            Managers.managers.AddManager(gameObject.name, manager);
         }
         //string Id = Md5Sum(gameObject.name);
 

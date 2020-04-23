@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SSManager : MonoBehaviour, IGameManager
+public class SSManager : MonoBehaviour
 {
     public ManagerStatus status { get; private set; }
 
@@ -70,48 +70,6 @@ public class SSManager : MonoBehaviour, IGameManager
 
     }
 
-    /*梯子
-    public void FallDownLadder() {
-        _body.gravityScale = 3;
-        _boxCollider.isTrigger = false;
-        print("robot!!!");
-        _body.velocity = new Vector2((Back.transform.position.x - ss.transform.position.x) * 7, _body.velocity.y);
-    }
-    public void LadderMoveUp() {
-        if (_isReachTopLadder) {
-            _animator.SetInteger(PAParameters.CLIMB_STAT, -1);
-            _animator.SetTrigger(PAParameters.LADDER_TOP);
-            //_animator.ResetTrigger(PAParameters.LADDER_TOP);
-            _body.gravityScale = 3;
-            _boxCollider.isTrigger = false;
-            ss.transform.position = new Vector3(_ladderTopPos.x, _ladderTopPos.y, ss.transform.position.z);
-        } else {
-            ss.transform.position = new Vector3(ss.transform.position.x, ss.transform.position.y + 0.05f, ss.transform.position.z);
-        }
-    }
-    public void LadderMoveDown() {
-        if (_isReachBottomLadder) {
-            _animator.SetInteger(PAParameters.CLIMB_STAT, -1);
-            _animator.SetTrigger(PAParameters.LADDER_BOTTOM);
-            //_animator.ResetTrigger(PAParameters.LADDER_BOTTOM);
-            _body.gravityScale = 3;
-            _boxCollider.isTrigger = false;
-            //gameObject.transform.position = new Vector3(_ladderBottomPos.x, _ladderBottomPos.y, gameObject.transform.position.z);
-            _body.velocity = new Vector2(_ladderBottomPos.x / 3, _ladderBottomPos.y);
-        } else {
-            ss.transform.position = new Vector3(ss.transform.position.x, ss.transform.position.y - 0.05f, ss.transform.position.z);
-        }
-    }
-    爬梯
-    public void ClimbStart() {
-        if (_hasLadder && !_isOnLadder) {
-            _animator.SetInteger(PAParameters.CLIMB_STAT, 0);
-            _body.gravityScale = 0;
-            _body.velocity = Vector2.zero;
-            _boxCollider.isTrigger = true;
-        }
-    }*/
-
     // 控制朝向
     public void Turn(float deltaX) {
         if (!IsAttacking()
@@ -143,7 +101,6 @@ public class SSManager : MonoBehaviour, IGameManager
     public void Jump() {
         if (_isGrounded && !IsAttacking()  /*&& !_isOnLadder*/) {
             _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            //_body.AddForce(new Vector2(Forward.transform.position.x - ss.transform.position.x, gameObject.transform.position.y) * jumpForce, ForceMode2D.Impulse);
             AddFrontForce(24);
             _isGrounded = false;
         }
