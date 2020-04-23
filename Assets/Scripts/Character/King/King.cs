@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class King : MonoBehaviour
 {
+    [SerializeField] private GameObject Forward;
+
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
 
@@ -13,18 +15,21 @@ public class King : MonoBehaviour
     private Vector2 collSize;
     private Vector2 collOffset;
     private ManagerRegister register;
-    private static KingManager kingManager;
+    private static EnemyManager manager;
 
+    private float _width;
 
     // Start is called before the first frame update
     void Start() {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        kingManager = (KingManager)Managers.managers.GetManager(gameObject.name);
+        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
 
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
+
+        _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
@@ -41,13 +46,13 @@ public class King : MonoBehaviour
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
         if (hit != null && !hit.isTrigger) {
-            kingManager._isGrounded = true;
+            manager._isGrounded = true;
             _animator.SetBool(EAParameters.GROUNDED, true);
-            kingManager._isJumping = false;
+            manager._isJumping = false;
 
         } else {
-            kingManager._isGrounded = false;
-            kingManager._isJumping = true;
+            manager._isGrounded = false;
+            manager._isJumping = true;
             _animator.SetBool(EAParameters.GROUNDED, false);
         }
 
@@ -57,32 +62,32 @@ public class King : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            kingManager.Turn(SPEED);
-            kingManager.Move(SPEED);
+            manager.Turn(SPEED, _width, gameObject, _animator);
+            manager.Move(SPEED, _animator, _body);
         }
 
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            kingManager.Jump();
+            manager.Jump(_body, gameObject, Forward, _animator);
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            kingManager.AttackAEnter();
+            manager.AttackAEnter(_animator);
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            kingManager.AttackBEnter();
+            manager.AttackBEnter(_animator);
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            kingManager.GetHit(0);
+            manager.GetHit(0, _animator);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            kingManager.Death();
+            manager.Death(_animator);
         }
     }
 

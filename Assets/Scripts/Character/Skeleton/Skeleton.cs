@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Skeleton : MonoBehaviour
 {
+    [SerializeField] private GameObject Forward;
+
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
 
@@ -13,19 +15,22 @@ public class Skeleton : MonoBehaviour
     private Vector2 collSize;
     private Vector2 collOffset;
     private ManagerRegister register;
-    private static SkeletonManager skeletonManager;
+    private static EnemyManager manager;
 
+    private float _width;
 
     // Start is called before the first frame update
     void Start()
     {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        skeletonManager = (SkeletonManager)Managers.managers.GetManager(gameObject.name);
+        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
 
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
+
+        _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
@@ -43,13 +48,13 @@ public class Skeleton : MonoBehaviour
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
         if (hit != null && !hit.isTrigger) {
-            skeletonManager._isGrounded = true;
+            manager._isGrounded = true;
             _animator.SetBool(EAParameters.GROUNDED, true);
-            skeletonManager._isJumping = false;
+            manager._isJumping = false;
 
         } else {
-            skeletonManager._isGrounded = false;
-            skeletonManager._isJumping = true;
+            manager._isGrounded = false;
+            manager._isJumping = true;
             _animator.SetBool(EAParameters.GROUNDED, false);
         }
 
@@ -59,32 +64,32 @@ public class Skeleton : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            skeletonManager.Turn(SPEED);
-            skeletonManager.Move(SPEED);
+            manager.Turn(SPEED, _width, gameObject, _animator);
+            manager.Move(SPEED, _animator, _body);
         }
 
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            skeletonManager.Jump();
+            manager.Jump(_body, gameObject, Forward, _animator);
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            skeletonManager.AttackAEnter();
+            manager.AttackAEnter(_animator);
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            skeletonManager.AttackBEnter();
+            manager.AttackBEnter(_animator);
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            skeletonManager.GetHit(0);
+            manager.GetHit(0, _animator);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            skeletonManager.Death();
+            manager.Death(_animator);
         }
     }
 

@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class SlimeAttackA : StateMachineBehaviour
 {
-    SlimeManager manager;
+    EnemyManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Debug.Log("slime attackA managername " + animator.gameObject.name);
-        manager = (SlimeManager)Managers.managers.GetManager(animator.gameObject.name);
-        Debug.Log("manager " + manager);
-        manager.AttackAExit();
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
+        manager.AttackAExit(animator);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

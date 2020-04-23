@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    //[SerializeField] private GameObject Forward;
+    [SerializeField] private GameObject Forward;
+    [SerializeField] private IEnemyDetector[] Attacks;
     //[SerializeField] private GameObject Back;
 
     public float speed = 3.0f;
@@ -17,8 +18,10 @@ public class Player : MonoBehaviour {
     private BoxCollider2D _boxCollider;
     private float _deltaX;
     private float _deltaY;
+    private float _width;
     private string _currentStat;//无用代码 
     
+
 
     // Start is called before the first frame update
     void Start() {
@@ -26,6 +29,8 @@ public class Player : MonoBehaviour {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
         _currentStat = PAParameters.IDLE;//无用代码
+
+        _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
@@ -38,8 +43,8 @@ public class Player : MonoBehaviour {
         _animator.SetFloat(PAParameters.SPEED, Mathf.Abs(_deltaX));
         // 当获取不为零的横向输入时，判断转向与移动
         if (!Mathf.Approximately(_deltaX, 0)) {
-            Managers.Player.Turn(_deltaX);
-            Managers.Player.Move(_deltaX);
+            Managers.Player.Turn(_animator, gameObject, _deltaX, _width);
+            Managers.Player.Move(_body, _animator, _deltaX);
         }
 
         // 不在倾斜的平台上滑动
@@ -68,7 +73,7 @@ public class Player : MonoBehaviour {
         }
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Managers.Player.Jump();
+            Managers.Player.Jump(_body, _animator);
         }
 
         // 控制碰撞
@@ -77,7 +82,7 @@ public class Player : MonoBehaviour {
 
         // 跑动
         if (Input.GetKey(KeyCode.LeftShift)){
-            Managers.Player.Run(_deltaX);
+            Managers.Player.Run(_body, _animator, _deltaX);
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
             Managers.Player.RunExit();
@@ -86,55 +91,55 @@ public class Player : MonoBehaviour {
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.J)) {
-            Managers.Player.AttackAEnter();
+            Managers.Player.AttackAEnter(_animator, _body, gameObject, Forward);
         }
         // 攻击A取消
         if (Input.GetKeyUp(KeyCode.J)) {
-            Managers.Player.AttackAExit();
+            Managers.Player.AttackAExit(_animator);
         }
 
         // 攻击B
         if (Input.GetKeyDown(KeyCode.K)) {
-            Managers.Player.AttackBEnter();
+            Managers.Player.AttackBEnter(_animator, _body, gameObject, Forward);
         }
         // 攻击B取消
         if (Input.GetKeyUp(KeyCode.K)) {
-            Managers.Player.AttackBExit();
+            Managers.Player.AttackBExit(_animator);
         }
 
         // 攻击C
         if (Input.GetKeyDown(KeyCode.U)) {
-            Managers.Player.AttackCEnter();
+            Managers.Player.AttackCEnter(_animator, _body, gameObject, Forward);
         }
         // 攻击C取消
         if (Input.GetKeyUp(KeyCode.U)) {
-            Managers.Player.AttackCExit();
+            Managers.Player.AttackCExit(_animator);
         }
 
         // 攻击D
         if (Input.GetKeyDown(KeyCode.I)) {
-            Managers.Player.AttackDEnter();
+            Managers.Player.AttackDEnter(_animator, _body, gameObject, Forward);
         }
         // 攻击D取消
         if (Input.GetKeyUp(KeyCode.I)) {
-            Managers.Player.AttackDExit();
+            Managers.Player.AttackDExit(_animator);
         }
 
         // 跳跃攻击
         if(Input.GetKeyDown(KeyCode.J)) {
-            Managers.Player.JumpAttack();
+            Managers.Player.JumpAttack(_body, _animator);
         }
 
         // 翻滚
         if (Input.GetKeyDown(KeyCode.L)) {
-            Managers.Player.Roll();
+            Managers.Player.Roll(_animator);
         }
 
         // 爬梯
-        _deltaY = Input.GetAxis("Vertical");
-        if (!Mathf.Approximately(_deltaY,0)) {
-            Managers.Player.ClimbStart();
-        }
+        //_deltaY = Input.GetAxis("Vertical");
+        //if (!Mathf.Approximately(_deltaY,0)) {
+        //    Managers.Player.ClimbStart();
+        //}
 
         
 

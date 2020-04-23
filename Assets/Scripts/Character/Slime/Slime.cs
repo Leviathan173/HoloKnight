@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Slime : MonoBehaviour
 {
+    [SerializeField] private GameObject Forward;
+
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
 
@@ -13,8 +15,9 @@ public class Slime : MonoBehaviour
     private Vector2 collSize;
     private Vector2 collOffset;
     private ManagerRegister register;
-    private static SlimeManager manager;
+    private static EnemyManager manager;
 
+    private float _width;
 
     // Start is called before the first frame update
     void Start() {
@@ -23,11 +26,13 @@ public class Slime : MonoBehaviour
         } else {
             register = GetComponent<ManagerRegister>();
             register.Register();
-            manager = (SlimeManager)Managers.managers.GetManager(gameObject.name);
+            manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
 
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _boxCollider = GetComponent<BoxCollider2D>();
+
+            _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
             collSize = _boxCollider.size;
             collOffset = _boxCollider.offset;
@@ -62,31 +67,31 @@ public class Slime : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            manager.Turn(SPEED);
-            manager.Move(SPEED);
+            manager.Turn(SPEED, _width, gameObject, _animator);
+            manager.Move(SPEED, _animator, _body);
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            manager.AttackAEnter();
+            manager.AttackAEnter(_animator);
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad2) && manager._isGrounded) {
-            manager.AttackBEnter();
+            manager.AttackBEnter(_animator);
         }
         // 攻击C
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            manager.AttackCEnter();
+            manager.AttackCEnter(_animator);
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            manager.GetHit(0);
+            manager.GetHit(0, _animator);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            manager.Death();
+            manager.Death(_animator);
         }
     }
 

@@ -15,6 +15,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public bool _isFacingRight { get; set; }
     public bool _isGrounded { get; set; }
     public bool _isJumping { get; set; }
+    public bool _usingShield { get; set; }
     public float _ladderX { get; set; }
     public float jumpForce = 12.0f;
 

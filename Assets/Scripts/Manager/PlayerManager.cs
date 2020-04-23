@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IGameManager {
+    [SerializeField] private Player player;
 
     private float JumpAttackAirBounce;
 
@@ -190,9 +191,18 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         _isRunning = false;
     }
     // 攻击A
-    public void AttackAEnter(Animator animator) {
+    public void AttackAEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
         if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce(body, player, Forward);
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
+            IEnemyDetector enemy = null;
+            foreach (GameObject gameObject in animator.GetComponentsInChildren<GameObject>()) {
+                if (gameObject.name.Equals("AttackA")) {
+                    enemy = gameObject.GetComponent<IEnemyDetector>();
+                }
+            }
+            
+            AttackACheck(animator, enemy);
             // TODO 攻击判定
         }
     }
@@ -207,8 +217,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
     }
     // 攻击B
-    public void AttackBEnter(Animator animator) {
+    public void AttackBEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
         if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce(body, player, Forward);
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
@@ -219,8 +230,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击C
-    public void AttackCEnter(Animator animator) {
+    public void AttackCEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
         if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce(body, player, Forward);
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
@@ -231,9 +243,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击D
-    public void AttackDEnter(Animator animator) {
+    public void AttackDEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
         if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
+            AddFrontForce(body, player, Forward);
             // TODO 攻击判定
 
         }

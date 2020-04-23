@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class KingAttackB : StateMachineBehaviour
 {
-    KingManager manager;
+    EnemyManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        manager = (KingManager)Managers.managers.GetManager(animator.gameObject.name);
-        manager.AttackBExit();
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
+        manager.AttackBExit(animator);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
