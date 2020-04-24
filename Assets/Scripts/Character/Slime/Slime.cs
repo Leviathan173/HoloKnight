@@ -5,6 +5,7 @@ using UnityEngine;
 public class Slime : MonoBehaviour
 {
     [SerializeField] private GameObject Forward;
+    [SerializeField] private EnemyDetector[] Attacks;
 
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
@@ -36,6 +37,8 @@ public class Slime : MonoBehaviour
 
             collSize = _boxCollider.size;
             collOffset = _boxCollider.offset;
+
+            Managers.managers.GetManager(gameObject.name).InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
         }
         
     }
@@ -67,31 +70,31 @@ public class Slime : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            manager.Turn(SPEED, _width, gameObject, _animator);
-            manager.Move(SPEED, _animator, _body);
+            manager.Turn(SPEED);
+            manager.Move(SPEED);
         }
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            manager.AttackAEnter(_animator);
+            manager.AttackAEnter();
         }
         // 攻击B
         if (Input.GetKeyDown(KeyCode.Keypad2) && manager._isGrounded) {
-            manager.AttackBEnter(_animator);
+            manager.AttackBEnter();
         }
         // 攻击C
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            manager.AttackCEnter(_animator);
+            manager.AttackCEnter();
         }
 
         // 受击
         if (Input.GetKeyDown(KeyCode.Keypad4)) {
-            manager.GetHit(0, _animator);
+            manager.GetHit(0);
         }
 
         // 死亡
         if (Input.GetKeyDown(KeyCode.Keypad5)) {
-            manager.Death(_animator);
+            manager.Death();
         }
     }
 

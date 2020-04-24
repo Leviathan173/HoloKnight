@@ -9,6 +9,7 @@ public interface IGameManager {
     float staminaIncreasement { get; set; }
 
 	void Startup();
-    void GetHit(float damage, Animator animator);
-    void Death(Animator animator);
+    void GetHit(float damage);
+    void Death();
+    void InitComponents(GameObject enemy, Rigidbody2D _body, Animator _animator, GameObject Forward, EnemyDetector[] Attacks, float _width);
 }

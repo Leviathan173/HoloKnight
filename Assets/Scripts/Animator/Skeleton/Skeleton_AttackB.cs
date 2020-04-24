@@ -9,7 +9,7 @@ public class Skeleton_AttackB : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         //Managers.Skeleton.AttackBExit();
         skeletonManager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
-        skeletonManager.AttackBExit(animator);
+        skeletonManager.AttackBExit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -8,7 +8,7 @@ public class SlimeAttackC : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
-        manager.AttackCExit(animator);
+        manager.AttackCExit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

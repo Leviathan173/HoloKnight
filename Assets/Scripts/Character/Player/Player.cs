@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     [SerializeField] private GameObject Forward;
-    [SerializeField] private IEnemyDetector[] Attacks;
+    [SerializeField] private EnemyDetector[] Attacks;
     //[SerializeField] private GameObject Back;
 
     public float speed = 3.0f;
@@ -34,6 +34,7 @@ public class Player : MonoBehaviour {
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
+        Managers.Player.InitComponents(null, _body, _animator, Forward, Attacks, _width);
     }
 
     // Update is called once per frame
@@ -43,8 +44,8 @@ public class Player : MonoBehaviour {
         _animator.SetFloat(PAParameters.SPEED, Mathf.Abs(_deltaX));
         // 当获取不为零的横向输入时，判断转向与移动
         if (!Mathf.Approximately(_deltaX, 0)) {
-            Managers.Player.Turn(_animator, gameObject, _deltaX, _width);
-            Managers.Player.Move(_body, _animator, _deltaX);
+            Managers.Player.Turn(_deltaX);
+            Managers.Player.Move(_deltaX);
         }
 
         // 不在倾斜的平台上滑动
@@ -73,7 +74,7 @@ public class Player : MonoBehaviour {
         }
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Managers.Player.Jump(_body, _animator);
+            Managers.Player.Jump();
         }
 
         // 控制碰撞
@@ -82,7 +83,7 @@ public class Player : MonoBehaviour {
 
         // 跑动
         if (Input.GetKey(KeyCode.LeftShift)){
-            Managers.Player.Run(_body, _animator, _deltaX);
+            Managers.Player.Run(_deltaX);
         }
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
             Managers.Player.RunExit();
@@ -91,48 +92,48 @@ public class Player : MonoBehaviour {
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.J)) {
-            Managers.Player.AttackAEnter(_animator, _body, gameObject, Forward);
+            Managers.Player.AttackAEnter();
         }
         // 攻击A取消
         if (Input.GetKeyUp(KeyCode.J)) {
-            Managers.Player.AttackAExit(_animator);
+            Managers.Player.AttackAExit();
         }
 
         // 攻击B
         if (Input.GetKeyDown(KeyCode.K)) {
-            Managers.Player.AttackBEnter(_animator, _body, gameObject, Forward);
+            Managers.Player.AttackBEnter();
         }
         // 攻击B取消
         if (Input.GetKeyUp(KeyCode.K)) {
-            Managers.Player.AttackBExit(_animator);
+            Managers.Player.AttackBExit();
         }
 
         // 攻击C
         if (Input.GetKeyDown(KeyCode.U)) {
-            Managers.Player.AttackCEnter(_animator, _body, gameObject, Forward);
+            Managers.Player.AttackCEnter();
         }
         // 攻击C取消
         if (Input.GetKeyUp(KeyCode.U)) {
-            Managers.Player.AttackCExit(_animator);
+            Managers.Player.AttackCExit();
         }
 
         // 攻击D
         if (Input.GetKeyDown(KeyCode.I)) {
-            Managers.Player.AttackDEnter(_animator, _body, gameObject, Forward);
+            Managers.Player.AttackDEnter();
         }
         // 攻击D取消
         if (Input.GetKeyUp(KeyCode.I)) {
-            Managers.Player.AttackDExit(_animator);
+            Managers.Player.AttackDExit();
         }
 
         // 跳跃攻击
         if(Input.GetKeyDown(KeyCode.J)) {
-            Managers.Player.JumpAttack(_body, _animator);
+            Managers.Player.JumpAttack();
         }
 
         // 翻滚
         if (Input.GetKeyDown(KeyCode.L)) {
-            Managers.Player.Roll(_animator);
+            Managers.Player.Roll();
         }
 
         // 爬梯

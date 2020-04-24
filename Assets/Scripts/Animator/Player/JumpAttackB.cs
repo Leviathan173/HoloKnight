@@ -6,7 +6,7 @@ public class JumpAttackB : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Managers.Player.AddUpForce(animator.gameObject.GetComponent<Rigidbody2D>());
+        Managers.Player.AddUpForce();
         animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, -1);
         Managers.Player.jumpStat = -1;
     }

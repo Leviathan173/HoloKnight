@@ -5,6 +5,11 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] private Player player;
 
+    public Rigidbody2D body;
+    public Animator animator;
+    public GameObject Forward;
+    public EnemyDetector[] Attacks;
+
     private float JumpAttackAirBounce;
 
     public float maxHealth { get; set; }
@@ -27,6 +32,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public bool _isGrounded { get; set; }
     public bool _isJumping { get; set; }
 
+    public float width;
     public float jumpForce = 12.0f;
     //public float speed = 3.0f;
 
@@ -52,15 +58,23 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         status = ManagerStatus.Started;
     }
+    // 初始化
+    public void InitComponents(GameObject game, Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
+        this.body = body;
+        this.animator = animator;
+        this.Forward = Forward;
+        this.Attacks = Attacks;
+        this.width = width;
+    }
     // 是否在攻击中
-    public bool IsAttacking(Animator animator) {
+    public bool IsAttacking() {
         return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_A) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_B) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_C) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_D));
     }
     // 添加向前的力
-    public void AddFrontForce(Rigidbody2D body, GameObject player, GameObject Forward, float force = 0) {
+    public void AddFrontForce(float force = 0) {
         if(force == 0) {
             body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 9, body.velocity.y);
         } else {
@@ -69,7 +83,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             
     }
     // 跳跃攻击
-    public void AddUpForce(Rigidbody2D body, float force = 0) {
+    public void AddUpForce(float force = 0) {
         if(Mathf.Approximately(force,0)) {
             if(body.velocity.y >= 0) {
                 body.AddForce(Vector2.up * JumpAttackAirBounce, ForceMode2D.Impulse);
@@ -132,23 +146,23 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     //}
     // 翻滚
     // 是否在翻滚中，用于转向判断
-    public bool IsRolling(Animator animator) {
+    public bool IsRolling() {
         return animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ROLL);
     }
     // 翻滚中每次动画状态更新调用
     // 添加一个朝向翻滚方向的加速度
-    public void OnRollGoing(Rigidbody2D body, GameObject player, GameObject Forward) {
+    public void OnRollGoing() {
         body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 14, body.velocity.y);
     }
     // 退出翻滚状态
-    public void OnRollExit(Animator animator) {
+    public void OnRollExit() {
         _isRolling = false;
         animator.ResetTrigger(PAParameters.ROLL);
     }
     // 控制朝向
-    public void Turn(Animator animator, GameObject player, float deltaX, float width) {
-        if (!IsRolling(animator) // 翻滚、攻击、爬梯子时不能转向
-            && !IsAttacking(animator)
+    public void Turn(float deltaX) {
+        if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
+            && !IsAttacking()
             /*&& !_isOnLadder*/) { 
             player.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3, 3, 3);
             if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
@@ -163,24 +177,24 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
     }
     //移动
-    public void Move(Rigidbody2D body, Animator animator, float deltaX) {
+    public void Move(float deltaX) {
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
-        if (movement != Vector2.zero && !_isRunning && !_isJumping && !IsAttacking(animator) && !IsRolling(animator)
+        if (movement != Vector2.zero && !_isRunning && !_isJumping && !IsAttacking() && !IsRolling()
             && !_isRolling && _isGrounded /*&& !_isOnLadder*/) {
             body.velocity = movement;
         }
     }
     // 跳跃
-    public void Jump(Rigidbody2D body, Animator animator) {
-        if (_isGrounded && !IsAttacking(animator) && !IsRolling(animator) /*&& !_isOnLadder*/) {
+    public void Jump() {
+        if (_isGrounded && !IsAttacking() && !IsRolling() /*&& !_isOnLadder*/) {
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;
         }
     }
     // 跑动
-    public void Run(Rigidbody2D body, Animator animator, float deltaX) {
+    public void Run(float deltaX) {
         if (new Vector2(deltaX, body.velocity.y) != Vector2.zero
-            && !_isJumping && !IsAttacking(animator) && !IsRolling(animator) && _isGrounded /*&& !_isOnLadder*/) {
+            && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded /*&& !_isOnLadder*/) {
             _isRunning = true;
             body.velocity = new Vector2(new Vector2(deltaX, body.velocity.y).x * 2, body.velocity.y);
             animator.SetFloat(PAParameters.SPEED, Mathf.Abs(deltaX * 2));
@@ -191,90 +205,84 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         _isRunning = false;
     }
     // 攻击A
-    public void AttackAEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
-        if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
-            AddFrontForce(body, player, Forward);
+    public void AttackAEnter() {
+        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
-            IEnemyDetector enemy = null;
-            foreach (GameObject gameObject in animator.GetComponentsInChildren<GameObject>()) {
-                if (gameObject.name.Equals("AttackA")) {
-                    enemy = gameObject.GetComponent<IEnemyDetector>();
-                }
-            }
-            
-            AttackACheck(animator, enemy);
+            AttackACheck();
             // TODO 攻击判定
         }
     }
     // 攻击A取消
-    public void AttackAExit(Animator animator) {
+    public void AttackAExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击A判定
-    public void AttackACheck(Animator animator, IEnemyDetector attack) {
-        foreach(string name in attack.EnemyList) {
-            Managers.managers.GetManager(name).GetHit(10, animator);
+    public void AttackACheck() {
+        foreach(string name in Attacks[0].EnemyList) {
+            EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
+            manager.GetHit(10);
         }
     }
     // 攻击B
-    public void AttackBEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
-        if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
-            AddFrontForce(body, player, Forward);
+    public void AttackBEnter() {
+        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
             // TODO 攻击判定
 
         }
     }
     // 攻击B取消
-    public void AttackBExit(Animator animator) {
+    public void AttackBExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击C
-    public void AttackCEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
-        if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
-            AddFrontForce(body, player, Forward);
+    public void AttackCEnter() {
+        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+            AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
             // TODO 攻击判定
 
         }
     }
     // 攻击C取消
-    public void AttackCExit(Animator animator) {
+    public void AttackCExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 攻击D
-    public void AttackDEnter(Animator animator, Rigidbody2D body, GameObject player, GameObject Forward) {
-        if (_isGrounded && !IsRolling(animator) /*&& !_isOnLadder*/ && !_isJumping) {
+    public void AttackDEnter() {
+        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
-            AddFrontForce(body, player, Forward);
+            AddFrontForce();
             // TODO 攻击判定
 
         }
     }
     // 攻击D取消
-    public void AttackDExit(Animator animator) {
+    public void AttackDExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
     // 跳跃攻击
-    public void JumpAttack(Rigidbody2D body, Animator animator) {
+    public void JumpAttack() {
         if (!_isGrounded && _isJumping) {
             animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
             body.velocity = new Vector2(0, body.velocity.y);
         }
     }
     // 翻滚
-    public void Roll(Animator animator) {
-        if (_isGrounded && !IsAttacking(animator) /*&& !_isOnLadder*/) {
+    public void Roll() {
+        if (_isGrounded && !IsAttacking() /*&& !_isOnLadder*/) {
             _isRolling = true;
             animator.SetTrigger(PAParameters.ROLL);
         }
     }
     // 受伤
-    public void GetHit(float damage, Animator animator) {
+    public void GetHit(float damage) {
         // TODO 玩家受伤
     }
     // 死亡
-    public void Death(Animator animator) {
+    public void Death() {
         // TODO 玩家死亡
     }
 }
