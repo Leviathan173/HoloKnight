@@ -10,20 +10,30 @@ public class HealthBarController : MonoBehaviour
     Image healthBar;
     TMP_Text damage;
     string rootName;
-    IGameManager manager = null;
+    EnemyManager manager = null;
     bool hasCoroutine = false;
     int time = 0;
     void Start() {
         rootName = transform.parent.gameObject.transform.parent.gameObject.name;
         healthBar = GetComponentInChildren<Image>();
         damage = GetComponentInChildren<TMP_Text>();
-        print("managers:" + Managers.managers);
-        manager = Managers.managers.GetManager(rootName);
+        manager = (EnemyManager)Managers.managers.GetManager(rootName);
+        if(manager == null) {
+            StartCoroutine(GetManager());
+        }
         healthBar.gameObject.SetActive(false);
         damage.gameObject.SetActive(false);
     }
 
+    IEnumerator GetManager() {
+        while(manager == null) {
+            yield return new WaitForSeconds(0.1f);
+            manager = (EnemyManager)Managers.managers.GetManager(rootName);
+        }
+    }
+
     public void SetHealth(float value) {
+        print("health maxHP:"+manager.maxHealth);
         float maxHealth = manager.maxHealth;
         float healthPercentage = value / maxHealth;
         healthBar.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,healthPercentage);
@@ -43,7 +53,8 @@ public class HealthBarController : MonoBehaviour
     IEnumerator HideHealthBar(int leftTime) {
         yield return new WaitForSeconds(leftTime);
         while (time > leftTime) {
-            yield return new WaitForSeconds(time - leftTime);
+            yield return new WaitForSeconds(3);
+            leftTime += 3;
         }
         healthBar.gameObject.SetActive(false);
         damage.gameObject.SetActive(false);

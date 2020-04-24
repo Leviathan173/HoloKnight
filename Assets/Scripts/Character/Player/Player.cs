@@ -34,7 +34,7 @@ public class Player : MonoBehaviour {
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
-        Managers.Player.InitComponents(null, _body, _animator, Forward, Attacks, _width);
+        Managers.Player.InitComponents(_body, _animator, Forward, Attacks, _width);
     }
 
     // Update is called once per frame

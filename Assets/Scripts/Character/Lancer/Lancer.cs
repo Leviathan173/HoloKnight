@@ -20,12 +20,7 @@ public class Lancer : MonoBehaviour
 
     private float _width;
 
-    // Start is called before the first frame update
-    void Start() {
-        register = GetComponent<ManagerRegister>();
-        register.Register();
-        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
-
+    void Awake() {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
@@ -34,8 +29,16 @@ public class Lancer : MonoBehaviour
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
+    }
 
-        Managers.managers.GetManager(gameObject.name).InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+
+    // Start is called before the first frame update
+    void Start() {
+        register = GetComponent<ManagerRegister>();
+        register.Register();
+        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+        manager.InitStats(100, 100, 0.25f);
     }
 
     // Update is called once per frame

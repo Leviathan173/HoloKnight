@@ -38,6 +38,11 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     public ManagerStatus status { get; private set; }
 
+
+    void FixedUpdate() {
+        
+    }
+
     public void Startup() {
         print("starting PlayerManager...");
 
@@ -59,7 +64,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         status = ManagerStatus.Started;
     }
     // 初始化
-    public void InitComponents(GameObject game, Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
+    public void InitComponents(Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
         this.body = body;
         this.animator = animator;
         this.Forward = Forward;
@@ -206,11 +211,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     // 攻击A
     public void AttackAEnter() {
-        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping && !IsAttacking()) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
-            AttackACheck();
-            // TODO 攻击判定
         }
     }
     // 攻击A取消

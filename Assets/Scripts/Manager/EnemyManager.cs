@@ -11,6 +11,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public Animator _animator;
     public GameObject Forward;
     public EnemyDetector[] Attacks;
+    public HealthBarController health;
 
     public float maxHealth { get; set; }
     public float currentHealth { get; set; }
@@ -36,6 +37,9 @@ public class EnemyManager : MonoBehaviour, IGameManager
         _isFacingRight = true;
         _isGrounded = false;
         _isJumping = false;
+
+        health = GetComponentInChildren<HealthBarController>();
+        print(health);
 
         status = ManagerStatus.Started;
     }
@@ -190,6 +194,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // TODO 把传入的damage进行判断
     public void GetHit(float damage) {
         _animator.SetTrigger(EAParameters.HIT);
+        currentHealth -= damage;
+        health.SetHealth(currentHealth);
     }
 
     // 死亡

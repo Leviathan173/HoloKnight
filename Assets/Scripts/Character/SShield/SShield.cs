@@ -35,7 +35,7 @@ public class SShield : MonoBehaviour
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
 
-        Managers.managers.GetManager(gameObject.name).InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+        manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
     }
 
     // Update is called once per frame

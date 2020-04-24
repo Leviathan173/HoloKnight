@@ -11,5 +11,5 @@ public interface IGameManager {
 	void Startup();
     void GetHit(float damage);
     void Death();
-    void InitComponents(GameObject enemy, Rigidbody2D _body, Animator _animator, GameObject Forward, EnemyDetector[] Attacks, float _width);
+    //void InitComponents(GameObject enemy, Rigidbody2D _body, Animator _animator, GameObject Forward, EnemyDetector[] Attacks, float _width);
 }
