@@ -236,6 +236,13 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         }
     }
+    // 攻击B判定
+    public void AttackBCheck() {
+        foreach (string name in Attacks[1].EnemyList) {
+            EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
+            manager.GetHit(10);
+        }
+    }
     // 攻击B取消
     public void AttackBExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
@@ -249,6 +256,13 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         }
     }
+    // 攻击C判定
+    public void AttackCCheck() {
+        foreach (string name in Attacks[2].EnemyList) {
+            EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
+            manager.GetHit(10);
+        }
+    }
     // 攻击C取消
     public void AttackCExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
@@ -260,6 +274,13 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             AddFrontForce();
             // TODO 攻击判定
 
+        }
+    }
+    // 攻击D判定
+    public void AttackDCheck() {
+        foreach (string name in Attacks[3].EnemyList) {
+            EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
+            manager.GetHit(10);
         }
     }
     // 攻击D取消
@@ -283,6 +304,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     // 受伤
     public void GetHit(float damage) {
         // TODO 玩家受伤
+        print("hit player");
+        animator.SetTrigger(PAParameters.HIT);
+        //animator.ResetTrigger(PAParameters.HIT);
     }
     // 死亡
     public void Death() {

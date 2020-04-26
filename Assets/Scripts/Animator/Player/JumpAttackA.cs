@@ -10,6 +10,8 @@ public class JumpAttackA : StateMachineBehaviour
         
         Managers.Player.jumpStat = 0;
         Managers.Player._isJumping = true;
+
+        Managers.Player.AttackDCheck();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

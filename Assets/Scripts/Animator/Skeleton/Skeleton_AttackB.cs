@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Skeleton_AttackB : StateMachineBehaviour
 {
-    EnemyManager skeletonManager;
+    EnemyManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        //Managers.Skeleton.AttackBExit();
-        skeletonManager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
-        skeletonManager.AttackBExit();
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
+        manager.AttackACheck();
+        manager.AttackBExit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

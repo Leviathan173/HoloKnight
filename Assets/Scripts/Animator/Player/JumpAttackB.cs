@@ -9,6 +9,8 @@ public class JumpAttackB : StateMachineBehaviour
         Managers.Player.AddUpForce();
         animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, -1);
         Managers.Player.jumpStat = -1;
+
+        Managers.Player.AttackDCheck();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

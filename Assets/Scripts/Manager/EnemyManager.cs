@@ -10,8 +10,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public Rigidbody2D _body;
     public Animator _animator;
     public GameObject Forward;
-    public EnemyDetector[] Attacks;
     public HealthBarController health;
+    public EnemyDetector[] Attacks;
 
     public float maxHealth { get; set; }
     public float currentHealth { get; set; }
@@ -38,8 +38,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
         _isGrounded = false;
         _isJumping = false;
 
+        //Attacks = GetComponentsInChildren<EnemyDetector>();
         health = GetComponentInChildren<HealthBarController>();
-        print(health);
 
         status = ManagerStatus.Started;
     }
@@ -119,9 +119,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击A判定
     public void AttackACheck() {
-        foreach (string name in Attacks[0].EnemyList) {
-            print(name);
-            Managers.managers.GetManager(name).GetHit(10);
+        if (Attacks[0].hasPlayer) {
+            Managers.Player.GetHit(10);
         }
     }
     // 攻击A取消
@@ -138,9 +137,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击B判定
     public void AttackBCheck() {
-        foreach (string name in Attacks[0].EnemyList) {
-            print(name);
-            Managers.managers.GetManager(name).GetHit(10);
+        if (Attacks[1].hasPlayer) {
+            Managers.Player.GetHit(10);
         }
     }
     // 攻击B取消
@@ -157,9 +155,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
         }
     }
     public void AttackBCheckSlime() {
-        foreach (string name in Attacks[0].EnemyList) {
-            print(name);
-            Managers.managers.GetManager(name).GetHit(10);
+        if (Attacks[1].hasPlayer) {
+            Managers.Player.GetHit(10);
         }
     }
     public void AttackBExitSlime() {
@@ -172,9 +169,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击C判定
     public void AttackCCheck() {
-        foreach (string name in Attacks[0].EnemyList) {
-            print(name);
-            Managers.managers.GetManager(name).GetHit(10);
+        if (Attacks[2].hasPlayer) {
+            Managers.Player.GetHit(10);
         }
     }
     // 攻击C取消
@@ -195,7 +191,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public void GetHit(float damage) {
         _animator.SetTrigger(EAParameters.HIT);
         currentHealth -= damage;
-        health.SetHealth(currentHealth);
+        health.SetHealth(damage);
     }
 
     // 死亡

@@ -9,6 +9,9 @@ public class Lancer : MonoBehaviour
 
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
+    public const float MAX_HEALTH = 100.0f;
+    public const float MAX_STAMINA = 100.0f;
+    public const float STAMINA_INCREASEMENT = 0.25f;
 
     private Rigidbody2D _body;
     private Animator _animator;
@@ -38,7 +41,7 @@ public class Lancer : MonoBehaviour
         register.Register();
         manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
         manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
-        manager.InitStats(100, 100, 0.25f);
+        manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT);
     }
 
     // Update is called once per frame

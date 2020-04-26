@@ -12,7 +12,10 @@ public class HealthBarController : MonoBehaviour
     string rootName;
     EnemyManager manager = null;
     bool hasCoroutine = false;
-    int time = 0;
+    float totalDamage = 0;
+    float currrentHealth = 0;
+    float maxHealth = 0;
+    float time = 0;
     void Start() {
         rootName = transform.parent.gameObject.transform.parent.gameObject.name;
         healthBar = GetComponentInChildren<Image>();
@@ -29,35 +32,37 @@ public class HealthBarController : MonoBehaviour
         while(manager == null) {
             yield return new WaitForSeconds(0.1f);
             manager = (EnemyManager)Managers.managers.GetManager(rootName);
+            maxHealth = manager.maxHealth;
+            currrentHealth = maxHealth;
         }
     }
 
     public void SetHealth(float value) {
-        print("health maxHP:"+manager.maxHealth);
-        float maxHealth = manager.maxHealth;
-        float healthPercentage = value / maxHealth;
+        currrentHealth -= value;
+        float healthPercentage = currrentHealth / maxHealth;
         healthBar.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,healthPercentage);
-        damage.text = value.ToString();
+        totalDamage += value;
+        print("total damange :" + totalDamage);
+        damage.text = totalDamage.ToString();
         healthBar.gameObject.SetActive(true);
         damage.gameObject.SetActive(true);
         if (!hasCoroutine) {
-            time += 3;
+            time = Time.time + 3;
             hasCoroutine = true;
-            StartCoroutine(HideHealthBar(time));
+            StartCoroutine(HideHealthBar());
         } else {
-            time += 3;
+            time = Time.time + 3;
         }
         
     }
 
-    IEnumerator HideHealthBar(int leftTime) {
-        yield return new WaitForSeconds(leftTime);
-        while (time > leftTime) {
-            yield return new WaitForSeconds(3);
-            leftTime += 3;
+    IEnumerator HideHealthBar() {
+        while (time > Time.time) {
+            yield return new WaitForSeconds(1);
         }
         healthBar.gameObject.SetActive(false);
         damage.gameObject.SetActive(false);
+        totalDamage = 0;
         hasCoroutine = false;
     }
 }

@@ -9,6 +9,9 @@ public class Acher : MonoBehaviour
 
     public const float SPEED = 2.0f;
     public const float SLOW_SPEED = 1.0f;
+    public const float MAX_HEALTH = 100.0f;
+    public const float MAX_STAMINA = 100.0f;
+    public const float STAMINA_INCREASEMENT = 0.25f;
 
     private Rigidbody2D _body;
     private Animator _animator;
@@ -35,6 +38,7 @@ public class Acher : MonoBehaviour
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
         manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+        manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT);
     }
 
     // Update is called once per frame
