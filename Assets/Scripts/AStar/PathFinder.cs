@@ -20,7 +20,8 @@ public class PathFinder : MonoBehaviour {
 
 
     public void FindShortestPathOfNodes(int fromNodeID, int toNodeID) {
-        if (QPathFinder.Logger.CanLogInfo) QPathFinder.Logger.LogInfo(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID, true);
+        //if (QPathFinder.Logger.CanLogInfo) QPathFinder.Logger.LogInfo(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID, true);
+        print(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID);
         StartCoroutine(FindShortestPathAsynchonousInternal(fromNodeID, toNodeID));
     }
 
@@ -121,7 +122,8 @@ public class PathFinder : MonoBehaviour {
                     }
                     print("Path found between " + fromNodeID + " and " + toNodeID + ":" + str);
                 }
-                StartCoroutine(Follow(finalPath));
+                EnemyManager manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+                StartCoroutine(manager.Follow(finalPath));
                 yield break;
             }
 
@@ -178,7 +180,5 @@ public class PathFinder : MonoBehaviour {
         yield break;
     }
 
-    private IEnumerator Follow(List<Node> finalPath) {
-        yield return null;
-    }
+    
 }

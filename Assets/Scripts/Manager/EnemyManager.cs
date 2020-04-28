@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AStar;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -117,6 +118,10 @@ public class EnemyManager : MonoBehaviour, IGameManager
             // TODO 攻击判定
         }
     }
+    // TODO 更加精准的判定
+    // 或许修改一下碰撞体，让他和挥剑的动作一样移动
+    // 或许就仅仅只是对每个攻击进行单独的延时触发判定
+    
     // 攻击A判定
     public void AttackACheck() {
         if (Attacks[0].hasPlayer) {
@@ -202,6 +207,31 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     public void Enemy1_Destroy() {
         Destroy(enemy);
+    }
+
+    public IEnumerator Follow(List<Node> finalPath) {
+        // TODO 根据寻路算法获取的路线行走
+        // 判断X坐标就行，Y轴给一个大概判定值，毕竟也不能飞
+        // 巡逻的行动
+        // 遇到了玩家之后的行动
+        // 这个协程不会一直存在，当玩家的位置发生变化之后要结束这个协程，然后重新判断路径，重新寻路
+        // 需要一个上限值来限制COST的上限，超过上限就可以不用进行移动
+        while (true) {
+            for (int i = 0; i < finalPath.Count; i++) {
+                if (finalPath[i + 1] != null) {
+                    if(finalPath[i].Position.x > enemy.transform.position.x) {
+                        if (_isFacingRight) {
+                            Move(3);
+                            yield return new WaitForSeconds(1);
+                        } else {
+                            Turn(-1);
+                            Move(3);
+                            yield return new WaitForSeconds(1);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
