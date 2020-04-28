@@ -5,11 +5,19 @@ using System.Collections.Generic;
 namespace AStar {
     public class Node {
         [SerializeField] private Vector3 position;
+        public Vector3 Position {
+            get { return position; }
+        }
         [SerializeField] private bool isOpen;
+        public bool IsOpen {
+            get { return isOpen; }
+        }
 
-        [SerializeField] public Node prevPosition;
+        [SerializeField] public Node prevNode;
         [SerializeField] public int ID;
-        [SerializeField] public float F;
+        [SerializeField] public float F {
+            get { return H + G; }
+        }
         [SerializeField] public float H;
         [SerializeField] public float G;
 
