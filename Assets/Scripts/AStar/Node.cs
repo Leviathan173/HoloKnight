@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace AStar {
+
+    public enum PathLineType {
+        Straight,
+        CatmullRomCurve,
+    }
+
+    [System.Serializable]
     public class Node {
         [SerializeField] private Vector3 position;
         public Vector3 Position {
@@ -32,6 +39,7 @@ namespace AStar {
         }
     }
 
+    [System.Serializable]
     public class Path {
         public Path(int a, int b) {
             NodeAId = a;
@@ -46,11 +54,12 @@ namespace AStar {
         [SerializeField] public bool isOpen = true;
     }
 
+    [System.Serializable]
     public class GraphData {
-        //[SerializeField] public PathLineType lineType;
+        [SerializeField] public PathLineType lineType;
         [SerializeField] public Color lineColor = Color.yellow;
         [SerializeField] public float nodeSize = 0.5f;
-        //[SerializeField] public float heightFromTheGround = 0;      // this represents how much offset we create our points from the ground ?
+        [SerializeField] public float heightFromTheGround = 0;
         [SerializeField] public string groundColliderLayerName = "Default";
 
         [SerializeField] public List<Node> nodes;

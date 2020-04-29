@@ -612,7 +612,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Forward: {fileID: 2380381583807165725}
-  Attacks: []
+  Attacks:
+  - {fileID: 1678291118}
+  - {fileID: 1678291118}
 --- !u!114 &2380381583101915048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,8 +643,8 @@ MonoBehaviour:
   _body: {fileID: 0}
   _animator: {fileID: 0}
   Forward: {fileID: 0}
-  Attacks: []
   health: {fileID: 0}
+  Attacks: []
   jumpForce: 12
   _width: 0
 --- !u!1 &2380381583342971057

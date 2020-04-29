@@ -123,6 +123,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Forward: {fileID: 3688733927168279402}
+  Attacks:
+  - {fileID: 1803423992}
+  - {fileID: 712670578}
+  - {fileID: 37250565}
+  - {fileID: 998196719}
   speed: 3
 --- !u!61 &3688733927102811751
 BoxCollider2D:
