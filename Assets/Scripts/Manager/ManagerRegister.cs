@@ -7,7 +7,7 @@ public class ManagerRegister : MonoBehaviour
     public static EnemyManager manager;
 
     public void Register() {
-        
+        print(gameObject.name);
         if (gameObject.name.Contains("E_")) {
             manager = GetComponent<EnemyManager>();
             Managers.managers.AddManager(gameObject.name, manager);

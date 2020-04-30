@@ -20,7 +20,6 @@ public class Player : MonoBehaviour {
     private float _deltaY;
     private float _width;
     private string _currentStat;//无用代码 
-    
 
 
     // Start is called before the first frame update
@@ -36,6 +35,30 @@ public class Player : MonoBehaviour {
         collOffset = _boxCollider.offset;
         Managers.Player.InitComponents(_body, _animator, Forward, Attacks, _width);
     }
+
+
+    void FixedUpdate() {
+        //print("grounded?" + Managers.Player._isGrounded);
+        //// 跳跃条件
+        //Vector3 max = _boxCollider.bounds.max;
+        //Vector3 min = _boxCollider.bounds.min;
+        //Vector2 corner1 = new Vector2(max.x, min.y - .2f);
+        //Vector2 corner2 = new Vector2(min.x, min.y - .3f);
+
+        //Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
+        //if (hit != null) {
+        //    if (!hit.isTrigger) {
+        //        Managers.Player._isGrounded = true;
+        //        _animator.SetBool(PAParameters.GROUND, true);
+        //        Managers.Player._isJumping = false;
+        //    }
+        //} else {
+        //    Managers.Player._isGrounded = false;
+        //    Managers.Player._isJumping = true;
+        //    _animator.SetBool(PAParameters.GROUND, false);
+        //}
+    }
+
 
     // Update is called once per frame
     void Update() {
@@ -54,24 +77,7 @@ public class Player : MonoBehaviour {
             //_body.gravityScale = (Managers.Player._isGrounded && Mathf.Approximately(_deltaX, 0)) ? 0 : 3;
             //_body.velocity = Vector2.zero;
         }
-        // 跳跃条件
-        Vector3 max = _boxCollider.bounds.max;
-        Vector3 min = _boxCollider.bounds.min;
-        Vector2 corner1 = new Vector2(max.x, min.y - .2f);
-        Vector2 corner2 = new Vector2(min.x, min.y - .3f);
-
-        Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
-        if(hit != null) {
-            if (!hit.isTrigger) {
-                Managers.Player._isGrounded = true;
-                _animator.SetBool(PAParameters.GROUND, true);
-                Managers.Player._isJumping = false;
-            } 
-        } else {
-            Managers.Player._isGrounded = false;
-            Managers.Player._isJumping = true;
-            _animator.SetBool(PAParameters.GROUND, false);
-        }
+        
         // 跳跃
         if (Input.GetKeyDown(KeyCode.Space)) {
             Managers.Player.Jump();
@@ -142,6 +148,10 @@ public class Player : MonoBehaviour {
         //    Managers.Player.ClimbStart();
         //}
 
+
+        if (Input.GetKeyDown(KeyCode.M)) {
+            Managers.UI.OnPlayStatusOpen();
+        }
         
 
     }

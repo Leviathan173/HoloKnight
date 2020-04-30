@@ -38,11 +38,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     public ManagerStatus status { get; private set; }
 
-
-    void FixedUpdate() {
-        
-    }
-
     public void Startup() {
         print("starting PlayerManager...");
 
