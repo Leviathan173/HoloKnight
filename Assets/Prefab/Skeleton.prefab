@@ -458,6 +458,8 @@ GameObject:
   - component: {fileID: 2380381583101915049}
   - component: {fileID: 2380381583101915048}
   - component: {fileID: 2085379912}
+  - component: {fileID: 1535033899954785862}
+  - component: {fileID: 710926467693569606}
   m_Layer: 8
   m_Name: Skeleton
   m_TagString: Untagged
@@ -647,6 +649,32 @@ MonoBehaviour:
   Attacks: []
   jumpForce: 12
   _width: 0
+--- !u!114 &1535033899954785862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380381583101915050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96da344381a364c59b8ff27429705cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
+  alignToPath: 1
+--- !u!114 &710926467693569606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380381583101915050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbb5eef16c503f4fb548542ea887c45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2380381583342971057
 GameObject:
   m_ObjectHideFlags: 0
