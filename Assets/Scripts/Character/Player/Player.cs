@@ -21,6 +21,12 @@ public class Player : MonoBehaviour {
     private float _width;
     private string _currentStat;//无用代码 
 
+    [SerializeField] public int Vigor = 10;
+    [SerializeField] public int Strength = 10;
+    [SerializeField] public int Dexterity = 10;
+    [SerializeField] public int Defense = 90;
+    [SerializeField] public float Absorption;
+
 
     // Start is called before the first frame update
     void Start() {
@@ -28,6 +34,8 @@ public class Player : MonoBehaviour {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
         _currentStat = PAParameters.IDLE;//无用代码
+
+        Absorption = Defense / 30;
 
         _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
@@ -39,15 +47,18 @@ public class Player : MonoBehaviour {
 
     void FixedUpdate() {
         //print("grounded?" + Managers.Player._isGrounded);
-        //// 跳跃条件
-        //Vector3 max = _boxCollider.bounds.max;
-        //Vector3 min = _boxCollider.bounds.min;
-        //Vector2 corner1 = new Vector2(max.x, min.y - .2f);
-        //Vector2 corner2 = new Vector2(min.x, min.y - .3f);
+        // 跳跃条件
+        //Vector3 max = _boxCollider.bounds.max;// 右上
+        //Vector3 min = _boxCollider.bounds.min;// 左下
+        //Vector2 corner1 = new Vector2(max.x-0.2f, min.y - .2f);
+        //Vector2 corner2 = new Vector2(min.x+0.2f, min.y - .3f);
 
         //Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
         //if (hit != null) {
         //    if (!hit.isTrigger) {
+        //        if (hit.tag.Equals("Ground")) {
+        //            print("Ground");
+        //        }
         //        Managers.Player._isGrounded = true;
         //        _animator.SetBool(PAParameters.GROUND, true);
         //        Managers.Player._isJumping = false;
@@ -57,6 +68,28 @@ public class Player : MonoBehaviour {
         //    Managers.Player._isJumping = true;
         //    _animator.SetBool(PAParameters.GROUND, false);
         //}
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        _body.GetContacts(contacts);
+        if (contacts != null) {
+            bool hited = false;
+            foreach(var contact in contacts) {
+                if(contact.collider != null) {
+                    if (contact.collider.name.Contains("Ground")) {
+                        Managers.Player._isGrounded = true;
+                        _animator.SetBool(PAParameters.GROUND, true);
+                        Managers.Player._isJumping = false;
+                        hited = true;
+                        break;
+                    }
+                }
+                
+            }
+            if (!hited) {
+                Managers.Player._isGrounded = false;
+                Managers.Player._isJumping = true;
+                _animator.SetBool(PAParameters.GROUND, false);
+            }
+        }
     }
 
 

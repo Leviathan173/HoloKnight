@@ -43,26 +43,51 @@ public class SShield : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    void FixedUpdate() {
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        _body.GetContacts(contacts);
+        if (contacts != null) {
+            bool hited = false;
+            foreach (var contact in contacts) {
+                if (contact.collider != null) {
+                    if (contact.collider.name.Contains("Ground") ||
+                        contact.collider.name.Contains("Plat")) {
+                        manager._isGrounded = true;
+                        _animator.SetBool(EAParameters.GROUNDED, true);
+                        manager._isJumping = false;
+                        hited = true;
+                        break;
+                    }
+                }
+
+            }
+            if (!hited) {
+                manager._isGrounded = false;
+                manager._isJumping = true;
+                _animator.SetBool(EAParameters.GROUNDED, false);
+            }
+        }
+    }
+
     void Update() {
         // 跳跃条件
-        Vector3 max = _boxCollider.bounds.max;
-        Vector3 min = _boxCollider.bounds.min;
-        Vector2 corner1 = new Vector2(max.x, min.y - .2f);
-        Vector2 corner2 = new Vector2(min.x, min.y - .3f);
+        //Vector3 max = _boxCollider.bounds.max;
+        //Vector3 min = _boxCollider.bounds.min;
+        //Vector2 corner1 = new Vector2(max.x, min.y - .2f);
+        //Vector2 corner2 = new Vector2(min.x, min.y - .3f);
 
-        Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
+        //Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
 
-        if (hit != null && !hit.isTrigger) {
-            manager._isGrounded = true;
-            _animator.SetBool(EAParameters.GROUNDED, true);
-            manager._isJumping = false;
+        //if (hit != null && !hit.isTrigger) {
+        //    manager._isGrounded = true;
+        //    _animator.SetBool(EAParameters.GROUNDED, true);
+        //    manager._isJumping = false;
 
-        } else {
-            manager._isGrounded = false;
-            manager._isJumping = true;
-            _animator.SetBool(EAParameters.GROUNDED, false);
-        }
+        //} else {
+        //    manager._isGrounded = false;
+        //    manager._isJumping = true;
+        //    _animator.SetBool(EAParameters.GROUNDED, false);
+        //}
 
         // 控制碰撞
         _boxCollider.offset = collOffset;
