@@ -55,7 +55,8 @@ public class Slime : MonoBehaviour
             bool hited = false;
             foreach (var contact in contacts) {
                 if (contact.collider != null) {
-                    if (contact.collider.name.Contains("Ground")) {
+                    if (contact.collider.name.Contains("Ground") ||
+                        contact.collider.name.Contains("Plat")) {
                         manager._isGrounded = true;
                         _animator.SetBool(EAParameters.GROUNDED, true);
                         manager._isJumping = false;
