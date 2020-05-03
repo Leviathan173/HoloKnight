@@ -19,7 +19,7 @@ public class Player : MonoBehaviour {
     private float _deltaX;
     private float _deltaY;
     private float _width;
-    private string _currentStat;//无用代码 
+    ElevatorController elevator = null;
 
     [SerializeField] public int Vigor = 10;
     [SerializeField] public int Strength = 10;
@@ -33,7 +33,6 @@ public class Player : MonoBehaviour {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
-        _currentStat = PAParameters.IDLE;//无用代码
 
         Absorption = Defense / 30;
 
@@ -74,13 +73,28 @@ public class Player : MonoBehaviour {
             bool hited = false;
             foreach(var contact in contacts) {
                 if(contact.collider != null) {
-                    if (contact.collider.name.Contains("Ground")||
-                        contact.collider.name.Contains("Plat")) {
+                    elevator = contact.collider.GetComponent<ElevatorController>();
+                    if(elevator != null) {
+                        transform.parent = elevator.transform;
+
                         Managers.Player._isGrounded = true;
                         _animator.SetBool(PAParameters.GROUND, true);
                         Managers.Player._isJumping = false;
                         hited = true;
                         break;
+                    } else {
+                        transform.parent = null;
+                    }
+
+                    if (contact.collider.name.Contains("Ground")||
+                        contact.collider.name.Contains("Plat")) {
+                        if(contact.point.y <= _boxCollider.bounds.min.y+0.2) {
+                            Managers.Player._isGrounded = true;
+                            _animator.SetBool(PAParameters.GROUND, true);
+                            Managers.Player._isJumping = false;
+                            hited = true;
+                            break;
+                        }
                     }
                 }
                 
@@ -203,10 +217,5 @@ public class Player : MonoBehaviour {
         if (collision.gameObject.name.Contains("E_")) {
             speed = 3.0f;
         }
-    }
-    private void ChangeStat(string changeStat) {
-        _animator.ResetTrigger(_currentStat);
-        _animator.SetTrigger(changeStat);
-        _currentStat = changeStat;
     }
 }

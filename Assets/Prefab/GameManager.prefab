@@ -51,7 +51,7 @@ MonoBehaviour:
   Forward: {fileID: 0}
   Attacks: []
   width: 0
-  jumpForce: 12
+  jumpForce: 16
 --- !u!114 &114613410379343147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,7 +77,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Setting: {fileID: 0}
+  Menu: {fileID: 0}
   MainCanvas: {fileID: 0}
   BGM: {fileID: 0}
+  PlayerStatus: {fileID: 0}
   BGMVolume: 0
   SESoundVolume: 0
+  equip: {fileID: 0}
+  data: {fileID: 0}
+  item: {fileID: 0}

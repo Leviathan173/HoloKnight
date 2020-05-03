@@ -176,6 +176,22 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             }
         }
     }
+    //public void Turn(float deltaX, Vector3 elevator) {
+    //    if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
+    //        && !IsAttacking()
+    //        /*&& !_isOnLadder*/) {
+    //        player.transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3 / elevator.x, 3 / elevator.y, 3);
+    //        if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
+    //            //do turn left
+    //            _isFacingRight = !_isFacingRight;
+    //            player.transform.position = new Vector3(player.transform.position.x - width, player.transform.position.y, player.transform.position.z);
+    //        } else if (!_isFacingRight && Mathf.Sign(deltaX) > 0) {
+    //            //do turn right
+    //            _isFacingRight = !_isFacingRight;
+    //            player.transform.position = new Vector3(player.transform.position.x + width, player.transform.position.y, player.transform.position.z);
+    //        }
+    //    }
+    //}
     //移动
     public void Move(float deltaX) {
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
