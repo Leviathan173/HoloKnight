@@ -27,18 +27,11 @@ public class UIManager : MonoBehaviour, IGameManager
         equip = PlayerStatus.GetComponentInChildren<EquipController>();
         item = PlayerStatus.GetComponentInChildren<ItemListController>();
         data = PlayerStatus.GetComponentInChildren<PlayerStatsDataController>();
-        print("equip:" + equip);
-        print("item:" + item);
-        print("data:" + data);
+        //print("equip:" + equip);
+        //print("item:" + item);
+        //print("data:" + data);
         status = ManagerStatus.Started;
     }
-
-    //void Awake() {
-    //    BGMVolume = 1;
-    //    SESoundVolume = 1;
-    //    equip = PlayerStatus.GetComponentInChildren<EquipController>();
-    //    item = PlayerStatus.GetComponentInChildren<ItemListController>();
-    //}
 
     public void OnExitGame() {
         Application.Quit();
@@ -64,6 +57,7 @@ public class UIManager : MonoBehaviour, IGameManager
         // 传的参数没有决定
     }
 
+    // 设置界面
     public void OnSettingOpen() {
         Setting.Open();
         MainCanvas.gameObject.SetActive(false);
@@ -73,7 +67,7 @@ public class UIManager : MonoBehaviour, IGameManager
         Setting.Close();
         MainCanvas.gameObject.SetActive(true);
     }
-
+    // 菜单界面，设置与退出
     public void OnMenuOpen() {
         Menu.OnOpen();
     }
@@ -89,21 +83,21 @@ public class UIManager : MonoBehaviour, IGameManager
         data.OnClose();
         PlayerStatus.OnClose();
     }
-
+    // 玩家状态中的装备菜单
     public void OnEquipOpen() {
         equip.OnOpen();
     }
     public void OnEquipClose() {
         equip.OnClose();
     }
-
+    // 状态数值显示菜单
     public void OnStatusOpen() {
         data.OnOpen();
     }
     public void OnstatusClose() {
         data.OnClose();
     }
-
+    // 更换装备的装备栏
     public void OnItemOpen() {
         item.OnOpen();
     }
@@ -113,7 +107,7 @@ public class UIManager : MonoBehaviour, IGameManager
 
     public void OnSliderValueChanged(Slider slider) {
         if (slider.name.Contains("SE")) {
-
+            // TODO 修改SE sound
         } else {
             BGMVolume = slider.value;
             BGM.volume = BGMVolume;

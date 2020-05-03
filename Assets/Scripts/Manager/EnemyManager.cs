@@ -115,7 +115,6 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public void AttackAEnter() {
         if (_isGrounded && !_isJumping) {
             _animator.SetTrigger(EAParameters.ATTACK_A);
-            // TODO 攻击判定
         }
     }
     // TODO 更加精准的判定
@@ -136,8 +135,6 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public void AttackBEnter() {
         if (_isGrounded && !_isJumping) {
             _animator.SetTrigger(EAParameters.ATTACK_B);
-            // TODO 攻击判定
-
         }
     }
     // 攻击B判定
@@ -192,10 +189,13 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
 
     // 受击
-    // TODO 把传入的damage进行判断
     public void GetHit(float damage) {
         _animator.SetTrigger(EAParameters.HIT);
-        currentHealth -= damage;
+        if(currentHealth < damage) {
+            currentHealth = 0;
+        } else {
+            currentHealth -= damage;
+        }
         health.SetHealth(damage);
     }
 
