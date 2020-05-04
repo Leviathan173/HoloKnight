@@ -5,7 +5,7 @@ using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-[CustomEditor(typeof(PathFinderMy))]
+[CustomEditor(typeof(PathFinder))]
 public class GUIEditor : Editor {
     enum SceneMode {
         AddNode,
@@ -16,7 +16,7 @@ public class GUIEditor : Editor {
 
     [MenuItem("GameObject/Create a 2D PathFinderMy in scene with a collider")]
     public static void Create2DPathFinderObjectInScene() {
-        if (GameObject.FindObjectOfType<PathFinderMy>() == null) {
+        if (GameObject.FindObjectOfType<PathFinder>() == null) {
             var managerGo = new GameObject("PathFinder");
             var colliderGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
             colliderGo.name = "Ground";
@@ -26,7 +26,7 @@ public class GUIEditor : Editor {
             var boxCollider = colliderGo.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
 
-            managerGo.AddComponent<PathFinderMy>();
+            managerGo.AddComponent<PathFinder>();
         } else {
             if (QPathFinder.Logger.CanLogError) QPathFinder.Logger.LogError("PathFollower Script already exists!");
         }
@@ -411,7 +411,7 @@ public class GUIEditor : Editor {
 
     private void OnEnable() {
         sceneMode = SceneMode.None;
-        script = target as PathFinderMy;
+        script = target as PathFinder;
         script.graphData.GenerateIDs();
     }
 
@@ -431,7 +431,7 @@ public class GUIEditor : Editor {
 
 
     private SceneMode sceneMode;
-    private PathFinderMy script;
+    private PathFinder script;
 
     const string nodeGUITextColor = "#ff00ffff";
     const string pathGUITextColor = "#00ffffff";
