@@ -108,7 +108,6 @@ public class AcherManager : MonoBehaviour
     public void AttackAEnter() {
         if (_isGrounded && !_isOnLadder && !_isJumping) {
             _animator.SetTrigger(EAParameters.ATTACK_A);
-            // TODO 攻击判定
         }
     }
     // 攻击A取消
@@ -119,8 +118,6 @@ public class AcherManager : MonoBehaviour
     public void AttackBEnter() {
         if (_isGrounded && !_isOnLadder && !_isJumping) {
             _animator.SetTrigger(EAParameters.ATTACK_B);
-            // TODO 攻击判定
-
         }
     }
     // 攻击B取消
@@ -129,13 +126,11 @@ public class AcherManager : MonoBehaviour
     }
 
     // 受击
-    // TODO 把传入的damage进行判断
     public void GetHit(float damage) {
         _animator.SetTrigger(EAParameters.HIT);
     }
 
     // 死亡
-    // TODO 消除敌人并给予玩家经验
     public void Death() {
         _animator.SetTrigger(EAParameters.DEAD);
     }

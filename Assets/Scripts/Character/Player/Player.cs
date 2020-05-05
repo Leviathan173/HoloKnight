@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using AStar;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -88,6 +89,16 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.F2)) {
+            GraphData datas = new GraphData();
+            print("datas:" + datas.GetNode(1));
+            print("player use data count:"+datas.nodes.Count);
+            foreach(var data in datas.nodes) {
+                print("player use data id:"+data.ID);
+            }
+        }
+
+
 
         _deltaX = Input.GetAxis("Horizontal") * speed;
         _animator.SetFloat(PAParameters.SPEED, Mathf.Abs(_deltaX));
@@ -97,8 +108,7 @@ public class Player : MonoBehaviour {
             Managers.Player.Move(_deltaX);
         }
 
-        // 不在倾斜的平台上滑动
-        // TODO
+        // TODO 不在倾斜的平台上滑动
         if (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Idle")) {
             //_body.gravityScale = (Managers.Player._isGrounded && Mathf.Approximately(_deltaX, 0)) ? 0 : 3;
             //_body.velocity = Vector2.zero;

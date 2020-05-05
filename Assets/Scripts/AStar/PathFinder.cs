@@ -10,6 +10,7 @@ public class PathFinder : MonoBehaviour {
     public static PathFinder Instance { get; private set; }
 
     public GraphData graphData = new GraphData();
+    List<Node> OuterNodes = new List<Node>();
 
     public void Awake() {
         _instance = this;
@@ -21,14 +22,43 @@ public class PathFinder : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.F1)) {
-            FindShortestPathOfNodes(6,1);
+            
+            System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
+                print("time.time：" + Time.time);
+                print("委托开始");
+                if (nodes == null || nodes.Count == 0) {
+                    print("Node为空");
+                    return;
+                }
+                
+                foreach(var node in nodes) {
+                    OuterNodes.Add(node);
+                }
+            };
+            FindShortestPathOfNodes(20,42,PathOfNodes);
+            StartCoroutine(Check());
         }
     }
 
-    public void FindShortestPathOfNodes(int fromNodeID, int toNodeID) {
+    IEnumerator Check() {
+        while (OuterNodes.Count == 0) {
+            yield return new WaitForSeconds(1);
+        }
+        print("outer nodes count:" + OuterNodes.Count);
+        foreach (var node in OuterNodes) {
+            print("node in outer nodes:" + node.ID);
+        }
+        OuterNodes.Clear();
+    }
+
+    private void WaitForSeconds(int v) {
+        throw new NotImplementedException();
+    }
+
+    public void FindShortestPathOfNodes(int fromNodeID, int toNodeID, System.Action<List<Node>> callback) {
         //if (QPathFinder.Logger.CanLogInfo) QPathFinder.Logger.LogInfo(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID, true);
         print(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID);
-        StartCoroutine(FindShortestPathAsynchonousInternal(fromNodeID, toNodeID));
+        StartCoroutine(FindShortestPathAsynchonousInternal(fromNodeID, toNodeID, callback));
     }
 
     public int FindNearestNode(Vector3 point) {
@@ -72,7 +102,13 @@ public class PathFinder : MonoBehaviour {
         path.isOpen = (enable);
     }
 
-    private IEnumerator FindShortestPathAsynchonousInternal(int fromNodeID, int toNodeID) {
+    private IEnumerator FindShortestPathAsynchonousInternal(int fromNodeID, int toNodeID, System.Action<List<Node>> callback) {
+        float start = Time.time;
+        if(callback == null) {
+            print("has no recver");
+            yield break;
+        }
+
 
         int startPointID = fromNodeID;
         int endPointID = toNodeID;
@@ -131,8 +167,9 @@ public class PathFinder : MonoBehaviour {
                         print("node:" + node.ID);
                     }
                 }
-                EnemyManager manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
-                StartCoroutine(manager.Follow(finalPath));
+                callback(finalPath);
+                float end = Time.time;
+                print("Time:" + (end - start));
                 yield break;
             }
 
@@ -181,11 +218,12 @@ public class PathFinder : MonoBehaviour {
 
         if (!found) {
             Debug.LogError("Path not found between " + fromNodeID + " and " + toNodeID);
+            callback(null);
             yield break;
         }
 
         Debug.LogError("Unknown error while finding the path!");
-
+        callback(null);
         yield break;
     }
 

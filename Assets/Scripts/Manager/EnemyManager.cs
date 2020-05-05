@@ -27,6 +27,29 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public float jumpForce = 12.0f;
     public float _width;
 
+    static PathFinder PathFinder;
+    public static System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
+        print("委托开始");
+        if (nodes == null || nodes.Count == 0) {
+            print("Node为空");
+            return;
+        }
+        float cost = 0;
+        foreach (var node in nodes) {
+            if(node.prevNode!= null) {
+                cost += PathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
+                if(cost > 500) {
+                    print("out of range");
+                    break;
+                }
+            }
+        }
+        if (cost <= 500) {
+            print("可以跟寻路线");
+            // TODO 跟寻路线
+        }
+    };
+
     void FixedUpdate() {
         if (currentStamina < maxStamina) {
             currentStamina += staminaIncreasement;
@@ -41,7 +64,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
         //Attacks = GetComponentsInChildren<EnemyDetector>();
         health = GetComponentInChildren<HealthBarController>();
-
+        PathFinder = PathFinder.Instance;
         status = ManagerStatus.Started;
     }
     // 初始化组件
@@ -200,7 +223,6 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
 
     // 死亡
-    // TODO 消除敌人并给予玩家经验
     public void Death() {
         _animator.SetTrigger(EAParameters.DEAD);
     }
@@ -209,29 +231,6 @@ public class EnemyManager : MonoBehaviour, IGameManager
         Destroy(enemy);
     }
 
-    public IEnumerator Follow(List<Node> finalPath) {
-        // TODO 根据寻路算法获取的路线行走
-        // 判断X坐标就行，Y轴给一个大概判定值，毕竟也不能飞
-        // 巡逻的行动
-        // 遇到了玩家之后的行动
-        // 这个协程不会一直存在，当玩家的位置发生变化之后要结束这个协程，然后重新判断路径，重新寻路
-        // 需要一个上限值来限制COST的上限，超过上限就可以不用进行移动
-        while (true) {
-            for (int i = 0; i < finalPath.Count; i++) {
-                if (finalPath[i + 1] != null) {
-                    if(finalPath[i].Position.x > enemy.transform.position.x) {
-                        if (_isFacingRight) {
-                            Move(3);
-                            yield return new WaitForSeconds(1);
-                        } else {
-                            Turn(-1);
-                            Move(3);
-                            yield return new WaitForSeconds(1);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    
 
 }

@@ -48,7 +48,7 @@ public class GUIEditor : Editor {
     private void ShowNodesAndPathInInspector() {
         script.graphData.nodeSize = EditorGUILayout.Slider("Node gizmo Size", script.graphData.nodeSize, 0.1f, 3f);
         script.graphData.lineColor = EditorGUILayout.ColorField("Path Color", script.graphData.lineColor);
-        script.graphData.lineType = (PathLineType)EditorGUILayout.EnumPopup("Path Type", script.graphData.lineType);
+        //script.graphData.lineType = (PathLineType)EditorGUILayout.EnumPopup("Path Type", script.graphData.lineType);
         script.graphData.heightFromTheGround = EditorGUILayout.FloatField("Offset from ground( Height )", script.graphData.heightFromTheGround);
         script.graphData.groundColliderLayerName = EditorGUILayout.TextField("Ground collider layer name", script.graphData.groundColliderLayerName);
         EditorGUILayout.Space();

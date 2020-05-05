@@ -56,7 +56,7 @@ namespace AStar {
 
     [System.Serializable]
     public class GraphData {
-        [SerializeField] public PathLineType lineType;
+        //[SerializeField] public PathLineType lineType;
         [SerializeField] public Color lineColor = Color.yellow;
         [SerializeField] public float nodeSize = 0.5f;
         [SerializeField] public float heightFromTheGround = 0;

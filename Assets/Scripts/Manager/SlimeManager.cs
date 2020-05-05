@@ -84,7 +84,6 @@ public class SlimeManager : MonoBehaviour
     // 攻击A
     public void AttackAEnter() {
         _animator.SetTrigger(EAParameters.ATTACK_A);
-        // TODO 攻击判定
     }
     // 攻击A取消
     public void AttackAExit() {
@@ -95,7 +94,6 @@ public class SlimeManager : MonoBehaviour
         _animator.SetTrigger(EAParameters.ATTACK_B);
         _body.AddForce(Vector2.up * AttackBBounce, ForceMode2D.Impulse);
         AddFrontForce(18);
-        // TODO 攻击判定
     }
     // 攻击B取消
     public void AttackBExit() {
@@ -111,13 +109,11 @@ public class SlimeManager : MonoBehaviour
     }
 
     // 受击
-    // TODO 把传入的damage进行判断
     public void GetHit(float damage) {
         _animator.SetTrigger(EAParameters.HIT);
     }
 
     // 死亡
-    // TODO 消除敌人并给予玩家经验
     public void Death() {
         _animator.SetTrigger(EAParameters.DEAD);
     }

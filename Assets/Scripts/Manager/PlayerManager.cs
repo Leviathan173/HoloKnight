@@ -243,8 +243,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
-            // TODO 攻击判定
-
         }
     }
     // 攻击B判定
@@ -263,8 +261,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
-            // TODO 攻击判定
-
         }
     }
     // 攻击C判定
@@ -283,8 +279,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
             AddFrontForce();
-            // TODO 攻击判定
-
         }
     }
     // 攻击D判定
