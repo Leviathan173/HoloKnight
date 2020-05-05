@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class AcherAttackB : StateMachineBehaviour
 {
-    private AcherManager manager;
+    private EnemyManager manager;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        manager = (AcherManager)Managers.managers.GetManager(animator.gameObject.name);
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
         manager.AttackBExit();
     }
 

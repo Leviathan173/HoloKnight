@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class SSDead : StateMachineBehaviour
 {
-    SSManager manager;
+    EnemyManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         // 之后用来摧毁敌人物体
-        manager = (SSManager)Managers.managers.GetManager(animator.gameObject.name);
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
         animator.ResetTrigger(EAParameters.DEAD);
     }
 

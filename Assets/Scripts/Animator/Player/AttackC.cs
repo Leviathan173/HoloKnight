@@ -6,7 +6,8 @@ public class AttackC : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Managers.Player.AddFrontForce(0);
+        //Managers.Player.AddFrontForce(0);
+        Managers.Player.AttackCCheck();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

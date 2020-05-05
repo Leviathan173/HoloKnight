@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(UIManager))]
 //[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
     public static Managers managers { get; private set; }
 	public static PlayerManager Player {get; private set;}
+    public static UIManager UI { get; private set; }
     //public static InventoryManager Inventory {get; private set;}
 
     private Dictionary<string, IGameManager> _startSequence;
@@ -15,12 +17,14 @@ public class Managers : MonoBehaviour {
 	void Awake() {
         managers = this;
 		Player = GetComponent<PlayerManager>();
+        UI = GetComponent<UIManager>();
         //Inventory = GetComponent<InventoryManager>();
 
         //_startSequence = new List<IGameManager>();
         _startSequence = new Dictionary<string, IGameManager>();
 
 		_startSequence.Add("Player",Player);
+        _startSequence.Add("UI", UI);
 		//_startSequence.Add(Inventory);
 
 		StartCoroutine(StartupManagers());
