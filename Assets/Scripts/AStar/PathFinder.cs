@@ -7,7 +7,7 @@ using UnityEngine;
 public class PathFinder : MonoBehaviour {
 
     private static PathFinder _instance;
-    public static PathFinder Instance { get; private set; }
+    public static PathFinder Instance { get { return _instance; }}
 
     public GraphData graphData = new GraphData();
     List<Node> OuterNodes = new List<Node>();
@@ -35,7 +35,7 @@ public class PathFinder : MonoBehaviour {
                     OuterNodes.Add(node);
                 }
             };
-            FindShortestPathOfNodes(20,42,PathOfNodes);
+            FindShortestPathOfNodes(56,1,PathOfNodes);
             StartCoroutine(Check());
         }
     }
@@ -135,7 +135,7 @@ public class PathFinder : MonoBehaviour {
         while (true) {
             Node leastCostPoint = null;
 
-            float minCost = 99999;
+            float minCost = float.MaxValue;
             foreach (var point in nextPoints) {
                 if (point.H <= 0)
                     point.H = Vector3.Distance(point.Position, endPoint.Position) + Vector3.Distance(point.Position, startPoint.Position);
@@ -217,7 +217,7 @@ public class PathFinder : MonoBehaviour {
         }
 
         if (!found) {
-            Debug.LogError("Path not found between " + fromNodeID + " and " + toNodeID);
+            print("Path not found between " + fromNodeID + " and " + toNodeID);
             callback(null);
             yield break;
         }

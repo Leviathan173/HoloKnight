@@ -10,7 +10,7 @@ public class HealthBarController : MonoBehaviour
     Image healthBar;
     TMP_Text damage;
     string rootName;
-    EnemyManager manager = null;
+    [SerializeField] EnemyManager manager = null;
     bool hasCoroutine = false;
     float totalDamage = 0;
     float currrentHealth = 0;
@@ -21,9 +21,7 @@ public class HealthBarController : MonoBehaviour
         healthBar = GetComponentInChildren<Image>();
         damage = GetComponentInChildren<TMP_Text>();
         manager = (EnemyManager)Managers.managers.GetManager(rootName);
-        if(manager == null) {
-            StartCoroutine(GetManager());
-        }
+        StartCoroutine(GetManager());
         healthBar.gameObject.SetActive(false);
         damage.gameObject.SetActive(false);
     }
@@ -32,9 +30,9 @@ public class HealthBarController : MonoBehaviour
         while(manager == null) {
             yield return new WaitForSeconds(0.1f);
             manager = (EnemyManager)Managers.managers.GetManager(rootName);
-            maxHealth = manager.maxHealth;
-            currrentHealth = maxHealth;
         }
+        maxHealth = manager.maxHealth;
+        currrentHealth = maxHealth;
     }
 
     public void SetHealth(float value) {
@@ -42,7 +40,6 @@ public class HealthBarController : MonoBehaviour
         float healthPercentage = currrentHealth / maxHealth;
         healthBar.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,healthPercentage);
         totalDamage += value;
-        print("total damange :" + totalDamage);
         damage.text = totalDamage.ToString();
         healthBar.gameObject.SetActive(true);
         damage.gameObject.SetActive(true);

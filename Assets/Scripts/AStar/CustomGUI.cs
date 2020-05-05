@@ -2,7 +2,6 @@
 using UnityEngine;
 
 public class CustomGUI : Editor {
-    //static List<string> HeaderList = new List<string>();
 
     public static void Space() {
         EditorGUILayout.Space();

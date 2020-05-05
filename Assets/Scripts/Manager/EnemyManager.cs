@@ -1,6 +1,7 @@
 ﻿using AStar;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour, IGameManager
@@ -27,18 +28,25 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public float jumpForce = 12.0f;
     public float _width;
 
-    static PathFinder PathFinder;
+    private Vector3 origin;
+
+    static PathFinder LocalPathFinder;
     public static System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
         print("委托开始");
         if (nodes == null || nodes.Count == 0) {
-            print("Node为空");
+            print("Node为空, 目标点不可达");
             return;
         }
+        //if (StopCoroutine()) {
+
+        //}
+        //(nodes.All(tmp.Contains) && nodes.Count == tmp.Count)
+
         float cost = 0;
         foreach (var node in nodes) {
             if(node.prevNode!= null) {
-                cost += PathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
-                if(cost > 500) {
+                cost += LocalPathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
+                if(cost > 2000) {
                     print("out of range");
                     break;
                 }
@@ -47,14 +55,20 @@ public class EnemyManager : MonoBehaviour, IGameManager
         if (cost <= 500) {
             print("可以跟寻路线");
             // TODO 跟寻路线
+            // 新建一个全局变量List，每次返回了一次路径的时候，把上次的路径放进List，判断这次的路径与上次的路径是否相同
+            // 如果不相同：
+            //              停止跟寻路径：停止跟寻路径的协程，并把这次的路径复制到List
+            // 如果相同：
+            //              继续跟寻，
+
         }
     };
 
-    void FixedUpdate() {
-        if (currentStamina < maxStamina) {
-            currentStamina += staminaIncreasement;
-        }
-    }
+    //void FixedUpdate() {
+    //    if (currentStamina < maxStamina) {
+    //        currentStamina += staminaIncreasement;
+    //    }
+    //}
 
     public void Startup() {
         
@@ -62,9 +76,16 @@ public class EnemyManager : MonoBehaviour, IGameManager
         _isGrounded = false;
         _isJumping = false;
 
+        StartCoroutine(StaminaIncreaser());
+        StartCoroutine(PathChecker());
+        //StartCoroutine(Tester());
+
+        origin = transform.position;
+
         //Attacks = GetComponentsInChildren<EnemyDetector>();
         health = GetComponentInChildren<HealthBarController>();
-        PathFinder = PathFinder.Instance;
+        LocalPathFinder = PathFinder.Instance;
+        print("PathFinder is null?" + (LocalPathFinder == null ? "yes" : "no"));
         status = ManagerStatus.Started;
     }
     // 初始化组件
@@ -231,6 +252,48 @@ public class EnemyManager : MonoBehaviour, IGameManager
         Destroy(enemy);
     }
 
-    
+    private IEnumerator StaminaIncreaser() {
+        int times = 0;
+        int time = (int)Mathf.Abs(Time.time);
+        while (true) {
+            //print("times"+times+" currSp:" + currentStamina);
+            if(currentStamina <= maxStamina - staminaIncreasement) {
+                if(time == (int)Mathf.Abs(Time.time)) {
+                    currentStamina += staminaIncreasement;
+                    times++;
+                } else {
+                    times = 0;
+                    time = (int)Mathf.Abs(Time.time);
+                }
+                yield return new WaitForSeconds(0.001f);
+            } else {
+                yield return new WaitForSeconds(0.017f);
+            }
+        }
+    }
+
+    private IEnumerator Tester() {
+        while (true) {
+            yield return new WaitForSeconds(Random.Range(0, 20));
+            currentStamina -= 50;
+        }
+    }
+
+    private IEnumerator PathChecker() {
+        while (true) {
+            if(LocalPathFinder != null) {
+                if (Vector3.Distance(origin, Managers.Player.player.transform.position) < 30) {
+                    LocalPathFinder.FindShortestPathOfNodes(LocalPathFinder.FindNearestNode(transform.position),
+                        LocalPathFinder.FindNearestNode(Managers.Player.player.transform.position),
+                        PathOfNodes);
+                    yield return new WaitForSeconds(1);
+                }
+                yield return new WaitForSeconds(1);
+            } else {
+                print("PathFinder instance is null!");
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
 
 }

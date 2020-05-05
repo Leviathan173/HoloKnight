@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IGameManager {
-    [SerializeField] private Player player;
+    [SerializeField] public Player player;
 
     public Rigidbody2D body;
     public Animator animator;

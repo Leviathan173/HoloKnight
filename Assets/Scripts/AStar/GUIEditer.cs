@@ -145,13 +145,13 @@ public class GUIEditor : Editor {
                                                             EditorGUILayout.BeginHorizontal();
 
                                                             sceneMode = (SceneMode)GUILayout.SelectionGrid((int)sceneMode, new string[] { "Add Node", "Move Node", "Connect Nodes", "None" }, 1);
-
+                                                            //Debug.Log("mode:" + sceneMode);
                                                             GUI.color = Color.white;
 
                                                             EditorGUILayout.EndHorizontal();
                                                         }
                         , "Mode");
-        GUILayout.Window(2, new Rect(0, 155f, 70f, 80f),
+        GUILayout.Window(2, new Rect(0f, 155f, 70f, 80f),
                                                         delegate (int windowID) {
                                                             EditorGUILayout.BeginVertical();
 
@@ -275,8 +275,10 @@ public class GUIEditor : Editor {
     void UpdateMouseInput() {
         Event e = Event.current;
         if (e.type == EventType.MouseDown) {
-            if (e.button == 0)
+            if (e.button == 0) {
                 OnMouseClick(e.mousePosition);
+            }
+                
         } else if (e.type == EventType.MouseUp) {
             MarkThisDirty();
             SceneView.RepaintAll();
@@ -431,6 +433,7 @@ public class GUIEditor : Editor {
 
 
     private SceneMode sceneMode;
+    SceneMode mode = SceneMode.None;
     private PathFinder script;
 
     const string nodeGUITextColor = "#ff00ffff";
