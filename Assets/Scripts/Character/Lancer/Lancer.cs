@@ -39,7 +39,7 @@ public class Lancer : MonoBehaviour
         register = GetComponent<ManagerRegister>();
         register.Register();
         manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
-        manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+        manager.InitComponents(null, _body, _animator, Forward, Attacks, _width);
         manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT);
     }
 
@@ -52,9 +52,9 @@ public class Lancer : MonoBehaviour
                 if (contact.collider != null) {
                     if (contact.collider.name.Contains("Ground") ||
                         contact.collider.name.Contains("Plat")) {
-                        manager._isGrounded = true;
+                        manager.isGrounded = true;
                         _animator.SetBool(EAParameters.GROUNDED, true);
-                        manager._isJumping = false;
+                        manager.isJumping = false;
                         hited = true;
                         break;
                     }
@@ -62,8 +62,8 @@ public class Lancer : MonoBehaviour
 
             }
             if (!hited) {
-                manager._isGrounded = false;
-                manager._isJumping = true;
+                manager.isGrounded = false;
+                manager.isJumping = true;
                 _animator.SetBool(EAParameters.GROUNDED, false);
             }
         }
@@ -95,7 +95,7 @@ public class Lancer : MonoBehaviour
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            manager.Turn(SPEED);
+            //manager.Turn(SPEED);
             manager.Move(SPEED);
         }
 

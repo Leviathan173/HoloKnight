@@ -8,9 +8,9 @@ public class EnemyManager : MonoBehaviour, IGameManager
 {
     public ManagerStatus status { get; private set; }
 
-    public GameObject enemy;
-    public Rigidbody2D _body;
-    public Animator _animator;
+    public Enemy enemy;
+    public Rigidbody2D body;
+    public Animator animator;
     public GameObject Forward;
     public HealthBarController health;
     public EnemyDetector[] Attacks;
@@ -21,47 +21,64 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
 
-    public bool _isFacingRight { get; set; }
-    public bool _isGrounded { get; set; }
-    public bool _isJumping { get; set; }
-    public bool _usingShield { get; set; }
+    public bool isFacingRight { get; set; }
+    public bool isGrounded { get; set; }
+    public bool isJumping { get; set; }
+    public bool usingShield { get; set; }
     public float jumpForce = 12.0f;
-    public float _width;
+    public float width;
 
     private Vector3 origin;
 
-    static PathFinder LocalPathFinder;
-    public static System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
+    static EnemyManager manager;
+    PathFollower follower;
+    PathFinder LocalPathFinder;
+    List<Node> currNodes = new List<Node>();
+    public System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
         print("委托开始");
         if (nodes == null || nodes.Count == 0) {
             print("Node为空, 目标点不可达");
             return;
         }
-        //if (StopCoroutine()) {
-
-        //}
-        //(nodes.All(tmp.Contains) && nodes.Count == tmp.Count)
-
         float cost = 0;
         foreach (var node in nodes) {
             if(node.prevNode!= null) {
-                cost += LocalPathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
-                if(cost > 2000) {
+                cost += manager.LocalPathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
+                if(cost > 500) {
                     print("out of range");
-                    break;
+                    return;
                 }
             }
         }
-        if (cost <= 500) {
-            print("可以跟寻路线");
-            // TODO 跟寻路线
-            // 新建一个全局变量List，每次返回了一次路径的时候，把上次的路径放进List，判断这次的路径与上次的路径是否相同
-            // 如果不相同：
-            //              停止跟寻路径：停止跟寻路径的协程，并把这次的路径复制到List
-            // 如果相同：
-            //              继续跟寻，
-
+        print("可以跟寻路线");
+        // UNDONE 跟寻路线
+        // 新建一个全局变量List，每次返回了一次路径的时候，把上次的路径放进List，判断这次的路径与上次的路径是否相同
+        // 如果不相同：
+        //              停止跟寻路径：停止跟寻路径的协程，并把这次的路径复制到List
+        // 如果相同：
+        //              继续跟寻，
+        if (manager.follower.hasCoroutine) {
+            print("has coroutine ...");
+            if (manager.currNodes != null || manager.currNodes.Count == 0) {
+                print("currNode not null");
+                if (!nodes.All(manager.currNodes.Contains) || nodes.Count != manager.currNodes.Count) {
+                    print("2 list are not same");
+                    manager.follower.StopFollow();
+                    manager.currNodes.Clear();
+                    foreach(var node in nodes) {
+                        manager.currNodes.Add(node);
+                    }
+                    manager.follower.FollowPath(nodes);
+                }
+            }
+        } else {
+            print("has no coroutine");
+            manager.follower.FollowPath(nodes);
+            foreach (var node in nodes) {
+                manager.currNodes.Add(node);
+            }
         }
+
     };
 
     //void FixedUpdate() {
@@ -72,30 +89,34 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     public void Startup() {
         
-        _isFacingRight = true;
-        _isGrounded = false;
-        _isJumping = false;
+        isFacingRight = true;
+        isGrounded = false;
+        isJumping = false;
 
         StartCoroutine(StaminaIncreaser());
-        StartCoroutine(PathChecker());
+        //StartCoroutine(PathChecker());
         //StartCoroutine(Tester());
 
         origin = transform.position;
+        manager = this;
+        follower = GetComponent<PathFollower>();
 
-        //Attacks = GetComponentsInChildren<EnemyDetector>();
         health = GetComponentInChildren<HealthBarController>();
         LocalPathFinder = PathFinder.Instance;
-        print("PathFinder is null?" + (LocalPathFinder == null ? "yes" : "no"));
+        //print("PathFinder is null?" + (LocalPathFinder == null ? "yes" : "no"));
         status = ManagerStatus.Started;
     }
     // 初始化组件
-    public void InitComponents(GameObject enemy, Rigidbody2D _body, Animator _animator, GameObject Forward, EnemyDetector[] Attacks, float _width) {
+    public void InitComponents(Enemy enemy, Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
         this.enemy = enemy;
-        this._body = _body;
-        this._animator = _animator;
+        this.body = body;
+        this.animator = animator;
         this.Forward = Forward;
         this.Attacks = Attacks;
-        this._width = _width;
+        this.width = width;
+        if (enemy == null || body == null || animator == null || Forward == null || Attacks == null || width == 0) {
+            Debug.LogError("has null Componets");
+        }
     }
     // 初始化血量等数值
     public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement) {
@@ -108,57 +129,66 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     //攻击
     public bool IsAttacking() {
-        return (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_A) ||
-            _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_B));
+        return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_A) ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_B));
     }
     // 添加向前的力
     public void AddFrontForce(float force = 0) {
         if (force == 0) {
-            _body.velocity = new Vector2((Forward.transform.position.x - enemy.transform.position.x) * 9, _body.velocity.y);
+            body.velocity = new Vector2((Forward.transform.position.x - enemy.transform.position.x) * 9, body.velocity.y);
         } else {
-            _body.velocity = new Vector2((Forward.transform.position.x - enemy.transform.position.x) * force, _body.velocity.y);
+            body.velocity = new Vector2((Forward.transform.position.x - enemy.transform.position.x) * force, body.velocity.y);
         }
     }
 
 
     // 控制朝向
-    public void Turn(float deltaX) {
+    public void Turn() {
         if (!IsAttacking()) {
-            enemy.transform.localScale = new Vector3(Mathf.Sign(deltaX) * enemy.transform.localScale.x, enemy.transform.localScale.y, enemy.transform.localScale.z);
-            if (_isFacingRight && Mathf.Sign(deltaX) < 0) {
+            enemy.transform.localScale = new Vector3(-1 * enemy.transform.localScale.x, enemy.transform.localScale.y, enemy.transform.localScale.z);
+            if (isFacingRight) {
                 //do turn left
-                _isFacingRight = !_isFacingRight;
-                enemy.transform.position = new Vector3(enemy.transform.position.x - _width, enemy.transform.position.y, enemy.transform.position.z);
-            } else if (!_isFacingRight && Mathf.Sign(deltaX) > 0) {
+                isFacingRight = !isFacingRight;
+                enemy.transform.position = new Vector3(enemy.transform.position.x - width, enemy.transform.position.y, enemy.transform.position.z);
+            } else if (!isFacingRight) {
                 //do turn right
-                _isFacingRight = !_isFacingRight;
-                enemy.transform.position = new Vector3(enemy.transform.position.x + _width, enemy.transform.position.y, enemy.transform.position.z);
+                isFacingRight = !isFacingRight;
+                enemy.transform.position = new Vector3(enemy.transform.position.x + width, enemy.transform.position.y, enemy.transform.position.z);
             }
         }
     }
     // 移动
     // 他需要持续的调用
     // 每次调用执行一次
-    public void Move(float deltaX) {
-        _animator.SetFloat(EAParameters.SPEED, 1.0f);
-        Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-        if (movement != Vector2.zero && !_isJumping && !IsAttacking()
-             && _isGrounded) {
-            _body.velocity = movement;
+    public void Move(float deltaX = 0) {
+        if(deltaX == 0) {
+            if(isFacingRight)
+                deltaX = enemy.Speed;
+            deltaX = -enemy.Speed;
+        } else {
+            if (!isFacingRight)
+                deltaX = -deltaX;
+        }
+        animator.SetFloat(EAParameters.SPEED, 1.0f);
+        Vector2 movement = new Vector2(deltaX, body.velocity.y);
+        print(gameObject.name + " move  movement:" + movement + " isJumping:"+isJumping+" IsAttacking:"+IsAttacking()+" isGrounded:"+isGrounded) ;
+        if (movement != Vector2.zero && !isJumping && !IsAttacking()
+             && isGrounded) {
+            body.velocity = movement;
         }
     }
     // 跳跃
     public void Jump() {
-        if (_isGrounded && !IsAttacking()) {
-            _body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        if (isGrounded && !IsAttacking()) {
+            body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             AddFrontForce(24);
-            _isGrounded = false;
+            isGrounded = false;
         }
     }
     // 攻击A
     public void AttackAEnter() {
-        if (_isGrounded && !_isJumping) {
-            _animator.SetTrigger(EAParameters.ATTACK_A);
+        if (isGrounded && !isJumping) {
+            animator.SetTrigger(EAParameters.ATTACK_A);
         }
     }
     // TODO 更加精准的判定
@@ -173,12 +203,12 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击A取消
     public void AttackAExit() {
-        _animator.ResetTrigger(EAParameters.ATTACK_A);
+        animator.ResetTrigger(EAParameters.ATTACK_A);
     }
     // 攻击B
     public void AttackBEnter() {
-        if (_isGrounded && !_isJumping) {
-            _animator.SetTrigger(EAParameters.ATTACK_B);
+        if (isGrounded && !isJumping) {
+            animator.SetTrigger(EAParameters.ATTACK_B);
         }
     }
     // 攻击B判定
@@ -189,14 +219,14 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击B取消
     public void AttackBExit() {
-        _animator.ResetTrigger(EAParameters.ATTACK_B);
+        animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
     // slime攻击B
     public void AttackBEnterSlime() {
-        if (_isGrounded && !_isJumping) {
-            _animator.SetTrigger(EAParameters.ATTACK_B);
-            _body.AddForce(Vector2.up * 3.0f, ForceMode2D.Impulse);
+        if (isGrounded && !isJumping) {
+            animator.SetTrigger(EAParameters.ATTACK_B);
+            body.AddForce(Vector2.up * 3.0f, ForceMode2D.Impulse);
             AddFrontForce(18);
         }
     }
@@ -206,12 +236,12 @@ public class EnemyManager : MonoBehaviour, IGameManager
         }
     }
     public void AttackBExitSlime() {
-        _animator.ResetTrigger(EAParameters.ATTACK_B);
+        animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
     // 攻击C
     public void AttackCEnter() {
-        _animator.SetTrigger(EAParameters.ATTACK_C);
+        animator.SetTrigger(EAParameters.ATTACK_C);
     }
     // 攻击C判定
     public void AttackCCheck() {
@@ -221,20 +251,20 @@ public class EnemyManager : MonoBehaviour, IGameManager
     }
     // 攻击C取消
     public void AttackCExit() {
-        _animator.ResetTrigger(EAParameters.ATTACK_C);
+        animator.ResetTrigger(EAParameters.ATTACK_C);
     }
 
     // 举盾
     public void UseShield() {
-        _animator.SetBool(EAParameters.SHIELD, true);
+        animator.SetBool(EAParameters.SHIELD, true);
     }
     public void UnuseShield() {
-        _animator.SetBool(EAParameters.SHIELD, false);
+        animator.SetBool(EAParameters.SHIELD, false);
     }
 
     // 受击
     public void GetHit(float damage) {
-        _animator.SetTrigger(EAParameters.HIT);
+        animator.SetTrigger(EAParameters.HIT);
         if(currentHealth < damage) {
             currentHealth = 0;
         } else {
@@ -245,7 +275,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     // 死亡
     public void Death() {
-        _animator.SetTrigger(EAParameters.DEAD);
+        animator.SetTrigger(EAParameters.DEAD);
     }
 
     public void Enemy1_Destroy() {
@@ -296,4 +326,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
         }
     }
 
+    void StartFollow() {
+        
+    }
 }

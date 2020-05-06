@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject Forward;
     [SerializeField] private EnemyDetector[] Attacks;
+    [SerializeField] private EnemyManager manager;
 
     [SerializeField] public float Speed = 2.0f;
     [SerializeField] public float SlowSpeed = 1.0f;
@@ -13,48 +14,50 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float MaxStamina = 100.0f;
     [SerializeField] public float StaminaIncreasement = 0.25f; // 每秒增长60次 0.25*60 = 15
 
-    private Rigidbody2D _body;
-    private Animator _animator;
-    private BoxCollider2D _boxCollider;
+    private Rigidbody2D body;
+    private Animator animator;
+    private BoxCollider2D boxCollider;
     private Vector2 collSize;
     private Vector2 collOffset;
     private ManagerRegister register;
-    private static EnemyManager manager;
+    
 
-    private float _width;
+    private float width;
 
 
     void Start() {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        //manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        manager = GetComponent<EnemyManager>();
+        print("start manager name :" + manager.name);
+        body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
 
-        _body = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _boxCollider = GetComponent<BoxCollider2D>();
+        width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
-        _width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
+        collSize = boxCollider.size;
+        collOffset = boxCollider.offset;
 
-        collSize = _boxCollider.size;
-        collOffset = _boxCollider.offset;
-
-        manager.InitComponents(gameObject, _body, _animator, Forward, Attacks, _width);
+        manager.InitComponents(this, body, animator, Forward, Attacks, width);
         manager.InitStats(MaxHp, MaxStamina, StaminaIncreasement);
 
     }
 
     void FixedUpdate() {
+        print("update manager name" + manager.name + " GO name:" + gameObject.name);
         ContactPoint2D[] contacts = new ContactPoint2D[10];
-        _body.GetContacts(contacts);
+        body.GetContacts(contacts);
         if (contacts != null) {
             bool hited = false;
             foreach (var contact in contacts) {
                 if (contact.collider != null) {
                     if (contact.collider.name.Contains("Ground") ||
                         contact.collider.name.Contains("Plat")) {
-                        manager._isGrounded = true;
-                        _animator.SetBool(EAParameters.GROUNDED, true);
-                        manager._isJumping = false;
+                        manager.isGrounded = true;
+                        animator.SetBool(EAParameters.GROUNDED, true);
+                        manager.isJumping = false;
                         hited = true;
                         break;
                     }
@@ -62,22 +65,29 @@ public class Enemy : MonoBehaviour
 
             }
             if (!hited) {
-                manager._isGrounded = false;
-                manager._isJumping = true;
-                _animator.SetBool(EAParameters.GROUNDED, false);
+                manager.isGrounded = false;
+                manager.isJumping = true;
+                animator.SetBool(EAParameters.GROUNDED, false);
             }
         }
     }
 
     void Update() {
 
+        if (Input.GetKeyDown(KeyCode.F3)) {
+            PathFinder.Instance.FindShortestPathOfNodes(PathFinder.Instance.FindNearestNode(transform.position),
+                        PathFinder.Instance.FindNearestNode(Managers.Player.player.transform.position),
+                        manager.PathOfNodes);
+        }
+
         // 控制碰撞
-        _boxCollider.offset = collOffset;
-        _boxCollider.size = collSize;
+        boxCollider.offset = collOffset;
+        boxCollider.size = collSize;
 
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            manager.Turn(Speed);
+            print("manager name :" + manager.name);
+            //manager.Turn();
             manager.Move(Speed);
         }
 
