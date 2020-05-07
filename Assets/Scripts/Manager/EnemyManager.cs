@@ -30,11 +30,10 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     private Vector3 origin;
 
-    static EnemyManager manager;
     PathFollower follower;
     PathFinder LocalPathFinder;
     List<Node> currNodes = new List<Node>();
-    public System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
+    public System.Action<List<Node>, EnemyManager> PathOfNodes = delegate (List<Node> nodes, EnemyManager manager) {
         print("委托开始");
         if (nodes == null || nodes.Count == 0) {
             print("Node为空, 目标点不可达");
@@ -44,7 +43,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
         foreach (var node in nodes) {
             if(node.prevNode!= null) {
                 cost += manager.LocalPathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
-                if(cost > 500) {
+                if(cost > 2000) {
                     print("out of range");
                     return;
                 }
@@ -68,12 +67,12 @@ public class EnemyManager : MonoBehaviour, IGameManager
                     foreach(var node in nodes) {
                         manager.currNodes.Add(node);
                     }
-                    manager.follower.FollowPath(nodes);
+                    manager.follower.FollowPath(nodes,manager);
                 }
             }
         } else {
             print("has no coroutine");
-            manager.follower.FollowPath(nodes);
+            manager.follower.FollowPath(nodes, manager);
             foreach (var node in nodes) {
                 manager.currNodes.Add(node);
             }
@@ -98,7 +97,6 @@ public class EnemyManager : MonoBehaviour, IGameManager
         //StartCoroutine(Tester());
 
         origin = transform.position;
-        manager = this;
         follower = GetComponent<PathFollower>();
 
         health = GetComponentInChildren<HealthBarController>();
@@ -145,7 +143,12 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // 控制朝向
     public void Turn() {
         if (!IsAttacking()) {
-            enemy.transform.localScale = new Vector3(-1 * enemy.transform.localScale.x, enemy.transform.localScale.y, enemy.transform.localScale.z);
+            enemy.transform.localScale = new Vector3(-enemy.transform.localScale.x, enemy.transform.localScale.y, enemy.transform.localScale.z);
+            if (gameObject.name.Contains("Slime")) {
+                isFacingRight = !isFacingRight;
+                enemy.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
+                return;
+            }
             if (isFacingRight) {
                 //do turn left
                 isFacingRight = !isFacingRight;
@@ -162,12 +165,13 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // 每次调用执行一次
     public void Move(float deltaX = 0) {
         if(deltaX == 0) {
-            if(isFacingRight)
+            if (isFacingRight) {
                 deltaX = enemy.Speed;
-            deltaX = -enemy.Speed;
-        } else {
-            if (!isFacingRight)
-                deltaX = -deltaX;
+            }
+            else {
+                deltaX = -enemy.Speed;
+            }
+            
         }
         animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
@@ -315,6 +319,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
                 if (Vector3.Distance(origin, Managers.Player.player.transform.position) < 30) {
                     LocalPathFinder.FindShortestPathOfNodes(LocalPathFinder.FindNearestNode(transform.position),
                         LocalPathFinder.FindNearestNode(Managers.Player.player.transform.position),
+                        this,
                         PathOfNodes);
                     yield return new WaitForSeconds(1);
                 }

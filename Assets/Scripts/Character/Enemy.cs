@@ -28,8 +28,8 @@ public class Enemy : MonoBehaviour
     void Start() {
         register = GetComponent<ManagerRegister>();
         register.Register();
-        //manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
-        manager = GetComponent<EnemyManager>();
+        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        //manager = GetComponent<EnemyManager>();
         print("start manager name :" + manager.name);
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -46,7 +46,6 @@ public class Enemy : MonoBehaviour
     }
 
     void FixedUpdate() {
-        print("update manager name" + manager.name + " GO name:" + gameObject.name);
         ContactPoint2D[] contacts = new ContactPoint2D[10];
         body.GetContacts(contacts);
         if (contacts != null) {
@@ -77,6 +76,7 @@ public class Enemy : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F3)) {
             PathFinder.Instance.FindShortestPathOfNodes(PathFinder.Instance.FindNearestNode(transform.position),
                         PathFinder.Instance.FindNearestNode(Managers.Player.player.transform.position),
+                        manager,
                         manager.PathOfNodes);
         }
 
@@ -84,10 +84,14 @@ public class Enemy : MonoBehaviour
         boxCollider.offset = collOffset;
         boxCollider.size = collSize;
 
+        // 转向
+        if (Input.GetKeyDown(KeyCode.Keypad9)) {
+            manager.Turn();
+        }
+
+
         // 移动
         if (Input.GetKeyDown(KeyCode.Keypad0)) {
-            print("manager name :" + manager.name);
-            //manager.Turn();
             manager.Move(Speed);
         }
 

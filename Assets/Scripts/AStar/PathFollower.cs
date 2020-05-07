@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PathFollower : MonoBehaviour
 {
-    [SerializeField] EnemyManager manager;
+    EnemyManager manager;
     PathFinder finder;
     float deltaX;
     public bool hasCoroutine { get; set; }
@@ -16,12 +16,15 @@ public class PathFollower : MonoBehaviour
     // 
     void Start()
     {
-        manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        //manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
+        //print("pf name:" + manager.name);
         finder = PathFinder.Instance;
         deltaX = 3;
     }
 
-    public void FollowPath(List<Node> nodes) {
+    public void FollowPath(List<Node> nodes, EnemyManager manager) {
+        this.manager = manager;
+        print("fp manager name:" + manager.name);
         foreach(var node in nodes) {
             print("node in follower :" + node.ID);
         }
@@ -49,7 +52,7 @@ public class PathFollower : MonoBehaviour
             while (!Check(manager.enemy.transform.position, NextNodePos)) {
                 pos = manager.enemy.transform.position;
                 if (Vector3.Distance(pos, NextNodePos) < 5) {
-                    goto Finded;
+                    break;
                 }
                 if(Check(manager.enemy.transform.position, Managers.Player.player.transform.position)) {
                     goto Finded;
@@ -73,14 +76,16 @@ public class PathFollower : MonoBehaviour
             }
         }
         Finded:
-            StartAction();
+        manager.animator.SetFloat(EAParameters.SPEED, -1f);
+        StartAction();
     }
 
     void StartAction() {
         print("start action");
+
     }
 
-    bool Check(Vector3 currPos, Vector3 goalPos, float deviationX = 5, float deviationY = 5) {
+    bool Check(Vector3 currPos, Vector3 goalPos, float deviationX = 2.5f, float deviationY = 2.5f) {
         if(currPos.x > goalPos.x - deviationX && currPos.x < goalPos.x + deviationX) {
             if(currPos.y > goalPos.y - deviationY && currPos.y < goalPos.y + deviationY) {
                 print("on goal currpos:" + currPos + " goalPos:" + goalPos);
