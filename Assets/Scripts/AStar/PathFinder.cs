@@ -71,8 +71,12 @@ public class PathFinder : MonoBehaviour {
                 nearestNode = node;
             }
         }
-
-        return nearestNode != null ? nearestNode.ID : -1;
+        if(nearestNode != null) {
+            if (Vector3.Distance(point, nearestNode.Position) < 10) {
+                return nearestNode.ID;
+            }
+        }
+        return -1;
     }
 
     public void EnableNode(int nodeID, bool enable) {
@@ -83,7 +87,7 @@ public class PathFinder : MonoBehaviour {
 
         Node node = graphData.GetNode(nodeID);
         if (node == null) {
-            Debug.LogError("Node not found");
+            Debug.Log("Node not found");
             return;
         }
         node.SetOpen(enable);
@@ -96,7 +100,7 @@ public class PathFinder : MonoBehaviour {
 
         Path path = graphData.GetPath(pathID);
         if (path == null) {
-            Debug.LogError("Path not found");
+            Debug.Log("Path not found");
             return;
         }
         path.isOpen = (enable);

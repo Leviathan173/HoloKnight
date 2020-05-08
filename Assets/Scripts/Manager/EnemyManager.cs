@@ -15,6 +15,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     public HealthBarController health;
     public EnemyDetector[] Attacks;
 
+
     public float maxHealth { get; set; }
     public float currentHealth { get; set; }
     public float maxStamina { get; set; }
@@ -30,7 +31,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     private Vector3 origin;
 
-    PathFollower follower;
+    [SerializeField] PathFollower follower;
     PathFinder LocalPathFinder;
     List<Node> currNodes = new List<Node>();
     public System.Action<List<Node>, EnemyManager> PathOfNodes = delegate (List<Node> nodes, EnemyManager manager) {

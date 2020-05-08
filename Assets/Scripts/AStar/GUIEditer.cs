@@ -97,8 +97,6 @@ public class GUIEditor : Editor {
                     EditorGUILayout.LabelField("One Way", EditorStyles.miniLabel, GUILayout.Width(50f)); paths[j].isOneWay = EditorGUILayout.Toggle(paths[j].isOneWay);
                     EditorGUILayout.LabelField("Enable", EditorStyles.miniLabel, GUILayout.Width(50f)); paths[j].isOpen = EditorGUILayout.Toggle(paths[j].isOpen);
 
-                    if (GUILayout.Button("+", GUILayout.Width(25f)))
-                        AddPath(j + 1);
                     if (GUILayout.Button("-", GUILayout.Width(25f)))
                         DeletePath(j);
                 }

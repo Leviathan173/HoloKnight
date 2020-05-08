@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ManagerRegister : MonoBehaviour
 {
-    public EnemyManager manager = null;
+    public static EnemyManager manager = null;
 
     public void Register() {
         print("register name "+gameObject.name);
