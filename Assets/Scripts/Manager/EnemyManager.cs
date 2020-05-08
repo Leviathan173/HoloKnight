@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour, IGameManager
-{
+public class EnemyManager : MonoBehaviour, IGameManager {
     public ManagerStatus status { get; private set; }
 
     public Enemy enemy;
@@ -31,9 +30,10 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     private Vector3 origin;
 
-    [SerializeField] PathFollower follower;
-    PathFinder LocalPathFinder;
-    List<Node> currNodes = new List<Node>();
+    [SerializeField] public PathFollower follower;
+    public PathFinderData PFData;
+    //public List<Node> currNodes = new List<Node>();
+    [SerializeField] public PathFinder finder;
     public System.Action<List<Node>, EnemyManager> PathOfNodes = delegate (List<Node> nodes, EnemyManager manager) {
         print("委托开始");
         if (nodes == null || nodes.Count == 0) {
@@ -42,9 +42,9 @@ public class EnemyManager : MonoBehaviour, IGameManager
         }
         float cost = 0;
         foreach (var node in nodes) {
-            if(node.prevNode!= null) {
-                cost += manager.LocalPathFinder.graphData.GetPathBetweenNode(node.prevNode, node).cost;
-                if(cost > 2000) {
+            if (node.prevNode != null) {
+                cost += manager.PFData.graphData.GetPathBetweenNode(node.prevNode, node).cost;
+                if (cost > 2000) {
                     print("out of range");
                     return;
                 }
@@ -59,50 +59,32 @@ public class EnemyManager : MonoBehaviour, IGameManager
         //              继续跟寻，
         if (manager.follower.hasCoroutine) {
             print("has coroutine ...");
-            if (manager.currNodes != null || manager.currNodes.Count == 0) {
-                print("currNode not null");
-                if (!nodes.All(manager.currNodes.Contains) || nodes.Count != manager.currNodes.Count) {
-                    print("2 list are not same");
-                    manager.follower.StopFollow();
-                    manager.currNodes.Clear();
-                    foreach(var node in nodes) {
-                        manager.currNodes.Add(node);
-                    }
-                    manager.follower.FollowPath(nodes,manager);
-                }
-            }
+            manager.follower.StopFollow();
+            manager.follower.FollowPath(nodes, manager);
         } else {
             print("has no coroutine");
             manager.follower.FollowPath(nodes, manager);
-            foreach (var node in nodes) {
-                manager.currNodes.Add(node);
-            }
         }
 
     };
 
-    //void FixedUpdate() {
-    //    if (currentStamina < maxStamina) {
-    //        currentStamina += staminaIncreasement;
-    //    }
-    //}
-
     public void Startup() {
-        
+
         isFacingRight = true;
         isGrounded = false;
         isJumping = false;
 
         StartCoroutine(StaminaIncreaser());
-        //StartCoroutine(PathChecker());
+        StartCoroutine(PathChecker());
         //StartCoroutine(Tester());
 
         origin = transform.position;
         follower = GetComponent<PathFollower>();
+        finder = GetComponent<PathFinder>();
 
         health = GetComponentInChildren<HealthBarController>();
-        LocalPathFinder = PathFinder.Instance;
-        //print("PathFinder is null?" + (LocalPathFinder == null ? "yes" : "no"));
+        PFData = PathFinderData.Instance;
+
         status = ManagerStatus.Started;
     }
     // 初始化组件
@@ -126,7 +108,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
         this.staminaIncreasement = staminaIncreasement;
     }
 
-    //攻击
+    // 是否在攻击中
     public bool IsAttacking() {
         return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_A) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_B));
@@ -165,18 +147,17 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // 他需要持续的调用
     // 每次调用执行一次
     public void Move(float deltaX = 0) {
-        if(deltaX == 0) {
+        if (deltaX == 0) {
             if (isFacingRight) {
                 deltaX = enemy.Speed;
-            }
-            else {
+            } else {
                 deltaX = -enemy.Speed;
             }
-            
+
         }
         animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
-        print(gameObject.name + " move  movement:" + movement + " isJumping:"+isJumping+" IsAttacking:"+IsAttacking()+" isGrounded:"+isGrounded) ;
+        print(gameObject.name + " move  movement:" + movement + " isJumping:" + isJumping + " IsAttacking:" + IsAttacking() + " isGrounded:" + isGrounded);
         if (movement != Vector2.zero && !isJumping && !IsAttacking()
              && isGrounded) {
             body.velocity = movement;
@@ -199,7 +180,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // TODO 更加精准的判定
     // 或许修改一下碰撞体，让他和挥剑的动作一样移动
     // 或许就仅仅只是对每个攻击进行单独的延时触发判定
-    
+
     // 攻击A判定
     public void AttackACheck() {
         if (Attacks[0].hasPlayer) {
@@ -270,7 +251,7 @@ public class EnemyManager : MonoBehaviour, IGameManager
     // 受击
     public void GetHit(float damage) {
         animator.SetTrigger(EAParameters.HIT);
-        if(currentHealth < damage) {
+        if (currentHealth < damage) {
             currentHealth = 0;
         } else {
             currentHealth -= damage;
@@ -292,8 +273,8 @@ public class EnemyManager : MonoBehaviour, IGameManager
         int time = (int)Mathf.Abs(Time.time);
         while (true) {
             //print("times"+times+" currSp:" + currentStamina);
-            if(currentStamina <= maxStamina - staminaIncreasement) {
-                if(time == (int)Mathf.Abs(Time.time)) {
+            if (currentStamina <= maxStamina - staminaIncreasement) {
+                if (time == (int)Mathf.Abs(Time.time)) {
                     currentStamina += staminaIncreasement;
                     times++;
                 } else {
@@ -316,10 +297,10 @@ public class EnemyManager : MonoBehaviour, IGameManager
 
     private IEnumerator PathChecker() {
         while (true) {
-            if(LocalPathFinder != null) {
+            if (PFData != null) {
                 if (Vector3.Distance(origin, Managers.Player.player.transform.position) < 30) {
-                    LocalPathFinder.FindShortestPathOfNodes(LocalPathFinder.FindNearestNode(transform.position),
-                        LocalPathFinder.FindNearestNode(Managers.Player.player.transform.position),
+                    finder.FindShortestPathOfNodes(PFData.FindNearestNode(transform.position),
+                        PFData.FindNearestNode(Managers.Player.player.transform.position),
                         this,
                         PathOfNodes);
                     yield return new WaitForSeconds(1);
@@ -332,7 +313,4 @@ public class EnemyManager : MonoBehaviour, IGameManager
         }
     }
 
-    void StartFollow() {
-        
-    }
 }

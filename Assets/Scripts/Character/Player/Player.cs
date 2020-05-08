@@ -90,7 +90,7 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.F2)) {
-            GraphData datas = new GraphData();
+            AStar.GraphData datas = new AStar.GraphData();
             print("datas:" + datas.GetNode(1));
             print("player use data count:"+datas.nodes.Count);
             foreach(var data in datas.nodes) {

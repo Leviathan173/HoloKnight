@@ -4,18 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFollower : MonoBehaviour {
-    PathFinder finder;
+    PathFinderData finder;
     float deltaX;
     public bool hasCoroutine { get; set; }
-    [SerializeField] IEnumerator coroutine;
+    IEnumerator coroutine;
     // UNDONE 完成寻路
     // A星算法只判断是否可达
     // 移动不一定需要按照算法的路径
     // 
     void Start() {
-        //manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
-        //print("pf name:" + manager.name);
-        finder = PathFinder.Instance;
+        finder = PathFinderData.Instance;
         deltaX = 3;
     }
 
@@ -45,42 +43,42 @@ public class PathFollower : MonoBehaviour {
 
     }
 
-    //IEnumerator OldFollower(List<Node> nodes, EnemyManager manager) {
-    //    print("start follower");
-    //    Vector3 pos = manager.enemy.transform.position;
-    //    for (int i = 0; i < nodes.Count; i++) {
-    //        print("move to node " + nodes[i].ID);
-    //        Vector3 NextNodePos = nodes[i].Position;
-    //        while (!Check(manager.enemy.transform.position, NextNodePos)) {
-    //            pos = manager.enemy.transform.position;
-    //            if (Vector3.Distance(pos, NextNodePos) < 2.5f) {
-    //                break;
-    //            }
-    //            if (Check(manager.enemy.transform.position, Managers.Player.player.transform.position)) {
-    //                goto Finded;
-    //            }
-    //            if (manager.isFacingRight) {
-    //                if (pos.x < NextNodePos.x) {
-    //                    manager.Move();
-    //                } else {
-    //                    manager.Turn();
-    //                    manager.Move();
-    //                }
-    //            } else {
-    //                if (pos.x < NextNodePos.x) {
-    //                    manager.Turn();
-    //                    manager.Move();
-    //                } else {
-    //                    manager.Move();
-    //                }
-    //            }
-    //            yield return new WaitForSeconds(0.2f);
-    //        }
-    //    }
-    //    Finded:
-    //    manager.animator.SetFloat(EAParameters.SPEED, -1f);
-    //    StartAction();
-    //}
+    IEnumerator OldFollower(List<Node> nodes, EnemyManager manager) {
+        print("start follower");
+        Vector3 pos = manager.enemy.transform.position;
+        for (int i = 0; i < nodes.Count; i++) {
+            print("move to node " + nodes[i].ID);
+            Vector3 NextNodePos = nodes[i].Position;
+            while (!Check(manager.enemy.transform.position, NextNodePos)) {
+                pos = manager.enemy.transform.position;
+                if (Vector3.Distance(pos, NextNodePos) < 2.5f) {
+                    break;
+                }
+                if (Check(manager.enemy.transform.position, Managers.Player.player.transform.position)) {
+                    goto Finded;
+                }
+                if (manager.isFacingRight) {
+                    if (pos.x < NextNodePos.x) {
+                        manager.Move();
+                    } else {
+                        manager.Turn();
+                        manager.Move();
+                    }
+                } else {
+                    if (pos.x < NextNodePos.x) {
+                        manager.Turn();
+                        manager.Move();
+                    } else {
+                        manager.Move();
+                    }
+                }
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+        Finded:
+        manager.animator.SetFloat(EAParameters.SPEED, -1f);
+        StartAction();
+    }
 
 
     IEnumerator Tester() {
@@ -90,7 +88,6 @@ public class PathFollower : MonoBehaviour {
     IEnumerator Follower(List<Node> nodes, EnemyManager manager) {
         print("start follower " + manager.name);
         print("go name " + gameObject.name);
-        print("is same " + manager.Equals(Managers.managers.GetManager("E_Slime")));
         Vector3 goal = manager.enemy.transform.position;
         for (int i = 0; i < nodes.Count; i++) {
             Node a = nodes[i];

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using AStar;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -7,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject Forward;
     [SerializeField] private EnemyDetector[] Attacks;
     [SerializeField] private EnemyManager manager;
+    [SerializeField] private PathFinder finder;
 
     [SerializeField] public float Speed = 2.0f;
     [SerializeField] public float SlowSpeed = 1.0f;
@@ -34,6 +37,7 @@ public class Enemy : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
+        finder = GetComponent<PathFinder>();
 
         width = GetComponent<SpriteRenderer>().bounds.size.x / 3;
 
@@ -74,8 +78,8 @@ public class Enemy : MonoBehaviour
     void Update() {
 
         if (Input.GetKeyDown(KeyCode.F3)) {
-            PathFinder.Instance.FindShortestPathOfNodes(PathFinder.Instance.FindNearestNode(transform.position),
-                        PathFinder.Instance.FindNearestNode(Managers.Player.player.transform.position),
+            finder.FindShortestPathOfNodes(PathFinderData.Instance.FindNearestNode(transform.position),
+                        PathFinderData.Instance.FindNearestNode(Managers.Player.player.transform.position),
                         manager,
                         manager.PathOfNodes);
         }

@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ManagerRegister : MonoBehaviour
 {
-    public static EnemyManager manager = null;
+    
 
     public void Register() {
-        print("register name "+gameObject.name);
+        EnemyManager manager;
+        //print("register name "+gameObject.name);
         if (gameObject.name.Contains("E_")) {
             manager = GetComponent<EnemyManager>();
-            print("enemy manager name :" + manager.name);
+            //print("enemy manager name :" + manager.name);
             Managers.managers.AddManager(gameObject.name, manager);
         }
 
