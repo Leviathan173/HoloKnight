@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour, IGameManager
     public void OnNewGame() {
         // TODO 异步加载
         //SceneManager.LoadScene("Tutorial");
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Stage1");
     }
 
     public void OnLoadScene(string sceneName) {
