@@ -51,12 +51,6 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             }
         }
         print("可以跟寻路线");
-        // UNDONE 跟寻路线
-        // 新建一个全局变量List，每次返回了一次路径的时候，把上次的路径放进List，判断这次的路径与上次的路径是否相同
-        // 如果不相同：
-        //              停止跟寻路径：停止跟寻路径的协程，并把这次的路径复制到List
-        // 如果相同：
-        //              继续跟寻，
         if (manager.follower.hasCoroutine) {
             print("has coroutine ...");
             manager.follower.StopFollow();
@@ -75,7 +69,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         isJumping = false;
 
         StartCoroutine(StaminaIncreaser());
-        StartCoroutine(PathChecker());
+        //StartCoroutine(PathChecker());
         //StartCoroutine(Tester());
 
         origin = transform.position;

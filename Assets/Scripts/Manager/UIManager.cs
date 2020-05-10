@@ -69,6 +69,10 @@ public class UIManager : MonoBehaviour, IGameManager
     }
     // 菜单界面，设置与退出
     public void OnMenuOpen() {
+        if (Menu.isActiveAndEnabled) {
+            Menu.OnClose();
+            return;
+        }
         Menu.OnOpen();
     }
     public void OnMenuClose() {

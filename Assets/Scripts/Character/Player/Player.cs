@@ -188,7 +188,9 @@ public class Player : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.M)) {
             Managers.UI.OnPlayStatusOpen();
         }
-        
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Managers.UI.OnMenuOpen();
+        }
 
     }
 

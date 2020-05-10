@@ -8,10 +8,6 @@ public class PathFollower : MonoBehaviour {
     float deltaX;
     public bool hasCoroutine { get; set; }
     IEnumerator coroutine;
-    // UNDONE 完成寻路
-    // A星算法只判断是否可达
-    // 移动不一定需要按照算法的路径
-    // 
     void Start() {
         finder = PathFinderData.Instance;
         deltaX = 3;
@@ -107,8 +103,9 @@ public class PathFollower : MonoBehaviour {
                     continue;
                 } else {
                     print("pf isn't flat" + " name:" + manager.name);
+                    goal = b.Position;
                     while (!Check(manager.enemy.transform.position, b.Position, manager.name)) {
-                        if(Check(manager.enemy.transform.position, Managers.Player.player.transform.position, manager.name)) {
+                        if (Check(manager.enemy.transform.position, Managers.Player.player.transform.position, manager.name)) {
                             print("pf hit!!!" + " name:" + manager.name);
                             goto End;
                         }
@@ -135,6 +132,7 @@ public class PathFollower : MonoBehaviour {
                 }
             }
         }
+        Check:
         print("pf check last " + "name:" + manager.name);
         while (!Check(manager.enemy.transform.position, goal, manager.name)) {
             print("pf into last check " + "name:" + manager.name);
@@ -159,6 +157,12 @@ public class PathFollower : MonoBehaviour {
             }
             yield return new WaitForSeconds(0.2f);
         }
+        if (!Check(Managers.Player.player.transform.position, goal, "player")) {
+            if(Vector3.Distance(Managers.Player.player.transform.position, goal) < 10) {
+                goal = Managers.Player.player.transform.position;
+                goto Check;
+            }
+        }
         End:
         print("pf end " + "name:" + manager.name);
         hasCoroutine = false;
@@ -176,7 +180,7 @@ public class PathFollower : MonoBehaviour {
     }
 
     bool Check(Vector3 currPos, Vector3 goalPos, string tag, float deviationX = 2.5f, float deviationY = 2.5f) {
-        print("pf Checking pos:" + currPos + " pos:" + goalPos+" tag:"+tag);
+        print("pf Checking pos:" + currPos + " pos:" + goalPos + " tag:" + tag);
         if (Mathf.Abs(currPos.x - goalPos.x) < deviationX) {
             if (Mathf.Abs(currPos.y - goalPos.y) < deviationY) {
                 print("on goal currpos:" + currPos + " goalPos:" + goalPos);

@@ -216,13 +216,13 @@ public class GUIEditor : Editor {
                 a = script.graphData.nodesSorted[paths[i].NodeAId];
                 //Debug.Log("node A :" + a + " is A open ? :" + a.IsOpen);
             }
-                
+
 
             if (script.graphData.nodesSorted.ContainsKey(paths[i].NodeBId)) {
                 b = script.graphData.nodesSorted[paths[i].NodeBId];
                 //Debug.Log("node B :" + b + " is B open ? :" + b.IsOpen);
             }
-                
+
 
             if (a != null && b != null && a != b && a.IsOpen && b.IsOpen) {
                 if (drawPathsInTheScene)
@@ -276,7 +276,7 @@ public class GUIEditor : Editor {
             if (e.button == 0) {
                 OnMouseClick(e.mousePosition);
             }
-                
+
         } else if (e.type == EventType.MouseUp) {
             MarkThisDirty();
             SceneView.RepaintAll();
