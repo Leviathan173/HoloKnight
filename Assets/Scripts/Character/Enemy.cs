@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float MaxHp = 100.0f;
     [SerializeField] public float MaxStamina = 100.0f;
     [SerializeField] public float StaminaIncreasement = 0.25f; // 每秒增长60次 0.25*60 = 15
+    [SerializeField] public float AttackCost = 35.0f;
 
     private Rigidbody2D body;
     private Animator animator;
@@ -46,7 +47,7 @@ public class Enemy : MonoBehaviour
         collOffset = boxCollider.offset;
 
         manager.InitComponents(this, body, animator, Forward, Attacks, width);
-        manager.InitStats(MaxHp, MaxStamina, StaminaIncreasement);
+        manager.InitStats(MaxHp, MaxStamina, StaminaIncreasement, AttackCost);
 
     }
 

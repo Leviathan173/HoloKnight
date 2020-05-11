@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionController : MonoBehaviour
-{
+public class ActionController : MonoBehaviour {
     public enum ActionMode {
         Aggressive,
         Defence
@@ -49,9 +48,73 @@ public class ActionController : MonoBehaviour
     /// <param name="manager">敌人管理器</param>
     /// <returns></returns>
     IEnumerator ActionAggressive(EnemyManager manager) {
-        float Hp = manager.currentHealth;
-        float Sp = manager.currentStamina;
-
+        float Sp;
+        while (true) {
+            GetClose:
+            print("Get close");
+            while (!manager.follower.Check(manager.enemy.transform.position,
+                Managers.Player.player.transform.position,
+                "get close", 1, 1)) {
+                if (manager.isFacingRight) {
+                    if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
+                        manager.Move();
+                    } else {
+                        manager.Turn();
+                        manager.Move();
+                    }
+                } else {
+                    if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
+                        manager.Turn();
+                        manager.Move();
+                    } else {
+                        manager.Move();
+                    }
+                }
+                yield return new WaitForSeconds(0.2f);
+            }
+            Attack:
+            print("Attack");
+            Sp = manager.currentStamina;
+            if (Sp > manager.attackCost) {
+                float ran = Random.Range(0, 2);
+                print("random :" + ran);
+                if(ran < 1) {
+                    manager.AttackAEnter();
+                    manager.AttackAExit();
+                } else {
+                    manager.AttackBEnter();
+                    manager.AttackBExit();
+                }
+                goto GetClose;
+            } else {
+                goto Hold;
+            }
+            Hold:
+            print("hold");
+            while(manager.follower.Check(manager.enemy.transform.position,
+                Managers.Player.player.transform.position,
+                "hold")) {
+                if (manager.isFacingRight) {
+                    if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
+                        manager.Move(-1);
+                    } else {
+                        manager.Turn();
+                        manager.Move();
+                    }
+                } else {
+                    if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
+                        manager.Turn();
+                        manager.Move(-1);
+                    } else {
+                        manager.Move();
+                    }
+                }
+                yield return new WaitForSeconds(0.2f);
+                if (manager.currentStamina > manager.attackCost) {
+                    goto GetClose;
+                }
+            }
+        }
         yield return null;
     }
     /// <summary>

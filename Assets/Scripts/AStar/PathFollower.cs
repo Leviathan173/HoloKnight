@@ -192,7 +192,7 @@ public class PathFollower : MonoBehaviour {
     /// <param name="deviationX">X轴的可接受误差</param>
     /// <param name="deviationY">Y轴的可接受误差</param>
     /// <returns></returns>
-    bool Check(Vector3 currPos, Vector3 goalPos, string tag, float deviationX = 2.5f, float deviationY = 2.5f) {
+    public bool Check(Vector3 currPos, Vector3 goalPos, string tag, float deviationX = 2.5f, float deviationY = 2.5f) {
         //print("pf Checking pos:" + currPos + " pos:" + goalPos + " tag:" + tag);
         if (Mathf.Abs(currPos.x - goalPos.x) < deviationX) {
             if (Mathf.Abs(currPos.y - goalPos.y) < deviationY) {

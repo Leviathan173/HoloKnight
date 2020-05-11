@@ -20,6 +20,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public float maxStamina { get; set; }
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
+    public float attackCost { get; set; }
 
     public bool isFacingRight { get; set; }
     public bool isGrounded { get; set; }
@@ -110,12 +111,14 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// <param name="maxHealth">血量上限</param>
     /// <param name="maxStamina">精力上限</param>
     /// <param name="staminaIncreasement">精力回复速度</param>
-    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement) {
+    /// <param name="attackCost">攻击消耗精力</param>
+    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement, float attackCost) {
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.maxStamina = maxStamina;
         currentStamina = maxStamina;
         this.staminaIncreasement = staminaIncreasement;
+        this.attackCost = attackCost;
     }
 
     /// <summary>
