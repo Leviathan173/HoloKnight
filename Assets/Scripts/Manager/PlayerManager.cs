@@ -58,7 +58,14 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         status = ManagerStatus.Started;
     }
-    // 初始化
+    /// <summary>
+    /// 初始化组件
+    /// </summary>
+    /// <param name="body">玩家Rigidbody</param>
+    /// <param name="animator">玩家Animator</param>
+    /// <param name="Forward">指示玩家前方的指示器</param>
+    /// <param name="Attacks">攻击检测器</param>
+    /// <param name="width">控制玩家转向的宽度值</param>
     public void InitComponents(Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
         this.body = body;
         this.animator = animator;
@@ -66,14 +73,20 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         this.Attacks = Attacks;
         this.width = width;
     }
-    // 是否在攻击中
+    /// <summary>
+    /// 是否在攻击中
+    /// </summary>
+    /// <returns></returns>
     public bool IsAttacking() {
         return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_A) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_B) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_C) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ATTACK_D));
     }
-    // 添加向前的力
+    /// <summary>
+    /// 添加向前的力
+    /// </summary>
+    /// <param name="force">力的大小</param>
     public void AddFrontForce(float force = 0) {
         if(force == 0) {
             body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 9, body.velocity.y);
@@ -82,7 +95,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         }
             
     }
-    // 跳跃攻击
+    /// <summary>
+    /// 添加向上的力
+    /// </summary>
+    /// <param name="force">力的大小</param>
     public void AddUpForce(float force = 0) {
         if(Mathf.Approximately(force,0)) {
             if(body.velocity.y >= 0) {
@@ -146,20 +162,30 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     //}
     // 翻滚
     // 是否在翻滚中，用于转向判断
+    /// <summary>
+    /// 是否在翻滚中
+    /// </summary>
+    /// <returns></returns>
     public bool IsRolling() {
         return animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(PAStat.ROLL);
     }
-    // 翻滚中每次动画状态更新调用
-    // 添加一个朝向翻滚方向的加速度
+    /// <summary>
+    /// 翻滚中每次动画状态更新调用，添加一个朝向翻滚方向的加速度
+    /// </summary>
     public void OnRollGoing() {
         body.velocity = new Vector2((Forward.transform.position.x - player.transform.position.x) * 14, body.velocity.y);
     }
-    // 退出翻滚状态
+    /// <summary>
+    /// 退出翻滚动画
+    /// </summary>
     public void OnRollExit() {
         _isRolling = false;
         animator.ResetTrigger(PAParameters.ROLL);
     }
-    // 控制朝向
+    /// <summary>
+    /// 控制朝向
+    /// </summary>
+    /// <param name="deltaX">转向的方向，负数为向左，正数反之</param>
     public void Turn(float deltaX) {
         if (!IsRolling() // 翻滚、攻击、爬梯子时不能转向
             && !IsAttacking()
@@ -193,6 +219,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     //    }
     //}
     //移动
+    /// <summary>
+    /// 移动
+    /// </summary>
+    /// <param name="deltaX">移动的速度</param>
     public void Move(float deltaX) {
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
         if (movement != Vector2.zero && !_isRunning && !_isJumping && !IsAttacking() && !IsRolling()
@@ -200,14 +230,19 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             body.velocity = movement;
         }
     }
-    // 跳跃
+    /// <summary>
+    /// 跳跃
+    /// </summary>
     public void Jump() {
         if (_isGrounded && !IsAttacking() && !IsRolling() /*&& !_isOnLadder*/) {
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;
         }
     }
-    // 跑动
+    /// <summary>
+    /// 跑
+    /// </summary>
+    /// <param name="deltaX">速度</param>
     public void Run(float deltaX) {
         if (new Vector2(deltaX, body.velocity.y) != Vector2.zero
             && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded /*&& !_isOnLadder*/) {
@@ -216,104 +251,139 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             animator.SetFloat(PAParameters.SPEED, Mathf.Abs(deltaX * 2));
         }
     }
-    //结束跑动
+    /// <summary>
+    /// 结束跑步动画
+    /// </summary>
     public void RunExit() {
         _isRunning = false;
     }
-    // 攻击A
+    /// <summary>
+    /// 攻击A
+    /// </summary>
     public void AttackAEnter() {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping && !IsAttacking()) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
         }
     }
-    // 攻击A取消
+    /// <summary>
+    /// 攻击A动画退出
+    /// </summary>
     public void AttackAExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
-    // 攻击A判定
+    /// <summary>
+    /// 攻击A判定
+    /// </summary>
     public void AttackACheck() {
         foreach(string name in Attacks[0].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
             manager.GetHit(10);
         }
     }
-    // 攻击B
+    /// <summary>
+    /// 攻击B
+    /// </summary>
     public void AttackBEnter() {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
         }
     }
-    // 攻击B判定
+    /// <summary>
+    /// 攻击B判定
+    /// </summary>
     public void AttackBCheck() {
         foreach (string name in Attacks[1].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
             manager.GetHit(10);
         }
     }
-    // 攻击B取消
+    /// <summary>
+    /// 攻击B动画退出
+    /// </summary>
     public void AttackBExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
-    // 攻击C
+    /// <summary>
+    /// 攻击C
+    /// </summary>
     public void AttackCEnter() {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
         }
     }
-    // 攻击C判定
+    /// <summary>
+    /// 攻击C判定
+    /// </summary>
     public void AttackCCheck() {
         foreach (string name in Attacks[2].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
             manager.GetHit(10);
         }
     }
-    // 攻击C取消
+    /// <summary>
+    /// 攻击C动画退出
+    /// </summary>
     public void AttackCExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
-    // 攻击D
+    /// <summary>
+    /// 攻击D
+    /// </summary>
     public void AttackDEnter() {
         if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
             AddFrontForce();
         }
     }
-    // 攻击D判定
+    /// <summary>
+    /// 攻击D判定
+    /// </summary>
     public void AttackDCheck() {
         foreach (string name in Attacks[3].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
             manager.GetHit(10);
         }
     }
-    // 攻击D取消
+    /// <summary>
+    /// 攻击D动画退出
+    /// </summary>
     public void AttackDExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
-    // 跳跃攻击
+    /// <summary>
+    /// 跳跃攻击
+    /// </summary>
     public void JumpAttack() {
         if (!_isGrounded && _isJumping) {
             animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
             body.velocity = new Vector2(0, body.velocity.y);
         }
     }
-    // 翻滚
+    /// <summary>
+    /// 翻滚
+    /// </summary>
     public void Roll() {
         if (_isGrounded && !IsAttacking() /*&& !_isOnLadder*/) {
             _isRolling = true;
             animator.SetTrigger(PAParameters.ROLL);
         }
     }
-    // 受伤
+    /// <summary>
+    /// 受伤
+    /// </summary>
+    /// <param name="damage">伤害</param>
     public void GetHit(float damage) {
         // TODO 玩家受伤
         print("hit player");
         animator.SetTrigger(PAParameters.HIT);
         //animator.ResetTrigger(PAParameters.HIT);
     }
-    // 死亡
+    /// <summary>
+    /// 死亡
+    /// </summary>
     public void Death() {
         // TODO 玩家死亡
     }

@@ -8,7 +8,6 @@ public class SettingPopup : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
     public void Open() {
         gameObject.SetActive(true);
     }

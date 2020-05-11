@@ -21,7 +21,11 @@ public class ActionController : MonoBehaviour
     void Start() {
         hasCorountine = false;
     }
-
+    /// <summary>
+    /// 开始行动模式
+    /// </summary>
+    /// <param name="manager">敌人管理器</param>
+    /// <param name="mode">进攻模式</param>
     public void StartAction(EnemyManager manager, ActionMode mode) {
         if (mode == ActionMode.Aggressive)
             coroutine = ActionAggressive(manager);
@@ -39,12 +43,22 @@ public class ActionController : MonoBehaviour
         hasCorountine = false;
     }
 
-
+    /// <summary>
+    /// 积极的进攻模式
+    /// </summary>
+    /// <param name="manager">敌人管理器</param>
+    /// <returns></returns>
     IEnumerator ActionAggressive(EnemyManager manager) {
         float Hp = manager.currentHealth;
         float Sp = manager.currentStamina;
+
         yield return null;
     }
+    /// <summary>
+    /// 偏向防守的进攻模式
+    /// </summary>
+    /// <param name="manager">敌人管理器</param>
+    /// <returns></returns>
     IEnumerator ActionDefence(EnemyManager manager) {
         float Hp = manager.currentHealth;
         float Sp = manager.currentStamina;

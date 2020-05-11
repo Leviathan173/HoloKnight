@@ -1,21 +1,42 @@
-﻿class EAParameters {
-    // 用来标记行走方向的速度，不参与移速运算，float
+﻿/// <summary>
+/// 敌人动画机的参数
+/// </summary>
+class EAParameters {
+    /// <summary>
+    /// 用来标记行走方向的速度，不参与移速运算，float
+    /// </summary>
     public const string SPEED = "Speed";
-    // 是否接地，bool
+    /// <summary>
+    /// 是否接地，bool
+    /// </summary>
     public const string GROUNDED = "Grounded";
-    // 受伤，trigger
+    /// <summary>
+    /// 受伤，trigger
+    /// </summary>
     public const string HIT = "Hit";
-    // 死亡，trigger
+    /// <summary>
+    /// 死亡，trigger
+    /// </summary>
     public const string DEAD = "Dead";
-    // 攻击A，trigger
+    /// <summary>
+    /// 攻击A，trigger
+    /// </summary>
     public const string ATTACK_A = "AttackA";
-    // 攻击B，trigger
+    /// <summary>
+    /// 攻击B，trigger
+    /// </summary>
     public const string ATTACK_B = "AttackB";
-    // 攻击C，trigger
+    /// <summary>
+    /// 攻击C，trigger
+    /// </summary>
     public const string ATTACK_C = "AttackC";
-    // TODO 缓慢行走，float
-    // Walk动画播放速度的系数
+    // TODO 缓慢行走
+    /// <summary>
+    /// Walk动画播放速度的系数，float
+    /// </summary>
     public const string WALK_SPEED = "WalkSpeed";
-    // 盾牌使用，bool
+    /// <summary>
+    /// 盾牌使用，bool
+    /// </summary>
     public const string SHIELD = "Shield";
 }

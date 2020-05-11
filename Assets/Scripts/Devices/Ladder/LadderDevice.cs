@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// 废弃方法
+// 废弃类
 public class LadderDevice : MonoBehaviour
 {
     void Awake() {

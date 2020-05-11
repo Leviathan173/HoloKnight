@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ManagerRegister : MonoBehaviour
 {
-    
-
+    /// <summary>
+    /// 管理器注册器
+    /// </summary>
     public void Register() {
         EnemyManager manager;
         //print("register name "+gameObject.name);

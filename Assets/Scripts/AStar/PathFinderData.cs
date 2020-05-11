@@ -48,7 +48,11 @@ public class PathFinderData : MonoBehaviour {
     //    }
     //    OuterNodes.Clear();
     //}
-
+    /// <summary>
+    /// 寻找离某点最近的结点
+    /// </summary>
+    /// <param name="point">点的位置</param>
+    /// <returns></returns>
     public int FindNearestNode(Vector3 point) {
         float minDistance = float.MaxValue;
         Node nearestNode = null;
@@ -66,7 +70,11 @@ public class PathFinderData : MonoBehaviour {
         }
         return -1;
     }
-
+    /// <summary>
+    /// 设置结点是否开放
+    /// </summary>
+    /// <param name="nodeID">结点ID</param>
+    /// <param name="enable">值</param>
     public void EnableNode(int nodeID, bool enable) {
         if (graphData == null) {
             Debug.LogError("Graph Data not found");
@@ -80,6 +88,11 @@ public class PathFinderData : MonoBehaviour {
         }
         node.SetOpen(enable);
     }
+    /// <summary>
+    /// 设置路径是否开放
+    /// </summary>
+    /// <param name="pathID">路径ID</param>
+    /// <param name="enable">值</param>
     public void EnablePath(int pathID, bool enable) {
         if (graphData == null) {
             Debug.LogError("Graph Data not found");

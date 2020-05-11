@@ -34,6 +34,9 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public PathFinderData PFData;
     //public List<Node> currNodes = new List<Node>();
     [SerializeField] public PathFinder finder;
+    /// <summary>
+    /// 寻路委托
+    /// </summary>
     public System.Action<List<Node>, EnemyManager> PathOfNodes = delegate (List<Node> nodes, EnemyManager manager) {
         print("委托开始");
         if (nodes == null || nodes.Count == 0) {
@@ -81,7 +84,15 @@ public class EnemyManager : MonoBehaviour, IGameManager {
 
         status = ManagerStatus.Started;
     }
-    // 初始化组件
+    /// <summary>
+    /// 初始化组件
+    /// </summary>
+    /// <param name="enemy">敌人自己</param>
+    /// <param name="body">敌人Rigidbody</param>
+    /// <param name="animator">敌人Animator</param>
+    /// <param name="Forward">敌人面向方向的物体指示器</param>
+    /// <param name="Attacks">检测攻击范围的检测器</param>
+    /// <param name="width">控制敌人转向的宽度，可以通过裁剪精灵图废弃</param>
     public void InitComponents(Enemy enemy, Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
         this.enemy = enemy;
         this.body = body;
@@ -93,7 +104,12 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             Debug.LogError("has null Componets");
         }
     }
-    // 初始化血量等数值
+    /// <summary>
+    /// 初始化血量等数值
+    /// </summary>
+    /// <param name="maxHealth">血量上限</param>
+    /// <param name="maxStamina">精力上限</param>
+    /// <param name="staminaIncreasement">精力回复速度</param>
     public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement) {
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
@@ -102,12 +118,18 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         this.staminaIncreasement = staminaIncreasement;
     }
 
-    // 是否在攻击中
+    /// <summary>
+    /// 判断是否在攻击中
+    /// </summary>
+    /// <returns></returns>
     public bool IsAttacking() {
         return (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_A) ||
             animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals(EAStat.ENEMY_ATTACK_B));
     }
-    // 添加向前的力
+    /// <summary>
+    /// 添加向前的力
+    /// </summary>
+    /// <param name="force">力的大小</param>
     public void AddFrontForce(float force = 0) {
         if (force == 0) {
             body.velocity = new Vector2((Forward.transform.position.x - enemy.transform.position.x) * 9, body.velocity.y);
@@ -117,7 +139,9 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     }
 
 
-    // 控制朝向
+    /// <summary>
+    /// 控制朝向
+    /// </summary>
     public void Turn() {
         if (!IsAttacking()) {
             enemy.transform.localScale = new Vector3(-enemy.transform.localScale.x, enemy.transform.localScale.y, enemy.transform.localScale.z);
@@ -137,9 +161,10 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             }
         }
     }
-    // 移动
-    // 他需要持续的调用
-    // 每次调用执行一次
+    /// <summary>
+    /// 移动
+    /// </summary>
+    /// <param name="deltaX">移动方向</param>
     public void Move(float deltaX = 0) {
         if (deltaX == 0) {
             if (isFacingRight) {
@@ -157,7 +182,9 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             body.velocity = movement;
         }
     }
-    // 跳跃
+    /// <summary>
+    /// 跳跃，暂时废弃
+    /// </summary>
     public void Jump() {
         if (isGrounded && !IsAttacking()) {
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -165,7 +192,9 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             isGrounded = false;
         }
     }
-    // 攻击A
+    /// <summary>
+    /// 攻击A
+    /// </summary>
     public void AttackAEnter() {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_A);
@@ -175,34 +204,47 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     // 或许修改一下碰撞体，让他和挥剑的动作一样移动
     // 或许就仅仅只是对每个攻击进行单独的延时触发判定
 
-    // 攻击A判定
+    /// <summary>
+    /// 攻击A判定
+    /// </summary>
     public void AttackACheck() {
         if (Attacks[0].hasPlayer) {
             Managers.Player.GetHit(10);
         }
     }
-    // 攻击A取消
+    /// <summary>
+    /// 退出攻击A的动画
+    /// </summary>
     public void AttackAExit() {
         animator.ResetTrigger(EAParameters.ATTACK_A);
     }
-    // 攻击B
+    /// <summary>
+    /// 攻击B
+    /// </summary>
     public void AttackBEnter() {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_B);
         }
     }
-    // 攻击B判定
+    /// <summary>
+    /// 攻击B判定
+    /// </summary>
     public void AttackBCheck() {
         if (Attacks[1].hasPlayer) {
             Managers.Player.GetHit(10);
         }
     }
-    // 攻击B取消
+    /// <summary>
+    /// 退出攻击B的动画
+    /// </summary>
     public void AttackBExit() {
         animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
-    // slime攻击B
+    // TODO 或许可以通过继承来避免这样的实现
+    /// <summary>
+    /// slime的攻击B
+    /// </summary>
     public void AttackBEnterSlime() {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_B);
@@ -210,39 +252,58 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             AddFrontForce(18);
         }
     }
+    /// <summary>
+    /// slime攻击B判定
+    /// </summary>
     public void AttackBCheckSlime() {
         if (Attacks[1].hasPlayer) {
             Managers.Player.GetHit(10);
         }
     }
+    /// <summary>
+    /// slime攻击B动画退出
+    /// </summary>
     public void AttackBExitSlime() {
         animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
-    // 攻击C
+    /// <summary>
+    /// 攻击C
+    /// </summary>
     public void AttackCEnter() {
         animator.SetTrigger(EAParameters.ATTACK_C);
     }
-    // 攻击C判定
+    /// <summary>
+    /// 攻击C判定
+    /// </summary>
     public void AttackCCheck() {
         if (Attacks[2].hasPlayer) {
             Managers.Player.GetHit(10);
         }
     }
-    // 攻击C取消
+    /// <summary>
+    /// 退出攻击C动画
+    /// </summary>
     public void AttackCExit() {
         animator.ResetTrigger(EAParameters.ATTACK_C);
     }
-
-    // 举盾
+    /// <summary>
+    /// 举盾
+    /// </summary>
     public void UseShield() {
         animator.SetBool(EAParameters.SHIELD, true);
     }
+    /// <summary>
+    /// Un举盾
+    /// </summary>
     public void UnuseShield() {
         animator.SetBool(EAParameters.SHIELD, false);
     }
 
-    // 受击
+    /// <summary>
+    /// 受伤
+    /// </summary>
+    /// <param name="damage">税前伤害</param>
     public void GetHit(float damage) {
         animator.SetTrigger(EAParameters.HIT);
         if (currentHealth < damage) {
@@ -253,15 +314,22 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         health.SetHealth(damage);
     }
 
-    // 死亡
+    /// <summary>
+    /// 播放死亡动画
+    /// </summary>
     public void Death() {
         animator.SetTrigger(EAParameters.DEAD);
     }
-
-    public void Enemy1_Destroy() {
+    /// <summary>
+    /// 摧毁敌人物体
+    /// </summary>
+    public void Enemy_Destroy() {
         Destroy(enemy);
     }
-
+    /// <summary>
+    /// 精力增长控制协程
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StaminaIncreaser() {
         int times = 0;
         int time = (int)Mathf.Abs(Time.time);
@@ -288,7 +356,11 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             currentStamina -= 50;
         }
     }
-
+    // TODO 或许可以通过修改值来控制寻路的频率
+    /// <summary>
+    /// 寻路协程
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PathChecker() {
         while (true) {
             if (PFData != null) {

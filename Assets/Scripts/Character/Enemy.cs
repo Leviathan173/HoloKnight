@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
 
 
     void Start() {
+        // 初始化值
         register = GetComponent<ManagerRegister>();
         register.Register();
         manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
@@ -50,6 +51,7 @@ public class Enemy : MonoBehaviour
     }
 
     void FixedUpdate() {
+        // 落地检测
         ContactPoint2D[] contacts = new ContactPoint2D[10];
         body.GetContacts(contacts);
         if (contacts != null) {
@@ -74,7 +76,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
+    // 测试用
     void Update() {
 
         if (Input.GetKeyDown(KeyCode.F3)) {
@@ -123,8 +125,10 @@ public class Enemy : MonoBehaviour
             manager.Death();
         }
     }
-
-    public void Enemy1_Death() {
+    /// <summary>
+    /// 敌人死亡
+    /// </summary>
+    public void Enemy_Death() {
         Destroy(gameObject, 0);
     }
 }

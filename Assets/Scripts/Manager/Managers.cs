@@ -29,7 +29,10 @@ public class Managers : MonoBehaviour {
 
 		StartCoroutine(StartupManagers());
 	}
-
+    /// <summary>
+    /// 启动所有管理器的协程
+    /// </summary>
+    /// <returns></returns>
 	private IEnumerator StartupManagers() {
 		foreach (KeyValuePair<string,IGameManager> manager in _startSequence) {
             manager.Value.Startup();
@@ -58,7 +61,11 @@ public class Managers : MonoBehaviour {
 		
 		Debug.Log("All managers started up");
 	}
-
+    /// <summary>
+    /// 添加新的管理器
+    /// </summary>
+    /// <param name="name">管理器关联的物体的名字</param>
+    /// <param name="manager">管理器</param>
     public void AddManager(string name,IGameManager manager) {
         if (!_startSequence.ContainsKey(name)) {
             //print("Add new manager " + name);
@@ -72,7 +79,11 @@ public class Managers : MonoBehaviour {
         
     }
         
-
+    /// <summary>
+    /// 通过名字获取管理器
+    /// </summary>
+    /// <param name="name">管理器关联的物体的名字</param>
+    /// <returns></returns>
     public IGameManager GetManager(string name) {
         if (_startSequence.ContainsKey(name)) {
             //print("return manager name "+ name + " obj :"+_startSequence[name]);

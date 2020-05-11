@@ -9,13 +9,26 @@ public class PathFinder : MonoBehaviour
     void Start() {
         graphData = PathFinderData.Instance.graphData;
     }
-
+    /// <summary>
+    /// 异步寻找对应路径
+    /// </summary>
+    /// <param name="fromNodeID">起始结点</param>
+    /// <param name="toNodeID">终点</param>
+    /// <param name="manager">敌人管理器</param>
+    /// <param name="callback">返回委托</param>
     public void FindShortestPathOfNodes(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         print(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID);
-        StartCoroutine(FindShortestPathAsynchonousInternal(fromNodeID, toNodeID, manager, callback));
+        StartCoroutine(FindShortestPathAsynchonous(fromNodeID, toNodeID, manager, callback));
     }
-
-    private IEnumerator FindShortestPathAsynchonousInternal(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
+    /// <summary>
+    /// 寻路协程
+    /// </summary>
+    /// <param name="fromNodeID">起始结点</param>
+    /// <param name="toNodeID">终点</param>
+    /// <param name="manager">敌人管理器</param>
+    /// <param name="callback">返回委托</param>
+    /// <returns></returns>
+    private IEnumerator FindShortestPathAsynchonous(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         float start = Time.time;
         if (callback == null || manager == null) {
             //print("has no recver");

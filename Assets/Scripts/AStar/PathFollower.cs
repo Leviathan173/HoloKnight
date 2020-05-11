@@ -15,13 +15,19 @@ public class PathFollower : MonoBehaviour {
             StartCoroutine(Tester());
         }
     }
-
+    /// <summary>
+    /// 跟寻路径
+    /// </summary>
+    /// <param name="nodes">路径中的顺序结点</param>
+    /// <param name="manager">敌人管理器</param>
     public void FollowPath(List<Node> nodes, EnemyManager manager) {
         coroutine = Follower(nodes, manager);
         hasCoroutine = true;
         StartCoroutine(coroutine);
     }
-
+    /// <summary>
+    /// 停止跟寻路线
+    /// </summary>
     public void StopFollow() {
         if (coroutine != null) {
             StopCoroutine(coroutine);
@@ -74,6 +80,12 @@ public class PathFollower : MonoBehaviour {
 
         yield return null;
     }
+    /// <summary>
+    /// 跟寻协程，控制行动逻辑
+    /// </summary>
+    /// <param name="nodes">路径中的顺序结点</param>
+    /// <param name="manager">敌人管理器</param>
+    /// <returns></returns>
     IEnumerator Follower(List<Node> nodes, EnemyManager manager) {
         Vector3 goal = nodes[0].Position;
         for (int i = 0; i < nodes.Count; i++) {
@@ -162,11 +174,24 @@ public class PathFollower : MonoBehaviour {
         manager.animator.SetFloat(EAParameters.SPEED, -1);
         yield return null;
     }
-
+    /// <summary>
+    /// a、b两点是否在同一平面上
+    /// </summary>
+    /// <param name="a">结点A</param>
+    /// <param name="b">结点B</param>
+    /// <returns></returns>
     bool IsFlat(Node a, Node b) {
         return Mathf.Abs(a.Position.y - b.Position.y) < 1.5f;
     }
-
+    /// <summary>
+    /// 检查两点的距离是否在误差之间
+    /// </summary>
+    /// <param name="currPos">现在位置</param>
+    /// <param name="goalPos">终点位置</param>
+    /// <param name="tag">Debug用字符串</param>
+    /// <param name="deviationX">X轴的可接受误差</param>
+    /// <param name="deviationY">Y轴的可接受误差</param>
+    /// <returns></returns>
     bool Check(Vector3 currPos, Vector3 goalPos, string tag, float deviationX = 2.5f, float deviationY = 2.5f) {
         //print("pf Checking pos:" + currPos + " pos:" + goalPos + " tag:" + tag);
         if (Mathf.Abs(currPos.x - goalPos.x) < deviationX) {
