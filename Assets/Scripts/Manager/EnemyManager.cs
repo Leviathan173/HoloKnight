@@ -245,6 +245,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     }
 
     // TODO 或许可以通过继承来避免这样的实现
+    // 暂时废弃
     /// <summary>
     /// slime的攻击B
     /// </summary>
