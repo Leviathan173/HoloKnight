@@ -55,9 +55,7 @@ public class ActionController : MonoBehaviour {
         while (true) {
             GetClose:
             print("ac Get close");
-            while (!manager.follower.Check(manager.enemy.transform.position,
-                Managers.Player.player.transform.position,
-                "ac get close", 2.3f, 2.3f)) {
+            while (!Check(manager,"ac get close")) {
                 if (manager.isFacingRight) {
                     if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                         manager.Move();
@@ -85,24 +83,27 @@ public class ActionController : MonoBehaviour {
                 print("ac random :" + ran);
                 if(ran < 1) {
                     print("ac attack a");
+                    yield return new WaitForSeconds(0.3f);
                     manager.AttackAEnter();
-                    //manager.AttackAExit();
                 } else {
                     print("ac attack b");
+                    yield return new WaitForSeconds(0.3f);
                     manager.AttackBEnter();
-                    //manager.AttackBExit();
                 }
-                yield return new WaitForSeconds(1);
-                goto GetClose;
+                yield return new WaitForSeconds(2);
+                if(manager.currentStamina > manager.attackCost) {
+                    goto GetClose;
+                } else {
+                    goto Hold;
+                }
+                
             } else {
                 print("ac has no sp");
                 goto Hold;
             }
             Hold:
             print("ac hold");
-            while(manager.follower.Check(manager.enemy.transform.position,
-                Managers.Player.player.transform.position,
-                "ac hold", 3, 3)) {
+            while(Check(manager, "ac hold")) {
                 if (manager.isFacingRight) {
                     if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                         manager.Move(-1);
@@ -140,9 +141,7 @@ public class ActionController : MonoBehaviour {
             Hp = manager.currentHealth;
             if (Hp > manager.maxHealth / 2) {
                 print("ac Get close");
-                while (!manager.follower.Check(manager.enemy.transform.position,
-                    Managers.Player.player.transform.position,
-                    "ac get close", 1, 1)) {
+                while (!Check(manager,"ac get close")) {
                     if (manager.isFacingRight) {
                         if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                             manager.Move();
@@ -161,13 +160,14 @@ public class ActionController : MonoBehaviour {
                     yield return new WaitForSeconds(0.2f);
                 }
             }
-            float ran = Random.Range(0, 1);
+            Defence:
+            float ran = Random.Range(0, 100) / 100.0f;
+            print("ac ran :" + ran + "health :" + manager.currentHealth / manager.maxHealth);
             if(ran > manager.currentHealth/manager.maxHealth) {
-                Defence:
                 print("ac defence");
                 if (hasShield) {
                     manager.UseShield();
-                    yield return new WaitForSeconds(1);
+                    yield return new WaitForSeconds(2);
                     goto GetClose;
                 } else {
                     goto Hold;
@@ -175,27 +175,24 @@ public class ActionController : MonoBehaviour {
             }
             Attack:
             print("ac Attack");
+            manager.UnuseShield();
             Sp = manager.currentStamina;
             if (Sp > manager.attackCost) {
                 ran = Random.Range(0, 2);
                 print("ac random :" + ran);
                 if (ran < 1) {
                     manager.AttackAEnter();
-                    //manager.AttackAExit();
                 } else {
                     manager.AttackBEnter();
-                    //manager.AttackBExit();
                 }
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(2);
                 goto GetClose;
             } else {
                 goto Hold;
             }
             Hold:
             print("ac hold");
-            while (manager.follower.Check(manager.enemy.transform.position,
-                Managers.Player.player.transform.position,
-                "ac hold")) {
+            while (Check(manager,"ac hold")) {
                 if (manager.isFacingRight) {
                     if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                         manager.Move(-1);
@@ -212,10 +209,26 @@ public class ActionController : MonoBehaviour {
                     }
                 }
                 yield return new WaitForSeconds(0.2f);
+                ran = Random.Range(0, 5);
+                if(ran == 0) {
+                    goto Defence;
+                }
                 if (manager.currentStamina > manager.attackCost) {
                     goto GetClose;
                 }
             }
         }
+    }
+
+    bool Check(EnemyManager manager, string msg = "no msg") {
+        print("checking " + msg);
+        foreach(var detector in manager.Attacks) {
+            if (detector.hasPlayer) {
+                print("checked in " + msg);
+                return true;
+            }
+        }
+        print("failed to check " + msg);
+        return false;
     }
 }

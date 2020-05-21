@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class CoinPicker : MonoBehaviour
 {
-    // TODO 拾取硬币并增加玩家金币
+    // UNDONE 拾取硬币并增加玩家金币
+    [SerializeField]public int gold = 100;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.gameObject.name.Contains("Player")) {
+            Managers.Player.gold += gold;
+            Destroy(gameObject);
+        }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    
+    public void SetGold(int value) {
+        gold = value;
     }
 }

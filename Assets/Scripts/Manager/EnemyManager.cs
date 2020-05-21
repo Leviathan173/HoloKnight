@@ -159,16 +159,19 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             if (gameObject.name.Contains("Slime")) {
                 isFacingRight = !isFacingRight;
                 enemy.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
+                health.Turn();
                 return;
             }
             if (isFacingRight) {
                 //do turn left
                 isFacingRight = !isFacingRight;
                 enemy.transform.position = new Vector3(enemy.transform.position.x - width, enemy.transform.position.y, enemy.transform.position.z);
+                health.Turn();
             } else if (!isFacingRight) {
                 //do turn right
                 isFacingRight = !isFacingRight;
                 enemy.transform.position = new Vector3(enemy.transform.position.x + width, enemy.transform.position.y, enemy.transform.position.z);
+                health.Turn();
             }
         }
     }
@@ -318,12 +321,14 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     public void UseShield() {
         animator.SetBool(EAParameters.SHIELD, true);
+        usingShield = true;
     }
     /// <summary>
     /// Un举盾
     /// </summary>
     public void UnuseShield() {
         animator.SetBool(EAParameters.SHIELD, false);
+        usingShield = false;
     }
 
     /// <summary>
@@ -331,13 +336,42 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     /// <param name="damage">税前伤害</param>
     public void GetHit(float damage) {
-        animator.SetTrigger(EAParameters.HIT);
-        if (currentHealth < damage) {
+        if (usingShield) {
+            damage = damage * 0.2f;
+            currentStamina -= damage * 2;
+            if (currentStamina <= 0) {
+                UnuseShield();
+                damage = damage / 0.2f;
+                animator.SetTrigger(EAParameters.HIT);
+                health.SetHealth(damage);
+                if (currentHealth < damage) {
+                    currentHealth = 0;
+                    Death();
+                    return;
+                } else {
+                    currentHealth -= damage;
+                }
+            } else {
+                health.SetHealth(damage);
+                if (currentHealth < damage) {
+                    currentHealth = 0;
+                    Death();
+                    return;
+                } else {
+                    currentHealth -= damage;
+                }
+            }
+            return;
+        }
+        health.SetHealth(damage);
+        if (currentHealth <= damage) {
             currentHealth = 0;
+            Death();
+            return;
         } else {
             currentHealth -= damage;
         }
-        health.SetHealth(damage);
+        animator.SetTrigger(EAParameters.HIT);
     }
 
     /// <summary>
@@ -350,7 +384,8 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// 摧毁敌人物体
     /// </summary>
     public void Enemy_Destroy() {
-        Destroy(enemy);
+        Destroy(enemy.gameObject);
+        Managers.Player.gold += 100;
     }
     /// <summary>
     /// 精力增长控制协程
@@ -363,7 +398,11 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             //print("times"+times+" currSp:" + currentStamina);
             if (currentStamina <= maxStamina - staminaIncreasement) {
                 if (time == (int)Mathf.Abs(Time.time)) {
-                    currentStamina += staminaIncreasement;
+                    if (usingShield) {
+                        currentStamina += staminaIncreasement * 0.25f;
+                    } else {
+                        currentStamina += staminaIncreasement;
+                    }
                     times++;
                 } else {
                     times = 0;

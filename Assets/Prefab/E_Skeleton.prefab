@@ -460,6 +460,9 @@ GameObject:
   - component: {fileID: 2085379912}
   - component: {fileID: 710926467693569606}
   - component: {fileID: 1340863984}
+  - component: {fileID: 1340863982}
+  - component: {fileID: 1340863983}
+  - component: {fileID: 5956034426093848992}
   m_Layer: 8
   m_Name: E_Skeleton
   m_TagString: Untagged
@@ -546,8 +549,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 1.8711
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 3
@@ -626,13 +629,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 0}
-  _body: {fileID: 0}
-  _animator: {fileID: 0}
+  body: {fileID: 0}
+  animator: {fileID: 0}
   Forward: {fileID: 0}
   health: {fileID: 0}
   Attacks: []
   jumpForce: 12
-  _width: 0
+  width: 0
+  follower: {fileID: 1340863982}
+  action: {fileID: 0}
+  PFData: {fileID: 0}
+  finder: {fileID: 0}
+  mode: 0
+  hasShield: 0
 --- !u!114 &710926467693569606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,11 +670,52 @@ MonoBehaviour:
   Attacks:
   - {fileID: 1678291118}
   - {fileID: 1678291118}
-  Speed: 5
+  manager: {fileID: 0}
+  finder: {fileID: 0}
+  Speed: 4
   SlowSpeed: 1
   MaxHp: 100
   MaxStamina: 100
-  StaminaIncreasement: 0.25
+  StaminaIncreasement: 0.125
+  AttackCost: 35
+  Mode: 0
+  HasShield: 0
+--- !u!114 &1340863982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380381583101915050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0d98e98b012ec46910e46b2229a7c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1340863983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380381583101915050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25762cc8a6e9b334c977f9d5395466d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5956034426093848992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380381583101915050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbb5eef16c503f4fb548542ea887c45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2380381583342971057
 GameObject:
   m_ObjectHideFlags: 0

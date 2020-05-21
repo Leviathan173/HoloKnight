@@ -7,8 +7,8 @@ public class LeverController : MonoBehaviour
 
     [SerializeField] Player player;
     [SerializeField] ElevatorController elevator;
-
-    public bool MoveDown = true;
+    [SerializeField] bool needCoin = false;
+    [SerializeField] public bool MoveDown = true;
     Animator animator;
     
 
@@ -20,7 +20,25 @@ public class LeverController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E)) {
-            if (CheckDistance()) {
+            if (needCoin) {
+                if (Managers.Player.gold >= 300) {
+                    if (CheckDistance()) {
+                        if (MoveDown) {
+                            if (elevator.atTop) {
+                                StartCoroutine(Move());
+                                Managers.Player.gold -= 300;
+                                needCoin = false;
+                            }
+                        } else {
+                            if (!elevator.atTop) {
+                                StartCoroutine(Move());
+                                Managers.Player.gold -= 300;
+                                needCoin = false;
+                            }
+                        }
+                    }
+                }
+            }else if (CheckDistance()) {
                 if (MoveDown) {
                     if (elevator.atTop) {
                         StartCoroutine(Move());
@@ -31,6 +49,7 @@ public class LeverController : MonoBehaviour
                     }
                 }
             }
+
         }
     }
     /// <summary>
@@ -39,10 +58,15 @@ public class LeverController : MonoBehaviour
     /// <returns></returns>
     bool CheckDistance() {
         Vector3 direction = player.transform.position - transform.position;
-        //print(gameObject.name+":"+Vector3.Dot(transform.forward, direction.normalized));
-        if (Vector3.Dot(transform.forward, direction.normalized) < 0.5f) {
-            if(Mathf.Abs(transform.position.x - player.transform.position.x)<5) {
-                if(Mathf.Abs(transform.position.y - player.transform.position.y) < 5) {
+        print(elevator.name+":"+":"+gameObject.name+" "+Vector3.Dot(transform.forward, direction.normalized));
+        if (Vector3.Dot(transform.forward, direction.normalized) < 0.75f) {
+            print("face");
+            print(elevator.name + ":" + ":" + gameObject.name + " " + Mathf.Abs(transform.position.x - player.transform.position.x));
+            if (Mathf.Abs(transform.position.x - player.transform.position.x)<7.5f) {
+                print("x in range");
+                print(elevator.name + ":" + ":" + gameObject.name + " " + Mathf.Abs(transform.position.y - player.transform.position.y));
+                if (Mathf.Abs(transform.position.y - player.transform.position.y) < 7.5f) {
+                    print("y in range");
                     return true;
                 }
             }

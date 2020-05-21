@@ -129,6 +129,11 @@ MonoBehaviour:
   - {fileID: 37250565}
   - {fileID: 998196719}
   speed: 3
+  Vigor: 10
+  Strength: 10
+  Dexterity: 10
+  Defense: 90
+  Absorption: 0
 --- !u!61 &3688733927102811751
 BoxCollider2D:
   m_ObjectHideFlags: 0

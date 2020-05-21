@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))]
 [RequireComponent(typeof(UIManager))]
-//[RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(InventoryManager))]
 
 public class Managers : MonoBehaviour {
     public static Managers managers { get; private set; }
 	public static PlayerManager Player {get; private set;}
     public static UIManager UI { get; private set; }
-    //public static InventoryManager Inventory {get; private set;}
+    public static InventoryManager Inventory {get; private set;}
 
     private Dictionary<string, IGameManager> _startSequence;
 	

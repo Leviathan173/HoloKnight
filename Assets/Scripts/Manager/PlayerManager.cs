@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] public Player player;
-
+    [SerializeField] PlayerBarController bar;
     public Rigidbody2D body;
     public Animator animator;
     public GameObject Forward;
@@ -34,6 +34,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     public float width;
     public float jumpForce = 12.0f;
+    public int gold = 0;
+    public float AttackCost = 10;
+    public Vector3 lastSpawnPos;
     //public float speed = 3.0f;
 
     public ManagerStatus status { get; private set; }
@@ -43,6 +46,14 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         JumpAttackAirBounce = 12.0f;
         jumpStat = -1;
+
+        maxHealth = 100;
+        currentHealth = maxHealth;
+        maxStamina = 50;
+        currentStamina = maxStamina;
+        staminaIncreasement = 0.75f;
+        StartCoroutine(StaminaIncreaser());
+        lastSpawnPos = player.transform.position;
         //_isReachTopLadder = false;
         //_isReachBottomLadder = false;
         
@@ -261,7 +272,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 攻击A
     /// </summary>
     public void AttackAEnter() {
-        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping && !IsAttacking()) {
+        if (_isGrounded && !IsRolling() && currentStamina >= AttackCost && !_isJumping && !IsAttacking()) {
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
         }
@@ -285,7 +298,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 攻击B
     /// </summary>
     public void AttackBEnter() {
-        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+        if (_isGrounded && !IsRolling() && currentStamina >= AttackCost && !_isJumping) {
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
         }
@@ -309,7 +324,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 攻击C
     /// </summary>
     public void AttackCEnter() {
-        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+        if (_isGrounded && !IsRolling() && currentStamina >= AttackCost && !_isJumping) {
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
         }
@@ -333,7 +350,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 攻击D
     /// </summary>
     public void AttackDEnter() {
-        if (_isGrounded && !IsRolling() /*&& !_isOnLadder*/ && !_isJumping) {
+        if (_isGrounded && !IsRolling() && currentStamina >= AttackCost && !_isJumping) {
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
             AddFrontForce();
         }
@@ -356,8 +375,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// <summary>
     /// 跳跃攻击
     /// </summary>
-    public void JumpAttack() {
-        if (!_isGrounded && _isJumping) {
+    public void JumpAttack() { 
+        if (!_isGrounded && _isJumping && currentStamina >= AttackCost) {
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
             animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
             body.velocity = new Vector2(0, body.velocity.y);
         }
@@ -366,7 +387,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 翻滚
     /// </summary>
     public void Roll() {
-        if (_isGrounded && !IsAttacking() /*&& !_isOnLadder*/) {
+        if (_isGrounded && !IsAttacking() && currentStamina >= AttackCost) {
             _isRolling = true;
             animator.SetTrigger(PAParameters.ROLL);
         }
@@ -378,13 +399,52 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void GetHit(float damage) {
         // TODO 玩家受伤
         print("hit player");
+        if (_isRolling) return;
+        currentHealth -= damage;
+        bar.UpdateHealth();
+        if (currentHealth <= 0) {
+            Death();
+            return;
+        }
         animator.SetTrigger(PAParameters.HIT);
-        //animator.ResetTrigger(PAParameters.HIT);
     }
     /// <summary>
     /// 死亡
     /// </summary>
     public void Death() {
-        // TODO 玩家死亡
+        print("death");
+        animator.SetTrigger(PAParameters.DEATH);
+        currentStamina = maxStamina;
+        currentHealth = maxHealth;
+    }
+    public void Destroy() {
+        animator.ResetTrigger(PAParameters.DEATH);
+        player.transform.position = lastSpawnPos;
+        gold -= 100;
+        
+    }
+    /// <summary>
+    /// 精力增长控制协程
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StaminaIncreaser() {
+        int times = 0;
+        int time = (int)Mathf.Abs(Time.time);
+        while (true) {
+            //print("times"+times+" currSp:" + currentStamina);
+            if (currentStamina <= maxStamina - staminaIncreasement) {
+                if (time == (int)Mathf.Abs(Time.time)) {
+                    currentStamina += staminaIncreasement;
+                    times++;
+                    bar.UpdateSp();
+                } else {
+                    times = 0;
+                    time = (int)Mathf.Abs(Time.time);
+                }
+                yield return new WaitForSeconds(0.001f);
+            } else {
+                yield return new WaitForSeconds(0.017f);
+            }
+        }
     }
 }

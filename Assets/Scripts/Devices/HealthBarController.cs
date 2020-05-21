@@ -26,6 +26,12 @@ public class HealthBarController : MonoBehaviour
         damage.gameObject.SetActive(false);
     }
     /// <summary>
+    /// 把伤害显示文字翻转
+    /// </summary>
+    public void Turn() {
+        damage.transform.localScale = new Vector3(-damage.transform.localScale.x, damage.transform.localScale.y, damage.transform.localScale.z);
+    }
+    /// <summary>
     /// 获取管理器的协程，因为这个脚本会比管理器初始化更先启动
     /// </summary>
     /// <returns></returns>

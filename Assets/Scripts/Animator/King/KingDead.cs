@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class KingDead : StateMachineBehaviour
 {
+    EnemyManager manager;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        animator.ResetTrigger(EAParameters.DEAD);
+        manager = (EnemyManager)Managers.managers.GetManager(animator.gameObject.name);
+        //animator.ResetTrigger(EAParameters.DEAD);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        if (stateInfo.normalizedTime > 1.0f) {
+            manager.Enemy_Destroy();
+        }
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //    manager.Enemy_Destroy();
     //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
