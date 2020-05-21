@@ -42,7 +42,7 @@ public class Slime : MonoBehaviour
             collOffset = _boxCollider.offset;
 
             manager.InitComponents(null, _body, _animator, Forward, Attacks, _width);
-            manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT, 35);
+            //manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT, 35);
 
         }
         

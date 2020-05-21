@@ -31,10 +31,13 @@ public class EnemyManager : MonoBehaviour, IGameManager {
 
     private Vector3 origin;
 
-    [SerializeField] public PathFollower follower;
+    public PathFollower follower;
+    public ActionController action;
     public PathFinderData PFData;
     //public List<Node> currNodes = new List<Node>();
-    [SerializeField] public PathFinder finder;
+    public PathFinder finder;
+    public ActionController.ActionMode mode;
+    public bool hasShield;
     /// <summary>
     /// 寻路委托
     /// </summary>
@@ -79,6 +82,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         origin = transform.position;
         follower = GetComponent<PathFollower>();
         finder = GetComponent<PathFinder>();
+        action = GetComponent<ActionController>();
 
         health = GetComponentInChildren<HealthBarController>();
         PFData = PathFinderData.Instance;
@@ -112,13 +116,17 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// <param name="maxStamina">精力上限</param>
     /// <param name="staminaIncreasement">精力回复速度</param>
     /// <param name="attackCost">攻击消耗精力</param>
-    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement, float attackCost) {
+    /// <param name="mode">进攻模式</param>
+    /// <param name="hasShield">是否有盾</param>
+    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement, float attackCost, ActionController.ActionMode mode, bool hasShield) {
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.maxStamina = maxStamina;
         currentStamina = maxStamina;
         this.staminaIncreasement = staminaIncreasement;
         this.attackCost = attackCost;
+        this.mode = mode;
+        this.hasShield = hasShield;
     }
 
     /// <summary>
@@ -169,14 +177,20 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     /// <param name="deltaX">移动方向</param>
     public void Move(float deltaX = 0) {
-        if (deltaX == 0) {
+        if (deltaX < 0) {
+            if (isFacingRight) {
+                deltaX = -enemy.Speed;
+            } else {
+                deltaX = enemy.Speed;
+            }
+        } else {
             if (isFacingRight) {
                 deltaX = enemy.Speed;
             } else {
                 deltaX = -enemy.Speed;
             }
-
         }
+        
         animator.SetFloat(EAParameters.SPEED, 1.0f);
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
         print(gameObject.name + " move  movement:" + movement + " isJumping:" + isJumping + " IsAttacking:" + IsAttacking() + " isGrounded:" + isGrounded);
@@ -201,6 +215,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public void AttackAEnter() {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_A);
+            currentStamina -= attackCost;
         }
     }
     // TODO 更加精准的判定
@@ -227,6 +242,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public void AttackBEnter() {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_B);
+            currentStamina -= attackCost;
         }
     }
     /// <summary>
@@ -271,11 +287,16 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         animator.ResetTrigger(EAParameters.ATTACK_B);
     }
 
+    // 攻击C只用于slime
     /// <summary>
     /// 攻击C
     /// </summary>
     public void AttackCEnter() {
-        animator.SetTrigger(EAParameters.ATTACK_C);
+        if (isGrounded && !isJumping) {
+            animator.SetTrigger(EAParameters.ATTACK_C);
+            currentStamina -= attackCost;
+        }
+
     }
     /// <summary>
     /// 攻击C判定
@@ -291,6 +312,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public void AttackCExit() {
         animator.ResetTrigger(EAParameters.ATTACK_C);
     }
+
     /// <summary>
     /// 举盾
     /// </summary>

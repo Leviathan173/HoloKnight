@@ -40,7 +40,7 @@ public class Lancer : MonoBehaviour
         register.Register();
         manager = (EnemyManager)Managers.managers.GetManager(gameObject.name);
         manager.InitComponents(null, _body, _animator, Forward, Attacks, _width);
-        manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT, 30);
+        //manager.InitStats(MAX_HEALTH, MAX_STAMINA, STAMINA_INCREASEMENT, 30);
     }
 
     void FixedUpdate() {

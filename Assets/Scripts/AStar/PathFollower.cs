@@ -172,6 +172,7 @@ public class PathFollower : MonoBehaviour {
         //print("pf end " + "name:" + manager.name);
         hasCoroutine = false;
         manager.animator.SetFloat(EAParameters.SPEED, -1);
+        manager.action.StartAction(manager, manager.mode, manager.hasShield);
         yield return null;
     }
     /// <summary>
@@ -193,10 +194,10 @@ public class PathFollower : MonoBehaviour {
     /// <param name="deviationY">Y轴的可接受误差</param>
     /// <returns></returns>
     public bool Check(Vector3 currPos, Vector3 goalPos, string tag, float deviationX = 2.5f, float deviationY = 2.5f) {
-        //print("pf Checking pos:" + currPos + " pos:" + goalPos + " tag:" + tag);
+        print("pf Checking pos:" + currPos + " pos:" + goalPos + " tag:" + tag);
         if (Mathf.Abs(currPos.x - goalPos.x) < deviationX) {
             if (Mathf.Abs(currPos.y - goalPos.y) < deviationY) {
-                print("on goal currpos:" + currPos + " goalPos:" + goalPos);
+                print("on goal currpos:" + currPos + " goalPos:" + goalPos + " tag:"+tag);
                 return true;
             } else {
                 return false;
