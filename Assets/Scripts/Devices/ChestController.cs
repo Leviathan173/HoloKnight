@@ -42,14 +42,6 @@ public class ChestController : MonoBehaviour
     }
     void Open() {
         animator.SetBool("isOpen", true);
-        //GameObject coin = (GameObject)Resources.Load("Prefabs/Coin");
-        //if (coin != null) {
-        //    coin = Instantiate(coin);
-        //    coin.transform.position = new Vector3(transform.position.x, transform.position.y + (gameObject.GetComponent<Renderer>().bounds.size.y), transform.position.z);
-        //    coin.transform.parent = GameObject.Find("Item").transform;
-        //} else {
-        //    Debug.LogError("fail to get prefab");
-        //}
         if (item != null) {
             item = Instantiate(item);
             item.transform.position = new Vector3(transform.position.x, transform.position.y + (gameObject.GetComponent<Renderer>().bounds.size.y), transform.position.z);

@@ -5,10 +5,15 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] public Player player;
     [SerializeField] public PlayerBarController bar;
+    [SerializeField] public AudioClip attack;
+    [SerializeField] public AudioClip attack2hit;
+    [SerializeField] public AudioClip step;
+    [SerializeField] public AudioClip hit;
     public Rigidbody2D body;
     public Animator animator;
     public GameObject Forward;
     public EnemyDetector[] Attacks;
+    public AudioSource audio;
 
     private float JumpAttackAirBounce;
 
@@ -52,6 +57,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             return 10 + weapon.Attack;
         }
     }
+    public bool hasKey = false;
     //public float speed = 3.0f;
 
     public ManagerStatus status { get; private set; }
@@ -95,11 +101,12 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// <param name="Forward">指示玩家前方的指示器</param>
     /// <param name="Attacks">攻击检测器</param>
     /// <param name="width">控制玩家转向的宽度值</param>
-    public void InitComponents(Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, float width) {
+    public void InitComponents(Rigidbody2D body, Animator animator, GameObject Forward, EnemyDetector[] Attacks, AudioSource audio, float width) {
         this.body = body;
         this.animator = animator;
         this.Forward = Forward;
         this.Attacks = Attacks;
+        this.audio = audio;
         this.width = width;
     }
     /// <summary>
@@ -264,6 +271,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// </summary>
     public void Jump() {
         if (_isGrounded && !IsAttacking() && !IsRolling()) {
+            audio.PlayOneShot(step);
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;
         }
@@ -274,7 +282,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// <param name="deltaX">速度</param>
     public void Run(float deltaX) {
         if (new Vector2(deltaX, body.velocity.y) != Vector2.zero
-            && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded /*&& !_isOnLadder*/) {
+            && !_isJumping && !IsAttacking() && !IsRolling() && _isGrounded && currentStamina >= 1) {
             _isRunning = true;
             body.velocity = new Vector2(new Vector2(deltaX, body.velocity.y).x * 2, body.velocity.y);
             animator.SetFloat(PAParameters.SPEED, Mathf.Abs(deltaX * 2));
@@ -295,6 +303,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 0);
+            audio.PlayOneShot(attack);
         }
     }
     /// <summary>
@@ -321,6 +330,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 1);
+            audio.PlayOneShot(attack);
         }
     }
     /// <summary>
@@ -347,6 +357,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             bar.UpdateSp();
             AddFrontForce();
             animator.SetInteger(PAParameters.ATTACKSTAT, 2);
+            audio.PlayOneShot(attack);
         }
     }
     /// <summary>
@@ -373,6 +384,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             bar.UpdateSp();
             animator.SetInteger(PAParameters.ATTACKSTAT, 3);
             AddFrontForce();
+            audio.PlayOneShot(attack2hit);
         }
     }
     /// <summary>
@@ -399,6 +411,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
             bar.UpdateSp();
             animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
             body.velocity = new Vector2(0, body.velocity.y);
+            audio.PlayOneShot(attack);
         }
     }
     /// <summary>
@@ -408,6 +421,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         if (_isGrounded && !IsAttacking() && currentStamina >= AttackCost) {
             _isRolling = true;
             animator.SetTrigger(PAParameters.ROLL);
+            // UNDONE 添加音效
         }
     }
     /// <summary>
@@ -418,6 +432,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         // TODO 玩家受伤
         print("hit player");
         if (_isRolling) return;
+        audio.PlayOneShot(hit);
         damage = damage / (defence / 100);
         currentHealth -= damage;
         bar.UpdateHealth();
@@ -435,6 +450,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.SetTrigger(PAParameters.DEATH);
         currentStamina = maxStamina;
         currentHealth = maxHealth;
+        // UNDONE 添加音效
     }
     public void Destroy() {
         animator.ResetTrigger(PAParameters.DEATH);

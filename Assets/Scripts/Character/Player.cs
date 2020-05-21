@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
     private Rigidbody2D _body;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
+    private AudioSource audio;
     private float _deltaX;
     private float _deltaY;
     private float _width;
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
+        audio = GetComponent<AudioSource>();
 
         Absorption = Defense / 30;
 
@@ -41,7 +43,7 @@ public class Player : MonoBehaviour {
 
         collSize = _boxCollider.size;
         collOffset = _boxCollider.offset;
-        Managers.Player.InitComponents(_body, _animator, Forward, Attacks, _width);
+        Managers.Player.InitComponents(_body, _animator, Forward, Attacks, audio, _width);
     }
 
 

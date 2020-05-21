@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ElevatorController : MonoBehaviour {
+    public AudioSource audio;
     public Vector3 finishPos = Vector3.zero;
     public float speed = 0.1f;
     public int _direction = 1; //移动方向，1向下，-1向上
@@ -15,6 +16,7 @@ public class ElevatorController : MonoBehaviour {
 
     void Start() {
         _startPos = transform.position;
+        audio = GetComponent<AudioSource>();
     }
 
     void OnDrawGizmos() {
@@ -36,6 +38,7 @@ public class ElevatorController : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     IEnumerator MoveElevator() {
+        audio.Play();
         while (true) {
             _trackPercent += _direction * speed * Time.deltaTime;
             float x = (finishPos.x - _startPos.x) * _trackPercent + _startPos.x;// 沿X轴移动的最终点
@@ -46,6 +49,7 @@ public class ElevatorController : MonoBehaviour {
                 _direction *= -1;
                 hasCoroutine = false;
                 atTop = !atTop;
+                audio.Pause();
                 yield break;
             }
         }

@@ -387,8 +387,14 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// 摧毁敌人物体
     /// </summary>
     public void Enemy_Destroy() {
-        Destroy(enemy.gameObject);
         Managers.Player.gold += 50;
+        float ran = Random.Range(0, 5);
+        if(ran == 0) {
+            GameObject heal = (GameObject)Resources.Load("Prefabs/Item/Red Potion");
+            heal = Instantiate(heal);
+            heal.transform.position = enemy.transform.position;
+        }
+        Destroy(enemy.gameObject);
     }
     /// <summary>
     /// 精力增长控制协程
