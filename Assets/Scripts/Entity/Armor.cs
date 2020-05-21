@@ -1,12 +1,6 @@
 ﻿
 public class Armor {
     private const float C = 1.25f;
-    private int id { get; set; }
-    public int Id {
-        get {
-            return id;
-        }
-    }
     private string name { get; set; }
     public string Name {
         get {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] public Player player;
-    [SerializeField] PlayerBarController bar;
+    [SerializeField] public PlayerBarController bar;
     public Rigidbody2D body;
     public Animator animator;
     public GameObject Forward;
@@ -37,6 +37,21 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public int gold = 0;
     public float AttackCost = 10;
     public Vector3 lastSpawnPos;
+    public Weapon weapon = new Weapon("wood sword", 10, 1);
+    public Armor helmet = new Armor("null", ArmorType.Helmet, 10, 1);
+    public Armor boot = new Armor("null", ArmorType.Boot, 10, 1);
+    public Armor armor = new Armor("null", ArmorType.Armor, 10, 1);
+    public List<Armor> armors = new List<Armor>();
+    public float defence {
+        get {
+            return Defence();
+        }
+    }
+    public float damage {
+        get {
+            return 10 + weapon.Attack;
+        }
+    }
     //public float speed = 3.0f;
 
     public ManagerStatus status { get; private set; }
@@ -47,11 +62,14 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         JumpAttackAirBounce = 12.0f;
         jumpStat = -1;
 
+        armors.Add(armor);
+        armors.Add(boot);
+        armors.Add(helmet);
         maxHealth = 100;
         currentHealth = maxHealth;
         maxStamina = 50;
         currentStamina = maxStamina;
-        staminaIncreasement = 0.75f;
+        staminaIncreasement = 0.25f;
         StartCoroutine(StaminaIncreaser());
         lastSpawnPos = player.transform.position;
         //_isReachTopLadder = false;
@@ -236,8 +254,8 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// <param name="deltaX">移动的速度</param>
     public void Move(float deltaX) {
         Vector2 movement = new Vector2(deltaX, body.velocity.y);
-        if (movement != Vector2.zero && !_isRunning && !_isJumping && !IsAttacking() && !IsRolling()
-            && !_isRolling && _isGrounded /*&& !_isOnLadder*/) {
+        if (movement != Vector2.zero && !_isRunning && !IsAttacking() && !IsRolling()
+            && !_isRolling && _isGrounded) {
             body.velocity = movement;
         }
     }
@@ -245,7 +263,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 跳跃
     /// </summary>
     public void Jump() {
-        if (_isGrounded && !IsAttacking() && !IsRolling() /*&& !_isOnLadder*/) {
+        if (_isGrounded && !IsAttacking() && !IsRolling()) {
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _isGrounded = false;
         }
@@ -291,7 +309,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackACheck() {
         foreach(string name in Attacks[0].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
-            manager.GetHit(10);
+            manager.GetHit(damage);
         }
     }
     /// <summary>
@@ -311,7 +329,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackBCheck() {
         foreach (string name in Attacks[1].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
-            manager.GetHit(10);
+            manager.GetHit(damage);
         }
     }
     /// <summary>
@@ -337,7 +355,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackCCheck() {
         foreach (string name in Attacks[2].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
-            manager.GetHit(10);
+            manager.GetHit(damage);
         }
     }
     /// <summary>
@@ -363,7 +381,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackDCheck() {
         foreach (string name in Attacks[3].EnemyList) {
             EnemyManager manager = (EnemyManager)Managers.managers.GetManager(name);
-            manager.GetHit(10);
+            manager.GetHit(damage);
         }
     }
     /// <summary>
@@ -400,6 +418,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         // TODO 玩家受伤
         print("hit player");
         if (_isRolling) return;
+        damage = damage / (defence / 100);
         currentHealth -= damage;
         bar.UpdateHealth();
         if (currentHealth <= 0) {
@@ -421,7 +440,26 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.ResetTrigger(PAParameters.DEATH);
         player.transform.position = lastSpawnPos;
         gold -= 100;
-        
+        if (gold < 0) gold = 0;
+        bar.UpdateHealth();
+        bar.UpdateSp();
+    }
+
+    public void Heal(float value) {
+        currentHealth += value;
+        print("heal:" + value);
+        if (currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
+        bar.UpdateHealth();
+    }
+
+    public float Defence() {
+        float defence = 0;
+        foreach(var armor in armors) {
+            defence += armor.Defence;
+        }
+        return defence;
     }
     /// <summary>
     /// 精力增长控制协程

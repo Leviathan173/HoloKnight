@@ -17,7 +17,6 @@ public class Gold : MonoBehaviour
 
     void Update()
     {
-        print("player:" + Managers.Player.gold + "  " + gold + "  "+ (Managers.Player.gold != gold));
         if(Managers.Player.gold != gold) {
             if (hasCoroutine) {
                 to = Managers.Player.gold;
@@ -33,7 +32,6 @@ public class Gold : MonoBehaviour
         int C = 1;
         if (from > to) C = -C;
         while (from != to) {
-            print("coin"+from);
             from += C;
             text.text = from.ToString();
             yield return null;

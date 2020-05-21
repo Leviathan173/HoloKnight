@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float AttackCost = 35.0f;
     [SerializeField] public ActionController.ActionMode Mode = ActionController.ActionMode.Aggressive;
     [SerializeField] public bool HasShield = false;
+    [SerializeField] public float Defence = 100;
 
     private Rigidbody2D body;
     private Animator animator;
@@ -49,7 +50,7 @@ public class Enemy : MonoBehaviour
         collOffset = boxCollider.offset;
 
         manager.InitComponents(this, body, animator, Forward, Attacks, width);
-        manager.InitStats(MaxHp, MaxStamina, StaminaIncreasement, AttackCost, Mode, HasShield);
+        manager.InitStats(MaxHp, MaxStamina, StaminaIncreasement, AttackCost, Mode, HasShield, Defence);
 
     }
 

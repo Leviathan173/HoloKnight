@@ -39,12 +39,12 @@ public class InventoryManager : MonoBehaviour, IGameManager {
     }
 
     public void AddWeapon(Weapon weapon) {
-        this.weapon.Add(weapon.Id, weapon);
+        //this.weapon.Add(weapon.Id, weapon);
 
         DisplayItems();
     }
     public void AddArmor(Armor armor) {
-        this.armor.Add(armor.Id, armor);
+        //this.armor.Add(armor.Id, armor);
 
         DisplayItems();
     }

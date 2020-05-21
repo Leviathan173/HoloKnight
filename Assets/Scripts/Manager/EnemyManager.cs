@@ -21,6 +21,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
     public float attackCost { get; set; }
+    public float defence { get; set; }
 
     public bool isFacingRight { get; set; }
     public bool isGrounded { get; set; }
@@ -118,7 +119,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// <param name="attackCost">攻击消耗精力</param>
     /// <param name="mode">进攻模式</param>
     /// <param name="hasShield">是否有盾</param>
-    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement, float attackCost, ActionController.ActionMode mode, bool hasShield) {
+    public void InitStats(float maxHealth, float maxStamina, float staminaIncreasement, float attackCost, ActionController.ActionMode mode, bool hasShield, float defence) {
         this.maxHealth = maxHealth;
         currentHealth = maxHealth;
         this.maxStamina = maxStamina;
@@ -127,6 +128,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         this.attackCost = attackCost;
         this.mode = mode;
         this.hasShield = hasShield;
+        this.defence = defence;
     }
 
     /// <summary>
@@ -336,6 +338,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     /// <param name="damage">税前伤害</param>
     public void GetHit(float damage) {
+        damage = damage / (defence / 100);
         if (usingShield) {
             damage = damage * 0.2f;
             currentStamina -= damage * 2;
@@ -385,7 +388,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     public void Enemy_Destroy() {
         Destroy(enemy.gameObject);
-        Managers.Player.gold += 100;
+        Managers.Player.gold += 50;
     }
     /// <summary>
     /// 精力增长控制协程

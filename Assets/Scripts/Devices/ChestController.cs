@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ChestController : MonoBehaviour
 {
-    // TODO 打开箱子的监听与物品的掉落
+    // UNDONE 打开箱子的监听与物品的掉落
+    [SerializeField] GameObject item;
     private bool isOpen;
     Animator animator;
 
@@ -31,8 +32,8 @@ public class ChestController : MonoBehaviour
         Vector3 direction = Managers.Player.player.transform.position - transform.position;
         //print(gameObject.name+":"+Vector3.Dot(transform.forward, direction.normalized));
         if (Vector3.Dot(transform.forward, direction.normalized) < 0.5f) {
-            if (Mathf.Abs(transform.position.x - Managers.Player.player.transform.position.x) < 5) {
-                if (Mathf.Abs(transform.position.y - Managers.Player.player.transform.position.y) < 5) {
+            if (Mathf.Abs(transform.position.x - Managers.Player.player.transform.position.x) < 2.5f) {
+                if (Mathf.Abs(transform.position.y - Managers.Player.player.transform.position.y) < 2.5f) {
                     return true;
                 }
             }
@@ -41,6 +42,21 @@ public class ChestController : MonoBehaviour
     }
     void Open() {
         animator.SetBool("isOpen", true);
-
+        //GameObject coin = (GameObject)Resources.Load("Prefabs/Coin");
+        //if (coin != null) {
+        //    coin = Instantiate(coin);
+        //    coin.transform.position = new Vector3(transform.position.x, transform.position.y + (gameObject.GetComponent<Renderer>().bounds.size.y), transform.position.z);
+        //    coin.transform.parent = GameObject.Find("Item").transform;
+        //} else {
+        //    Debug.LogError("fail to get prefab");
+        //}
+        if (item != null) {
+            item = Instantiate(item);
+            item.transform.position = new Vector3(transform.position.x, transform.position.y + (gameObject.GetComponent<Renderer>().bounds.size.y), transform.position.z);
+            item.transform.parent = GameObject.Find("Item").transform;
+            isOpen = true;
+        } else {
+            Debug.LogError("null item");
+        }
     }
 }
