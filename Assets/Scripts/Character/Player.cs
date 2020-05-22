@@ -128,12 +128,12 @@ public class Player : MonoBehaviour {
 
         // 攻击A
         if (Input.GetKeyDown(KeyCode.J)) {
-            print("key down");
-            Managers.Player.AttackAEnter();
+            Managers.Player.Attack();
         }
+        // TODO 删除不需要的代码
         // 攻击A取消
         if (Input.GetKeyUp(KeyCode.J)) {
-            Managers.Player.AttackAExit();
+            //Managers.Player.AttackAExit();
         }
 
         // 攻击B

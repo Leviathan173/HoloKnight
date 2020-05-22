@@ -30,6 +30,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     //public bool _isReachBottomLadder { get; set; }
     //public bool _isOnLadder { get; set; }
     //public bool _hasLadder { get; set; }
+    public int attackStat { get; set; }
     public int jumpStat { get; set; }
     public bool _isRolling { get; set; }
     public bool _isFacingRight { get; set; }
@@ -67,6 +68,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
         JumpAttackAirBounce = 12.0f;
         jumpStat = -1;
+        attackStat = -1;
 
         armors.Add(armor);
         armors.Add(boot);
@@ -294,6 +296,17 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void RunExit() {
         _isRunning = false;
     }
+
+    public void Attack() {
+        if (_isGrounded && !IsRolling() && currentStamina >= AttackCost && !_isJumping && !IsAttacking() && animator.GetInteger(PAParameters.ATTACKSTAT) == -1) {
+            animator.SetInteger(PAParameters.ATTACKSTAT, 0);
+            currentStamina -= AttackCost;
+            bar.UpdateSp();
+            AddFrontForce();
+            audio.PlayOneShot(attack);
+        }
+    }
+    // TODO 删除不需要的代码
     /// <summary>
     /// 攻击A
     /// </summary>
@@ -348,6 +361,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackBExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
+    // TODO 删除不需要的代码
     /// <summary>
     /// 攻击C
     /// </summary>
@@ -375,6 +389,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public void AttackCExit() {
         animator.SetInteger(PAParameters.ATTACKSTAT, -1);
     }
+    // TODO 删除不需要的代码
     /// <summary>
     /// 攻击D
     /// </summary>
@@ -406,10 +421,11 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// 跳跃攻击
     /// </summary>
     public void JumpAttack() { 
-        if (!_isGrounded && _isJumping && currentStamina >= AttackCost) {
+        if (!_isGrounded && _isJumping && currentStamina >= AttackCost && attackStat == -1) {
             currentStamina -= AttackCost;
             bar.UpdateSp();
-            animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, 0);
+            attackStat++;
+            animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, attackStat);
             body.velocity = new Vector2(0, body.velocity.y);
             audio.PlayOneShot(attack);
         }
@@ -429,7 +445,6 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     /// </summary>
     /// <param name="damage">伤害</param>
     public void GetHit(float damage) {
-        // TODO 玩家受伤
         print("hit player");
         if (_isRolling) return;
         audio.PlayOneShot(hit);
