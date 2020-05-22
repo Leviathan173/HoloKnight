@@ -82,7 +82,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         isJumping = false;
 
         StartCoroutine(StaminaIncreaser());
-        //StartCoroutine(PathChecker());
+        StartCoroutine(PathChecker());
         //StartCoroutine(Tester());
 
         origin = transform.position;
@@ -354,23 +354,24 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             if (currentStamina <= 0) {
                 UnuseShield();
                 damage = damage / 0.2f;
-                animator.SetTrigger(EAParameters.HIT);
                 health.SetHealth(damage);
-                if (currentHealth < damage) {
+                if (currentHealth <= damage) {
                     currentHealth = 0;
                     Death();
                     return;
                 } else {
                     currentHealth -= damage;
+                    animator.SetTrigger(EAParameters.HIT);
                 }
             } else {
                 health.SetHealth(damage);
-                if (currentHealth < damage) {
+                if (currentHealth <= damage) {
                     currentHealth = 0;
                     Death();
                     return;
                 } else {
                     currentHealth -= damage;
+                    animator.SetTrigger(EAParameters.HIT);
                 }
             }
             return;
@@ -404,6 +405,10 @@ public class EnemyManager : MonoBehaviour, IGameManager {
             GameObject heal = (GameObject)Resources.Load("Prefabs/Item/Red Potion");
             heal = Instantiate(heal);
             heal.transform.position = enemy.transform.position;
+        }else if(ran == 1){
+            GameObject lvl = (GameObject)Resources.Load("Prefabs/Item/levelup");
+            lvl = Instantiate(lvl);
+            lvl.transform.position = enemy.transform.position;
         }
         Destroy(enemy.gameObject);
     }

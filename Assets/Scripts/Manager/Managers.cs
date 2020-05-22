@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerManager))]
 [RequireComponent(typeof(UIManager))]
-[RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(AudioManager))]
 
 public class Managers : MonoBehaviour {
     public static Managers managers { get; private set; }
 	public static PlayerManager Player {get; private set;}
     public static UIManager UI { get; private set; }
-    public static InventoryManager Inventory {get; private set;}
+    public static AudioManager Audio { get; private set; }
 
     private Dictionary<string, IGameManager> _startSequence;
 	
@@ -18,14 +18,14 @@ public class Managers : MonoBehaviour {
         managers = this;
 		Player = GetComponent<PlayerManager>();
         UI = GetComponent<UIManager>();
-        //Inventory = GetComponent<InventoryManager>();
+        Audio = GetComponent<AudioManager>();
 
-        //_startSequence = new List<IGameManager>();
+
         _startSequence = new Dictionary<string, IGameManager>();
 
 		_startSequence.Add("Player",Player);
         _startSequence.Add("UI", UI);
-		//_startSequence.Add(Inventory);
+        _startSequence.Add("Audio", Audio);
 
 		StartCoroutine(StartupManagers());
 	}

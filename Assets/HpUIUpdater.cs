@@ -12,8 +12,8 @@ public class HpUIUpdater : MonoBehaviour
 
     void Update() {
         print("hp text.text.Split('/')[0]:" + text.text.Split('/')[0]);
-        if (int.Parse(text.text.Split('/')[0]) != Managers.Player.currentHealth) {
-            text.text = Managers.Player.currentHealth.ToString();
+        if (float.Parse(text.text.Split('/')[0]) != Managers.Player.currentHealth) {
+            text.text = ((int)Managers.Player.currentHealth).ToString();
             text.text += "/" + Managers.Player.maxHealth;
         }
     }

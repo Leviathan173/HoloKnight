@@ -11,8 +11,8 @@ public class StrUIUpdater : MonoBehaviour
     }
 
     void Update() {
-        if (int.Parse(text.text) != Managers.Player.str) {
-            text.text = Managers.Player.str.ToString();
+        if (int.Parse(text.text) != Managers.Player.Str) {
+            text.text = Managers.Player.Str.ToString();
         }
     }
 }

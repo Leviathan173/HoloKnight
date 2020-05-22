@@ -5,7 +5,9 @@ using UnityEngine;
 public class DoorOpener : MonoBehaviour
 {
     [SerializeField] public bool needKey;
+    [SerializeField] public bool oneway;
     bool isOpen;
+    
     Animator animator;
     void Start() {
         animator = GetComponent<Animator>();
@@ -22,7 +24,17 @@ public class DoorOpener : MonoBehaviour
                             GetComponent<AudioSource>().Play();
                         }
                     }
-                } else if (CheckDistance()) {
+                }else if (oneway) {
+                    EnemyDetector detector = gameObject.GetComponentInChildren<EnemyDetector>();
+                    if (!detector.hasPlayer) {
+                        if (CheckDistance()) {
+                            animator.SetBool("isOpen", true);
+                            GetComponent<BoxCollider2D>().isTrigger = true;
+                            GetComponent<AudioSource>().Play();
+                        }
+                    }
+                }
+                else if (CheckDistance()) {
                     animator.SetBool("isOpen", true);
                     GetComponent<BoxCollider2D>().isTrigger = true;
                     GetComponent<AudioSource>().Play();

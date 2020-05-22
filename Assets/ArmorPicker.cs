@@ -4,7 +4,7 @@ using UnityEngine;
 public class ArmorPicker : MonoBehaviour
 {
     [SerializeField] string name;
-    [SerializeField] ArmorType type;
+    [SerializeField] EquipType type;
     [SerializeField] float defence;
     [SerializeField] int level;
     private Armor armor;
@@ -17,7 +17,7 @@ public class ArmorPicker : MonoBehaviour
         if (collider.gameObject.name.Contains("Player")) {
             for(int i = 0; i < Managers.Player.armors.Count; i++) {
                 if (Managers.Player.armors[i].Type.Equals(type)) {
-                    GetComponent<AudioSource>().Play();
+                    Managers.Audio.PlayClipOneShot(Managers.Audio.equip);
                     if (Managers.Player.armors[i].Name.Equals(name)) {
                         Managers.Player.armors[i].Level += 1;
                         print(type + " levelup " + Managers.Player.armors[i].Level);

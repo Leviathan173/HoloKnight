@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public enum ArmorType {
+public enum EquipType {
+    Weapon,
     Helmet,
     Armor,
     Boot
@@ -88,7 +89,7 @@ public class InventoryManager : MonoBehaviour, IGameManager {
         Debug.Log("Unequipped");
         return false;
     }
-    public bool EquipArmor(int id, ArmorType type) {
+    public bool EquipArmor(int id, EquipType type) {
         if (armor.ContainsKey(id) && armor[id].Type == type) {
             // UNDONE 装备特定类型装备
             Debug.Log("Equipped " + id);

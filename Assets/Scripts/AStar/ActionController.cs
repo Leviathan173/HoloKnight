@@ -54,6 +54,7 @@ public class ActionController : MonoBehaviour {
         float Sp;
         while (true) {
             GetClose:
+            yield return new WaitForSeconds(0.2f);
             print("ac Get close");
             while (!Check(manager,"ac get close")) {
                 if (manager.isFacingRight) {
@@ -102,6 +103,7 @@ public class ActionController : MonoBehaviour {
                 goto Hold;
             }
             Hold:
+            yield return new WaitForSeconds(0.2f);
             print("ac hold");
             while(Check(manager, "ac hold")) {
                 if (manager.isFacingRight) {
@@ -109,14 +111,14 @@ public class ActionController : MonoBehaviour {
                         manager.Move(-1);
                     } else {
                         manager.Turn();
-                        manager.Move();
+                        manager.Move(-1);
                     }
                 } else {
                     if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                         manager.Turn();
                         manager.Move(-1);
                     } else {
-                        manager.Move();
+                        manager.Move(-1);
                     }
                 }
                 print("ac hold wait");
@@ -198,14 +200,14 @@ public class ActionController : MonoBehaviour {
                         manager.Move(-1);
                     } else {
                         manager.Turn();
-                        manager.Move();
+                        manager.Move(-1);
                     }
                 } else {
                     if (manager.enemy.transform.position.x < Managers.Player.player.transform.position.x) {
                         manager.Turn();
                         manager.Move(-1);
                     } else {
-                        manager.Move();
+                        manager.Move(-1);
                     }
                 }
                 yield return new WaitForSeconds(0.2f);
@@ -217,6 +219,7 @@ public class ActionController : MonoBehaviour {
                     goto GetClose;
                 }
             }
+            yield return new WaitForSeconds(1.5f);
         }
     }
 

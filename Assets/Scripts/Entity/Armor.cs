@@ -7,8 +7,8 @@ public class Armor {
             return name;
         }
     }
-    private ArmorType type { get; set; }
-    public ArmorType Type {
+    private EquipType type { get; set; }
+    public EquipType Type {
         get {
             return type;
         }
@@ -46,7 +46,7 @@ public class Armor {
             level = value;
         }
     }
-    public Armor(string name, ArmorType type, float defence, int level) {
+    public Armor(string name, EquipType type, float defence, int level) {
         this.name = name;
         this.type = type;
         this.defence = defence;

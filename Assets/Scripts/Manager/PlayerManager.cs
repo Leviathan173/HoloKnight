@@ -23,9 +23,35 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public float maxStamina { get; set; }
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
-    public int vigor = 10;
-    public int dex = 10;
-    public int str = 10;
+    public int level = 1;
+    private int vigor = 3;
+    public int Vigor {
+        get {
+            return vigor + level;
+        }
+        set {
+            vigor = value;
+        }
+    }
+    private int dex = 3;
+    public int Dex {
+        get {
+            return vigor + level;
+        }
+        set {
+            dex = value;
+        }
+    }
+    private int str = 3;
+    public int Str {
+        get {
+            return str + level;
+        }
+        set {
+            str = value;
+        }
+
+    }
 
     public int attackStat { get; set; }
     public int jumpStat { get; set; }
@@ -40,10 +66,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public int gold = 0;
     public float AttackCost = 10;
     public Vector3 lastSpawnPos;
-    public Weapon weapon = new Weapon("wood sword", 10, 1);
-    public Armor helmet = new Armor("null", ArmorType.Helmet, 10, 1);
-    public Armor boot = new Armor("null", ArmorType.Boot, 10, 1);
-    public Armor armor = new Armor("null", ArmorType.Armor, 10, 1);
+    public Weapon weapon = new Weapon("Knife", 10, 1);
+    public Armor helmet = new Armor("LeatherHelmet", EquipType.Helmet, 10, 1);
+    public Armor boot = new Armor("LeatherBoot", EquipType.Boot, 10, 1);
+    public Armor armor = new Armor("LeatherArmor", EquipType.Armor, 10, 1);
     public List<Armor> armors = new List<Armor>();
     public float defence {
         get {
@@ -74,7 +100,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         currentHealth = maxHealth;
         maxStamina = 50 + (dex * 0.25f);
         currentStamina = maxStamina;
-        staminaIncreasement = 0.25f + (dex*0.01f);
+        staminaIncreasement = 0.15f + (dex*0.01f);
         StartCoroutine(StaminaIncreaser());
         lastSpawnPos = player.transform.position;
         //_isReachTopLadder = false;

@@ -18,17 +18,14 @@ public class UIManager : MonoBehaviour, IGameManager {
 
     [SerializeField] private EquipController equip;
     [SerializeField] private PlayerStatsDataController data;
-    [SerializeField] private ItemListController item;
+    //[SerializeField] private ItemListController item;
 
     public void Startup() {
         BGMVolume = 1;
         SESoundVolume = 1;
         equip = PlayerStatus.GetComponentInChildren<EquipController>();
-        item = PlayerStatus.GetComponentInChildren<ItemListController>();
+        //item = PlayerStatus.GetComponentInChildren<ItemListController>();
         data = PlayerStatus.GetComponentInChildren<PlayerStatsDataController>();
-        //print("equip:" + equip);
-        //print("item:" + item);
-        //print("data:" + data);
         status = ManagerStatus.Started;
     }
     /// <summary>
@@ -102,6 +99,7 @@ public class UIManager : MonoBehaviour, IGameManager {
     /// </summary>
     public void OnPlayStatusOpen() {
         PlayerStatus.OnOpen();
+        equip.OnClose();
         data.OnOpen();
     }
     /// <summary>
@@ -135,32 +133,33 @@ public class UIManager : MonoBehaviour, IGameManager {
     public void OnstatusClose() {
         data.OnClose();
     }
-    /// <summary>
-    /// 更换装备的装备栏显示
-    /// </summary>
-    public void OnItemOpen() {
-        item.OnOpen();
-    }
-    /// <summary>
-    /// 更换装备的装备栏关闭
-    /// </summary>
-    public void OnItemClose() {
-        item.OnClose();
-    }
+    ///// <summary>
+    ///// 更换装备的装备栏显示
+    ///// </summary>
+    //public void OnItemOpen() {
+    //    item.OnOpen();
+    //}
+    ///// <summary>
+    ///// 更换装备的装备栏关闭
+    ///// </summary>
+    //public void OnItemClose() {
+    //    item.OnClose();
+    //}
     /// <summary>
     /// 修改音乐音量大小
     /// </summary>
     /// <param name="slider">控制音乐的滑动条</param>
     public void OnSoundSliderValueChanged(Slider slider) {
         BGMVolume = slider.value;
-        BGM.volume = BGMVolume;
+        //BGM.volume = BGMVolume;
+        Managers.Audio.bgm.OnSliderValueChanged(slider);
     }
     /// <summary>
     /// 修改音效音量大小
     /// </summary>
     /// <param name="slider">控制音效的滑动条</param>
     public void OnSESoundSliderValueChanged(Slider slider) {
-        // TODO 修改SE音量
+        Managers.Audio.OnSESliderValueChanged(slider);
     }
 
 }

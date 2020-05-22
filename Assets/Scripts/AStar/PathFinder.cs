@@ -30,8 +30,8 @@ public class PathFinder : MonoBehaviour
     /// <returns></returns>
     private IEnumerator FindShortestPathAsynchonous(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         float start = Time.time;
-        if (callback == null || manager == null) {
-            //print("has no recver");
+        if (callback == null || manager == null || fromNodeID < 0 || toNodeID < 0) {
+            callback(null, null);
             yield break;
         }
 
@@ -44,6 +44,7 @@ public class PathFinder : MonoBehaviour
 
         Node startPoint = graphData.nodesSorted[startPointID];
         Node endPoint = graphData.nodesSorted[endPointID];
+            
 
         foreach (var point in graphData.nodes) {
             point.H = -1;

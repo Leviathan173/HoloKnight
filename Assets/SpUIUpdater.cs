@@ -12,7 +12,7 @@ public class SpUIUpdater : MonoBehaviour
 
     void Update() {
         print("sp text.text.Split('/')[0]:" + text.text.Split('/')[0]);
-        if (int.Parse(text.text.Split('/')[0]) != Managers.Player.currentStamina) {
+        if (float.Parse(text.text.Split('/')[0]) != Managers.Player.currentStamina) {
             text.text = ((int)Managers.Player.currentStamina).ToString();
             text.text += "/" + ((int)Managers.Player.maxStamina).ToString();
         }

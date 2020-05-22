@@ -11,8 +11,8 @@ public class VigorUIUpdater : MonoBehaviour
     }
 
     void Update() {
-        if (int.Parse(text.text) != Managers.Player.vigor) {
-            text.text = Managers.Player.vigor.ToString();
+        if (int.Parse(text.text) != Managers.Player.Vigor) {
+            text.text = Managers.Player.Vigor.ToString();
         }
     }
 }

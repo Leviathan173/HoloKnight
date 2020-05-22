@@ -11,8 +11,8 @@ public class DexUIUpdater : MonoBehaviour
     }
 
     void Update() {
-        if (int.Parse(text.text) != Managers.Player.dex) {
-            text.text = Managers.Player.dex.ToString();
+        if (int.Parse(text.text) != Managers.Player.Dex) {
+            text.text = Managers.Player.Dex.ToString();
         }
     }
 }
