@@ -29,6 +29,7 @@ public class Gold : MonoBehaviour
         }
     }
     IEnumerator Increaser(int from) {
+        GetComponent<AudioSource>().Play();
         int C = 1;
         if (from > to) C = -C;
         while (from != to) {
@@ -37,5 +38,6 @@ public class Gold : MonoBehaviour
             yield return null;
         }
         hasCoroutine = false;
+        GetComponent<AudioSource>().Pause();
     }
 }

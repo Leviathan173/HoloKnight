@@ -14,6 +14,7 @@ public class WeaponPicker : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.name.Contains("Player")) {
+            GetComponent<AudioSource>().Play();
             if (Managers.Player.weapon.Name.Equals(weapon.Name)) {
                 Managers.Player.weapon.Level += 1;
                 print("weapon " + weapon.Name + " levelup:" + Managers.Player.weapon.Level);

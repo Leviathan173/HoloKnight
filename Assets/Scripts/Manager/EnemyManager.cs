@@ -13,6 +13,11 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     public GameObject Forward;
     public HealthBarController health;
     public EnemyDetector[] Attacks;
+    public AudioSource audio;
+    [SerializeField] public AudioClip attack;
+    [SerializeField] public AudioClip step;
+    [SerializeField] public AudioClip hit;
+    [SerializeField] public AudioClip death;
 
 
     public float maxHealth { get; set; }
@@ -84,6 +89,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         follower = GetComponent<PathFollower>();
         finder = GetComponent<PathFinder>();
         action = GetComponent<ActionController>();
+        audio = GetComponent<AudioSource>();
 
         health = GetComponentInChildren<HealthBarController>();
         PFData = PathFinderData.Instance;
@@ -221,6 +227,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_A);
             currentStamina -= attackCost;
+            audio.PlayOneShot(attack);
         }
     }
     // TODO 更加精准的判定
@@ -248,6 +255,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_B);
             currentStamina -= attackCost;
+            audio.PlayOneShot(attack);
         }
     }
     /// <summary>
@@ -300,6 +308,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         if (isGrounded && !isJumping) {
             animator.SetTrigger(EAParameters.ATTACK_C);
             currentStamina -= attackCost;
+            audio.PlayOneShot(attack);
         }
 
     }
@@ -374,6 +383,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
         } else {
             currentHealth -= damage;
         }
+        audio.PlayOneShot(hit);
         animator.SetTrigger(EAParameters.HIT);
     }
 
@@ -382,6 +392,7 @@ public class EnemyManager : MonoBehaviour, IGameManager {
     /// </summary>
     public void Death() {
         animator.SetTrigger(EAParameters.DEAD);
+        audio.PlayOneShot(death);
     }
     /// <summary>
     /// 摧毁敌人物体

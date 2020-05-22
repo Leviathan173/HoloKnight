@@ -8,11 +8,13 @@ public class ChestController : MonoBehaviour
     [SerializeField] GameObject item;
     private bool isOpen;
     Animator animator;
+    AudioSource audio;
 
 
     void Start() {
         animator = GetComponent<Animator>();
         isOpen = animator.GetBool("isOpen");
+        audio = GetComponent<AudioSource>();
     }
 
     void Update() {
@@ -42,6 +44,7 @@ public class ChestController : MonoBehaviour
     }
     void Open() {
         animator.SetBool("isOpen", true);
+        audio.Play();
         if (item != null) {
             item = Instantiate(item);
             item.transform.position = new Vector3(transform.position.x, transform.position.y + (gameObject.GetComponent<Renderer>().bounds.size.y), transform.position.z);

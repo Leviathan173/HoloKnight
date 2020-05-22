@@ -19,11 +19,13 @@ public class DoorOpener : MonoBehaviour
                         if (CheckDistance()) {
                             animator.SetBool("isOpen", true);
                             GetComponent<BoxCollider2D>().isTrigger = true;
+                            GetComponent<AudioSource>().Play();
                         }
                     }
                 } else if (CheckDistance()) {
                     animator.SetBool("isOpen", true);
                     GetComponent<BoxCollider2D>().isTrigger = true;
+                    GetComponent<AudioSource>().Play();
                 }
             }
         }

@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     [SerializeField] public AudioClip attack2hit;
     [SerializeField] public AudioClip step;
     [SerializeField] public AudioClip hit;
+    [SerializeField] public AudioClip death;
     public Rigidbody2D body;
     public Animator animator;
     public GameObject Forward;
@@ -22,14 +23,10 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public float maxStamina { get; set; }
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
+    public int vigor = 10;
+    public int dex = 10;
+    public int str = 10;
 
-    //public Vector2 _ladderTopPos { get; set; }
-    //public Vector2 _ladderBottomPos { get; set; }
-    //public float _ladderX { get; set; }
-    //public bool _isReachTopLadder { get; set; }
-    //public bool _isReachBottomLadder { get; set; }
-    //public bool _isOnLadder { get; set; }
-    //public bool _hasLadder { get; set; }
     public int attackStat { get; set; }
     public int jumpStat { get; set; }
     public bool _isRolling { get; set; }
@@ -55,7 +52,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     }
     public float damage {
         get {
-            return 10 + weapon.Attack;
+            return 10 + weapon.Attack + (dex * 0.5f) + (str * 0.25f);
         }
     }
     public bool hasKey = false;
@@ -73,11 +70,11 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         armors.Add(armor);
         armors.Add(boot);
         armors.Add(helmet);
-        maxHealth = 100;
+        maxHealth = 100 + (vigor * 20) + (str * 2);
         currentHealth = maxHealth;
-        maxStamina = 50;
+        maxStamina = 50 + (dex * 0.25f);
         currentStamina = maxStamina;
-        staminaIncreasement = 0.25f;
+        staminaIncreasement = 0.25f + (dex*0.01f);
         StartCoroutine(StaminaIncreaser());
         lastSpawnPos = player.transform.position;
         //_isReachTopLadder = false;
@@ -465,7 +462,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.SetTrigger(PAParameters.DEATH);
         currentStamina = maxStamina;
         currentHealth = maxHealth;
-        // UNDONE 添加音效
+        audio.PlayOneShot(death);
     }
     public void Destroy() {
         animator.ResetTrigger(PAParameters.DEATH);
