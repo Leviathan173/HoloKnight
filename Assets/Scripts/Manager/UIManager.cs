@@ -23,9 +23,14 @@ public class UIManager : MonoBehaviour, IGameManager {
     public void Startup() {
         BGMVolume = 1;
         SESoundVolume = 1;
-        equip = PlayerStatus.GetComponentInChildren<EquipController>();
-        //item = PlayerStatus.GetComponentInChildren<ItemListController>();
-        data = PlayerStatus.GetComponentInChildren<PlayerStatsDataController>();
+        if(PlayerStatus != null) {
+            equip = PlayerStatus.GetComponentInChildren<EquipController>();
+            //item = PlayerStatus.GetComponentInChildren<ItemListController>();
+            data = PlayerStatus.GetComponentInChildren<PlayerStatsDataController>();
+        } else {
+            Debug.LogWarning("PlayerStatus view is null");
+        }
+        
         status = ManagerStatus.Started;
     }
     /// <summary>

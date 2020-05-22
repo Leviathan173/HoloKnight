@@ -13,7 +13,7 @@ public class EquipUIUpdater : MonoBehaviour {
     public Armor helmet = null;
     public Armor boot = null;
     public Armor armor = null;
-    void FixedUpdate() {
+    void Update() {
         switch (type) {
             case EquipType.Weapon:
                 weapon = Managers.Player.weapon;

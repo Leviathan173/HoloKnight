@@ -11,8 +11,8 @@ public class LevelUIUpdater : MonoBehaviour
     }
 
     void Update() {
-        if (int.Parse(text.text) != Managers.Player.level) {
-            text.text = Managers.Player.level.ToString();
+        if (int.Parse(text.text) != Managers.Player.Level) {
+            text.text = Managers.Player.Level.ToString();
         }
     }
 }

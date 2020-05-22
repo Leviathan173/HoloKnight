@@ -18,16 +18,34 @@ public class PlayerManager : MonoBehaviour, IGameManager {
 
     private float JumpAttackAirBounce;
 
-    public float maxHealth { get; set; }
+    public float maxHealth {
+        get {
+            return 100 + (Vigor * 20) + (Str * 2);
+        }
+    }
     public float currentHealth { get; set; }
-    public float maxStamina { get; set; }
+    public float maxStamina {
+        get {
+            return 50 + (Dex * 0.25f);
+        }
+    }
     public float currentStamina { get; set; }
     public float staminaIncreasement { get; set; }
-    public int level = 1;
+    private int level = 1;
+    public int Level {
+        get {
+            return level;
+        }
+        set {
+            level = value;
+            currentHealth = maxHealth;
+            bar.UpdateHealth();
+        }
+    }
     private int vigor = 3;
     public int Vigor {
         get {
-            return vigor + level;
+            return vigor + Level;
         }
         set {
             vigor = value;
@@ -36,7 +54,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     private int dex = 3;
     public int Dex {
         get {
-            return vigor + level;
+            return vigor + Level;
         }
         set {
             dex = value;
@@ -45,7 +63,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     private int str = 3;
     public int Str {
         get {
-            return str + level;
+            return str + Level;
         }
         set {
             str = value;
@@ -66,7 +84,7 @@ public class PlayerManager : MonoBehaviour, IGameManager {
     public int gold = 0;
     public float AttackCost = 10;
     public Vector3 lastSpawnPos;
-    public Weapon weapon = new Weapon("Knife", 10, 1);
+    public Weapon weapon = new Weapon("Knife", 5, 1);
     public Armor helmet = new Armor("LeatherHelmet", EquipType.Helmet, 10, 1);
     public Armor boot = new Armor("LeatherBoot", EquipType.Boot, 10, 1);
     public Armor armor = new Armor("LeatherArmor", EquipType.Armor, 10, 1);
@@ -96,9 +114,9 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         armors.Add(armor);
         armors.Add(boot);
         armors.Add(helmet);
-        maxHealth = 100 + (vigor * 20) + (str * 2);
+        //maxHealth = 100 + (vigor * 20) + (str * 2);
         currentHealth = maxHealth;
-        maxStamina = 50 + (dex * 0.25f);
+        //maxStamina = 50 + (dex * 0.25f);
         currentStamina = maxStamina;
         staminaIncreasement = 0.15f + (dex*0.01f);
         StartCoroutine(StaminaIncreaser());
@@ -488,13 +506,13 @@ public class PlayerManager : MonoBehaviour, IGameManager {
         animator.SetTrigger(PAParameters.DEATH);
         currentStamina = maxStamina;
         currentHealth = maxHealth;
+        gold -= 50;
+        if (gold < 0) gold = 0;
         audio.PlayOneShot(death);
     }
     public void Destroy() {
         animator.ResetTrigger(PAParameters.DEATH);
         player.transform.position = lastSpawnPos;
-        gold -= 100;
-        if (gold < 0) gold = 0;
         bar.UpdateHealth();
         bar.UpdateSp();
     }

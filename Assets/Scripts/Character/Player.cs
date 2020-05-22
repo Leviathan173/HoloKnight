@@ -186,6 +186,15 @@ public class Player : MonoBehaviour {
             Managers.UI.OnMenuOpen();
         }
 
+        // cheat
+        if (Input.GetKeyDown(KeyCode.F12)) {
+            Managers.Player.gold += 100;
+        }
+        if (Input.GetKeyDown(KeyCode.F11)) {
+            Managers.Player.Level++;
+            print("max HP:"+Managers.Player.maxHealth);
+        }
+
     }
 
     // TODO 不让玩家能够推动敌人

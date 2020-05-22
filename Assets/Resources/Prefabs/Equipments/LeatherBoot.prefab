@@ -96,8 +96,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39fe938840d56d241a485e4d362e5a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: LeatherBoot
-  type: 2
+  aName: LeatherBoot
+  type: 3
   defence: 20
   level: 1
 --- !u!61 &861828066083576640

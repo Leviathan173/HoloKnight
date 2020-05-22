@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(PlayerManager))]
+//[RequireComponent(typeof(PlayerManager))]
 [RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(AudioManager))]
 
@@ -22,8 +22,12 @@ public class Managers : MonoBehaviour {
 
 
         _startSequence = new Dictionary<string, IGameManager>();
-
-		_startSequence.Add("Player",Player);
+        if(Player != null) {
+            _startSequence.Add("Player", Player);
+        } else {
+            Debug.LogWarning("Player is null");
+        }
+		    
         _startSequence.Add("UI", UI);
         _startSequence.Add("Audio", Audio);
 

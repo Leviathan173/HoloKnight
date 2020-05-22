@@ -30,12 +30,18 @@ public class Gold : MonoBehaviour
     }
     IEnumerator Increaser(int from) {
         GetComponent<AudioSource>().Play();
+        Check:
         int C = 1;
         if (from > to) C = -C;
         while (from != to) {
             from += C;
             text.text = from.ToString();
             yield return null;
+        }
+        if(to != Managers.Player.gold) {
+            from = to;
+            to = Managers.Player.gold;
+            goto Check;
         }
         hasCoroutine = false;
         GetComponent<AudioSource>().Pause();
