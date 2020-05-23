@@ -31,7 +31,7 @@ public class PathFinder : MonoBehaviour
     private IEnumerator FindShortestPathAsynchonous(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         float start = Time.time;
         if (callback == null || manager == null || fromNodeID < 0 || toNodeID < 0) {
-            callback(null, null);
+            //callback(null, null);
             yield break;
         }
 
@@ -76,6 +76,7 @@ public class PathFinder : MonoBehaviour
             if (leastCostPoint == null)
                 break;
 
+            // 如果结束
             if (leastCostPoint == endPoint) {
                 found = true;
                 Node prevPoint = leastCostPoint;

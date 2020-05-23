@@ -177,8 +177,12 @@ public class Player : MonoBehaviour {
         //if (!Mathf.Approximately(_deltaY,0)) {
         //    Managers.Player.ClimbStart();
         //}
-
-
+        if (Input.GetKeyDown(KeyCode.R)) {
+            Managers.UI.OnNewGame();
+        }
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            Managers.Player.Death();
+        }
         if (Input.GetKeyDown(KeyCode.M)) {
             Managers.UI.OnPlayStatusOpen();
         }
@@ -187,7 +191,7 @@ public class Player : MonoBehaviour {
         }
 
         // cheat
-        if (Input.GetKeyDown(KeyCode.F12)) {
+        if (Input.GetKeyUp(KeyCode.F12)) {
             Managers.Player.gold += 100;
         }
         if (Input.GetKeyDown(KeyCode.F11)) {
