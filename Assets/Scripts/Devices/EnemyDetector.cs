@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class EnemyDetector : MonoBehaviour, IEnemyDetector {
+public class EnemyDetector : MonoBehaviour {
     public List<string> EnemyList { get; set; }
     public bool hasPlayer { get; set; }
 

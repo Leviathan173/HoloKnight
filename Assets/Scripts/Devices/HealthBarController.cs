@@ -25,7 +25,16 @@ public class HealthBarController : MonoBehaviour
         healthBar.gameObject.SetActive(false);
         damage.gameObject.SetActive(false);
     }
-
+    /// <summary>
+    /// 把伤害显示文字翻转
+    /// </summary>
+    public void Turn() {
+        damage.transform.localScale = new Vector3(-damage.transform.localScale.x, damage.transform.localScale.y, damage.transform.localScale.z);
+    }
+    /// <summary>
+    /// 获取管理器的协程，因为这个脚本会比管理器初始化更先启动
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GetManager() {
         while(manager == null) {
             yield return new WaitForSeconds(0.1f);
@@ -34,7 +43,10 @@ public class HealthBarController : MonoBehaviour
         maxHealth = manager.maxHealth;
         currrentHealth = maxHealth;
     }
-
+    /// <summary>
+    /// 设置血条的长度
+    /// </summary>
+    /// <param name="value">血量减少的值</param>
     public void SetHealth(float value) {
         currrentHealth -= value;
         float healthPercentage = currrentHealth / maxHealth;
@@ -52,7 +64,10 @@ public class HealthBarController : MonoBehaviour
         }
         
     }
-
+    /// <summary>
+    /// 在不受到伤害的三秒后隐藏血条
+    /// </summary>
+    /// <returns></returns>
     IEnumerator HideHealthBar() {
         while (time > Time.time) {
             yield return new WaitForSeconds(1);

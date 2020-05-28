@@ -74,17 +74,32 @@ namespace AStar {
             nodesSorted = new Dictionary<int, Node>();
             pathsSorted = new Dictionary<int, Path>();
         }
-
+        /// <summary>
+        /// 获取对应ID的结点
+        /// </summary>
+        /// <param name="ID">结点ID</param>
+        /// <returns></returns>
         public Node GetNode(int ID) {
             if (nodesSorted.ContainsKey(ID))
                 return nodesSorted[ID];
             return null;
         }
+        /// <summary>
+        /// 获取对应ID的路径
+        /// </summary>
+        /// <param name="ID">路径ID</param>
+        /// <returns></returns>
         public Path GetPath(int ID) {
             if (pathsSorted.ContainsKey(ID))
                 return pathsSorted[ID];
             return null;
         }
+        /// <summary>
+        /// 获取连接两个结点的路径，使用ID
+        /// </summary>
+        /// <param name="from">起始结点ID</param>
+        /// <param name="to">终点ID</param>
+        /// <returns></returns>
         public Path GetPathBetweenNodeId(int from, int to) {
             foreach (Path path in paths) {
                 if (
@@ -96,14 +111,21 @@ namespace AStar {
             }
             return null;
         }
-
+        /// <summary>
+        /// 获取连接两个结点的路径，使用结点
+        /// </summary>
+        /// <param name="from">起始结点</param>
+        /// <param name="to">终点</param>
+        /// <returns></returns>
         public Path GetPathBetweenNode(Node from, Node to) {
             if (from == null | to == null)
                 return null;
 
             return GetPathBetweenNodeId(from.ID, to.ID);
         }
-
+        /// <summary>
+        /// 初始化结点与路径ID
+        /// </summary>
         public void GenerateIDs() {
             if (nodes == null)
                 return;

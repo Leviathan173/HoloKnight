@@ -6,15 +6,18 @@ public class Idle : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Managers.Player.jumpStat = -1;
-        animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, -1);
+        if (Managers.Player.jumpStat != -1) {
+            Managers.Player.jumpStat = -1;
+            animator.SetInteger(PAParameters.JUMP_ATTACK_STAT, -1);
+            Managers.Player.audio.PlayOneShot(Managers.Player.step);
+        }
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -5,7 +5,7 @@ using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-[CustomEditor(typeof(PathFinder))]
+[CustomEditor(typeof(PathFinderData))]
 public class GUIEditor : Editor {
     enum SceneMode {
         AddNode,
@@ -16,8 +16,8 @@ public class GUIEditor : Editor {
 
     [MenuItem("GameObject/Create a 2D PathFinderMy in scene with a collider")]
     public static void Create2DPathFinderObjectInScene() {
-        if (GameObject.FindObjectOfType<PathFinder>() == null) {
-            var managerGo = new GameObject("PathFinder");
+        if (GameObject.FindObjectOfType<PathFinderData>() == null) {
+            var managerGo = new GameObject("PathFinderData");
             var colliderGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
             colliderGo.name = "Ground";
             //colliderGo.GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.black);
@@ -26,9 +26,9 @@ public class GUIEditor : Editor {
             var boxCollider = colliderGo.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
 
-            managerGo.AddComponent<PathFinder>();
+            managerGo.AddComponent<PathFinderData>();
         } else {
-            if (QPathFinder.Logger.CanLogError) QPathFinder.Logger.LogError("PathFollower Script already exists!");
+            Debug.LogError("PathFollower Script already exists!");
         }
     }
 
@@ -97,8 +97,6 @@ public class GUIEditor : Editor {
                     EditorGUILayout.LabelField("One Way", EditorStyles.miniLabel, GUILayout.Width(50f)); paths[j].isOneWay = EditorGUILayout.Toggle(paths[j].isOneWay);
                     EditorGUILayout.LabelField("Enable", EditorStyles.miniLabel, GUILayout.Width(50f)); paths[j].isOpen = EditorGUILayout.Toggle(paths[j].isOpen);
 
-                    if (GUILayout.Button("+", GUILayout.Width(25f)))
-                        AddPath(j + 1);
                     if (GUILayout.Button("-", GUILayout.Width(25f)))
                         DeletePath(j);
                 }
@@ -218,13 +216,13 @@ public class GUIEditor : Editor {
                 a = script.graphData.nodesSorted[paths[i].NodeAId];
                 //Debug.Log("node A :" + a + " is A open ? :" + a.IsOpen);
             }
-                
+
 
             if (script.graphData.nodesSorted.ContainsKey(paths[i].NodeBId)) {
                 b = script.graphData.nodesSorted[paths[i].NodeBId];
                 //Debug.Log("node B :" + b + " is B open ? :" + b.IsOpen);
             }
-                
+
 
             if (a != null && b != null && a != b && a.IsOpen && b.IsOpen) {
                 if (drawPathsInTheScene)
@@ -278,7 +276,7 @@ public class GUIEditor : Editor {
             if (e.button == 0) {
                 OnMouseClick(e.mousePosition);
             }
-                
+
         } else if (e.type == EventType.MouseUp) {
             MarkThisDirty();
             SceneView.RepaintAll();
@@ -296,7 +294,7 @@ public class GUIEditor : Editor {
                 hitPos += (-ray.direction.normalized) * script.graphData.heightFromTheGround;
                 AddNode(hitPos);
             } else
-                QPathFinder.Logger.LogError("No collider detected with layer " + script.graphData.groundColliderLayerName + "! Could not add node! ");
+                Debug.LogError("No collider detected with layer " + script.graphData.groundColliderLayerName + "! Could not add node! ");
         } else if (sceneMode == SceneMode.ConnectPath) {
             LayerMask backgroundLayerMask = 1 << LayerMask.NameToLayer(script.graphData.groundColliderLayerName);
             Ray ray = HandleUtility.GUIPointToWorldRay(mousePos);
@@ -306,7 +304,7 @@ public class GUIEditor : Editor {
                 Vector3 hitPos = hit.point;
                 TryAddPath(hitPos);
             } else
-                QPathFinder.Logger.LogError("No collider detected with layer " + script.graphData.groundColliderLayerName + "! Could not add node! ");
+                Debug.LogError("No collider detected with layer " + script.graphData.groundColliderLayerName + "! Could not add node! ");
         }
     }
 
@@ -325,7 +323,7 @@ public class GUIEditor : Editor {
 
         script.graphData.GenerateIDs();
 
-        QPathFinder.Logger.LogInfo("Node with ID:" + nodeAdded.ID + " Added!");
+        Debug.Log("Node with ID:" + nodeAdded.ID + " Added!");
     }
 
     void DeleteNode(int removeIndex = -1) {
@@ -340,23 +338,23 @@ public class GUIEditor : Editor {
         nodeList.RemoveAt(removeIndex);
         script.graphData.GenerateIDs();
 
-        QPathFinder.Logger.LogInfo("Node with ID:" + nodeRemoved.ID + " Removed!");
+        Debug.Log("Node with ID:" + nodeRemoved.ID + " Removed!");
     }
 
     void ClearNodes() {
         script.graphData.nodes.Clear();
-        QPathFinder.Logger.LogWarning("All Nodes are cleared!");
+        Debug.LogWarning("All Nodes are cleared!");
     }
 
     void AddPath(int addIndex = -1, int from = -1, int to = -1) {
         if (from != -1 && to != -1) {
             if (from == to) {
-                QPathFinder.Logger.LogError("Preventing from adding Path to the same node.");
+                Debug.LogError("Preventing from adding Path to the same node.");
                 return;
             }
             Path pd = script.graphData.GetPathBetweenNodeId(from, to);
             if (pd != null) {
-                QPathFinder.Logger.LogError("We already have a path between these nodes. New Path not added!");
+                Debug.LogError("We already have a path between these nodes. New Path not added!");
                 return;
             }
         }
@@ -368,7 +366,7 @@ public class GUIEditor : Editor {
             script.graphData.paths.Insert(addIndex, newPath);
         script.graphData.GenerateIDs();
 
-        QPathFinder.Logger.LogInfo("Path with ID:" + newPath.ID + " Added");
+        Debug.Log("Path with ID:" + newPath.ID + " Added");
     }
 
     void DeletePath(int removeIndex = -1) {
@@ -383,27 +381,27 @@ public class GUIEditor : Editor {
         pathList.RemoveAt(removeIndex);
         script.graphData.GenerateIDs();
 
-        QPathFinder.Logger.LogInfo("Path with ID:" + removedPath.ID + " Removed");
+        Debug.Log("Path with ID:" + removedPath.ID + " Removed");
     }
 
     void ClearPaths() {
         script.graphData.paths.Clear();
-        QPathFinder.Logger.LogWarning("All Paths are cleared!");
+        Debug.LogWarning("All Paths are cleared!");
     }
 
     void TryAddPath(Vector3 position) {
         Node selectedNode = script.graphData.GetNode(script.FindNearestNode(position));
         if (selectedNode == null) {
-            QPathFinder.Logger.LogError("Could not find any nearest Node to connect to!");
+            Debug.LogError("Could not find any nearest Node to connect to!");
             return;
         }
         if (selectedNodeForConnectNodesMode != -1) {
             AddPath(-1, selectedNodeForConnectNodesMode, selectedNode.ID);
-            QPathFinder.Logger.LogInfo("Connected " + selectedNodeForConnectNodesMode.ToString() + " and " + selectedNode.ID);
+            Debug.Log("Connected " + selectedNodeForConnectNodesMode.ToString() + " and " + selectedNode.ID);
             selectedNodeForConnectNodesMode = -1;
         } else {
             selectedNodeForConnectNodesMode = selectedNode.ID;
-            QPathFinder.Logger.LogInfo("Selected : " + selectedNodeForConnectNodesMode.ToString() + ". Now click another node to join these two");
+            Debug.Log("Selected : " + selectedNodeForConnectNodesMode.ToString() + ". Now click another node to join these two");
         }
     }
 
@@ -413,7 +411,7 @@ public class GUIEditor : Editor {
 
     private void OnEnable() {
         sceneMode = SceneMode.None;
-        script = target as PathFinder;
+        script = target as PathFinderData;
         script.graphData.GenerateIDs();
     }
 
@@ -423,10 +421,10 @@ public class GUIEditor : Editor {
             return;
 
         if (PrefabUtility.GetCorrespondingObjectFromSource(script.gameObject) != null) {
-            //QPathFinder.Logger.LogInfo ( "Prefab for PathFinderMy found! Marked it Dirty ( Modified )");
+            //Debug.Log ( "Prefab for PathFinderMy found! Marked it Dirty ( Modified )");
             EditorUtility.SetDirty(script);
         } else {
-            //QPathFinder.Logger.LogInfo ( "Prefab for PathFinderMy Not found! Marked the scene as Dirty ( Modified )");
+            //Debug.Log ( "Prefab for PathFinderMy Not found! Marked the scene as Dirty ( Modified )");
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
     }
@@ -434,7 +432,7 @@ public class GUIEditor : Editor {
 
     private SceneMode sceneMode;
     SceneMode mode = SceneMode.None;
-    private PathFinder script;
+    private PathFinderData script;
 
     const string nodeGUITextColor = "#ff00ffff";
     const string pathGUITextColor = "#00ffffff";

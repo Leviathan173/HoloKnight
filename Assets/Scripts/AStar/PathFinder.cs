@@ -1,111 +1,37 @@
 ﻿using AStar;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFinder : MonoBehaviour {
-
-    private static PathFinder _instance;
-    public static PathFinder Instance { get { return _instance; }}
-
-    public GraphData graphData = new GraphData();
-    List<Node> OuterNodes = new List<Node>();
-
-    public void Awake() {
-        _instance = this;
+public class PathFinder : MonoBehaviour
+{
+    private GraphData graphData;
+    void Start() {
+        graphData = PathFinderData.Instance.graphData;
     }
-    public void OnDestroy() {
-        _instance = null;
-    }
-
-
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.F1)) {
-            
-            System.Action<List<Node>> PathOfNodes = delegate (List<Node> nodes) {
-                print("time.time：" + Time.time);
-                print("委托开始");
-                if (nodes == null || nodes.Count == 0) {
-                    print("Node为空");
-                    return;
-                }
-                
-                foreach(var node in nodes) {
-                    OuterNodes.Add(node);
-                }
-            };
-            FindShortestPathOfNodes(56,1,PathOfNodes);
-            StartCoroutine(Check());
-        }
-    }
-
-    IEnumerator Check() {
-        while (OuterNodes.Count == 0) {
-            yield return new WaitForSeconds(1);
-        }
-        print("outer nodes count:" + OuterNodes.Count);
-        foreach (var node in OuterNodes) {
-            print("node in outer nodes:" + node.ID);
-        }
-        OuterNodes.Clear();
-    }
-
-    private void WaitForSeconds(int v) {
-        throw new NotImplementedException();
-    }
-
-    public void FindShortestPathOfNodes(int fromNodeID, int toNodeID, System.Action<List<Node>> callback) {
-        //if (QPathFinder.Logger.CanLogInfo) QPathFinder.Logger.LogInfo(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID, true);
+    /// <summary>
+    /// 异步寻找对应路径
+    /// </summary>
+    /// <param name="fromNodeID">起始结点</param>
+    /// <param name="toNodeID">终点</param>
+    /// <param name="manager">敌人管理器</param>
+    /// <param name="callback">返回委托</param>
+    public void FindShortestPathOfNodes(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         print(" FindShortestPathAsynchronous triggered from " + fromNodeID + " to " + toNodeID);
-        StartCoroutine(FindShortestPathAsynchonousInternal(fromNodeID, toNodeID, callback));
+        StartCoroutine(FindShortestPathAsynchonous(fromNodeID, toNodeID, manager, callback));
     }
-
-    public int FindNearestNode(Vector3 point) {
-        float minDistance = float.MaxValue;
-        Node nearestNode = null;
-
-        foreach (var node in graphData.nodes) {
-            if (Vector3.Distance(node.Position, point) < minDistance) {
-                minDistance = Vector3.Distance(node.Position, point);
-                nearestNode = node;
-            }
-        }
-
-        return nearestNode != null ? nearestNode.ID : -1;
-    }
-
-    public void EnableNode(int nodeID, bool enable) {
-        if (graphData == null) {
-            Debug.LogError("Graph Data not found");
-            return;
-        }
-
-        Node node = graphData.GetNode(nodeID);
-        if (node == null) {
-            Debug.LogError("Node not found");
-            return;
-        }
-        node.SetOpen(enable);
-    }
-    public void EnablePath(int pathID, bool enable) {
-        if (graphData == null) {
-            Debug.LogError("Graph Data not found");
-            return;
-        }
-
-        Path path = graphData.GetPath(pathID);
-        if (path == null) {
-            Debug.LogError("Path not found");
-            return;
-        }
-        path.isOpen = (enable);
-    }
-
-    private IEnumerator FindShortestPathAsynchonousInternal(int fromNodeID, int toNodeID, System.Action<List<Node>> callback) {
+    /// <summary>
+    /// 寻路协程
+    /// </summary>
+    /// <param name="fromNodeID">起始结点</param>
+    /// <param name="toNodeID">终点</param>
+    /// <param name="manager">敌人管理器</param>
+    /// <param name="callback">返回委托</param>
+    /// <returns></returns>
+    private IEnumerator FindShortestPathAsynchonous(int fromNodeID, int toNodeID, EnemyManager manager, System.Action<List<Node>, EnemyManager> callback) {
         float start = Time.time;
-        if(callback == null) {
-            print("has no recver");
+        if (callback == null || manager == null || fromNodeID < 0 || toNodeID < 0) {
+            //callback(null, null);
             yield break;
         }
 
@@ -118,6 +44,7 @@ public class PathFinder : MonoBehaviour {
 
         Node startPoint = graphData.nodesSorted[startPointID];
         Node endPoint = graphData.nodesSorted[endPointID];
+            
 
         foreach (var point in graphData.nodes) {
             point.H = -1;
@@ -149,6 +76,7 @@ public class PathFinder : MonoBehaviour {
             if (leastCostPoint == null)
                 break;
 
+            // 如果结束
             if (leastCostPoint == endPoint) {
                 found = true;
                 Node prevPoint = leastCostPoint;
@@ -163,11 +91,11 @@ public class PathFinder : MonoBehaviour {
                         str += "=>" + a.ID.ToString();
                     }
                     print("Path found between " + fromNodeID + " and " + toNodeID + ":" + str);
-                    foreach(var node in finalPath) {
+                    foreach (var node in finalPath) {
                         print("node:" + node.ID);
                     }
                 }
-                callback(finalPath);
+                callback(finalPath, manager);
                 float end = Time.time;
                 print("Time:" + (end - start));
                 yield break;
@@ -218,15 +146,12 @@ public class PathFinder : MonoBehaviour {
 
         if (!found) {
             print("Path not found between " + fromNodeID + " and " + toNodeID);
-            callback(null);
+            callback(null, null);
             yield break;
         }
 
         Debug.LogError("Unknown error while finding the path!");
-        callback(null);
+        callback(null, null);
         yield break;
     }
-
-
 }
-

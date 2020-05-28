@@ -1,15 +1,14 @@
-﻿using UnityEngine;
+﻿/// <summary>
+/// 管理器的基类
+/// </summary>
 public interface IGameManager {
+    /// <summary>
+    /// 管理器运行状态
+    /// </summary>
 	ManagerStatus status {get;}
 
-    //float maxHealth { get; set; }
-    //float currentHealth { get; set; }
-    //float maxStamina { get; set; }
-    //float currentStamina { get; set; }
-    //float staminaIncreasement { get; set; }
-
+    /// <summary>
+    /// 管理器启动
+    /// </summary>
 	void Startup();
-    //void GetHit(float damage);
-    //void Death();
-    //void InitComponents(GameObject enemy, Rigidbody2D _body, Animator _animator, GameObject Forward, EnemyDetector[] Attacks, float _width);
 }
